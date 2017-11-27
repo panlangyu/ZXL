@@ -1,0 +1,15 @@
+server:
+  port: 8082
+
+spring:
+  application:
+    name: information
+  profiles:
+      active: dataSourceTest, dataRedisTest
+  activemq:
+    broker-url: tcp://localhost:61616
+    in-memory: true
+    pool:
+      enabled: true
+
+activeMq: UME_YPB_QUEUE
