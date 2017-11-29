@@ -63,7 +63,7 @@ public class Cache {
     }
 
     public static void main(String[] args) throws InterruptedException {
-        CacheManager.putCacheInfo("key","token",CacheManager.TIME_OUT,true);
+        CacheManager.putCacheInfo("key","token",CacheManager.TOKEN_TIME_OUT,true);
         Thread.sleep(100);
         System.out.println(String.valueOf(CacheManager.getCacheToken("key")));
         Thread.sleep(500);
