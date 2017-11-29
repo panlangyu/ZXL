@@ -14,11 +14,10 @@ public class Event5503 extends EventService implements ServiceSupport {
 
 
     @Override
-    public void process(Instance instance) {
+    public Instance process(Instance instance) {
         //TODO process code...
 
-
-
+        return instance;
     }
 
 

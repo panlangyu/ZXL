@@ -1,6 +1,7 @@
 package com.travelsky.ypb.publics;
 
 import com.sun.tools.javac.util.Convert;
+import com.travelsky.ypb.domain.log.Log;
 import com.travelsky.ypb.domain.xml.LowestPrice;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -257,7 +258,7 @@ public final class CommonUtil {
 				Field.setAccessible(fields, true);
 				for (Field field : fields) {
 					if (field.getName().equals(key)) {
-						field.set(tR, map.get(key));
+						field.set(tR, Integer.parseInt(map.get(key)));
 						break ;
 					}
 				}
@@ -331,11 +332,18 @@ public final class CommonUtil {
 	 *            例：new Date()
 	 * @return 例：星期五
 	 */
-	public static String getDayOfWeek(Date date) {
+	public static String getDayOfWeek(String date) {
+		SimpleDateFormat newSdf = new SimpleDateFormat("yyyy-MM-dd");
+		Date dt = null;
+		try {
+			dt = newSdf.parse(date);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
 		String[] weekArr = new String[] { "周日", "周一", "周二", "周三", "周四", "周五",
 				"周六" };
 		Calendar calendar = Calendar.getInstance();
-		calendar.setTime(date);
+		calendar.setTime(dt);
 		int weekDay = calendar.get(Calendar.DAY_OF_WEEK) - 1;
 		return weekArr[weekDay];
 	}
@@ -553,7 +561,6 @@ public final class CommonUtil {
 	 * </blockquote>
 	 * @return  例：18:22出发
 	 */
-	@SuppressWarnings("deprecation")
 	public static String getCfStr(String str){
 		SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
 		Date date = null;
@@ -562,7 +569,7 @@ public final class CommonUtil {
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
-		return sdf.format(date).toString()+ "出发  ";
+		return sdf.format(date).toString();
 	}
 	
 	/**
@@ -785,7 +792,6 @@ public final class CommonUtil {
 	 * @return 例：14OCT16
 	 */
 	public static String personPNRDate(String date) {
-		LOGGER.info("需要转换的时间："+date);
 		Map<String, String> date_map = new HashMap<String, String>();// 放月份
 		date_map.put("一月", "JAN");// 1
 		date_map.put("二月", "FEB");// 2
@@ -816,10 +822,8 @@ public final class CommonUtil {
 				if (ip.contains("10.5.146.39") || ip.contains("10.5.146.40")) {
 					return date.toUpperCase();
 				}else {
-					LOGGER.info("需要转换的时间："+date);
 					String mm_zho = "";
 					if (!"".equals(mm)) {
-						LOGGER.info("需要转换的时间："+mm);
 						mm_zho = date_map.get(mm);
 						date = date.replace(mm, mm_zho);
 					}

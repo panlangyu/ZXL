@@ -1,6 +1,6 @@
 package com.travelsky.ypb.business.service.iface;
 
-import com.travelsky.ypb.domain.message.MessageRequest;
+import com.travelsky.ypb.domain.message.Instance;
 
 /**
  * Created by huc on 2017/11/26.
@@ -8,7 +8,7 @@ import com.travelsky.ypb.domain.message.MessageRequest;
  */
 public interface IPushServer {
 
-    String push(MessageRequest messageRequest);
+    String push(Instance instance);
 
     String newToken(String appId);
 }

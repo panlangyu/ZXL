@@ -1,5 +1,7 @@
 package com.travelsky.ypb.configuration;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
@@ -12,11 +14,13 @@ public final class InitAirport {
 
     public static Map<String,String> airportMap = new HashMap<String,String>();
     public static Map<String, String> aou = new HashMap<String, String>();
+    public static JSONObject json = new JSONObject();
 
     //初始化出发地到达地
     static {
         airportMap.put("SZX","深圳");
         airportMap.put("PEK","北京");
+        airportMap.put("YIH","宜昌");
 
         aou.put("KY", "昆明航空");
         aou.put("G5", "华夏航空");
@@ -58,6 +62,18 @@ public final class InitAirport {
         aou.put("ZJ", "浙江航空");
         aou.put("QW", "青岛航空");
         aou.put("A6", "红土航空");
+
+
+
+        json.put("rcMachineType","pc");
+        json.put("rcVersion","2.1.2");
+        json.put("rcHannelId","WEB");
+        json.put("rcKey","acbe255a9ba6bb3dcde608a53ab0f2c4");
+        json.put("rcAccessToken","okaccept");
+        json.put("rcMachienId","121212");
+        json.put("sign","ac59075b964b0715");
+        json.put("rcParams","");
+
     }
 
     public InitAirport() {

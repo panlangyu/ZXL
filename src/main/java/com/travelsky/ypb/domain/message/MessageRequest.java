@@ -10,37 +10,24 @@ import java.util.Map;
 public class MessageRequest {
 	
 	private String appid;
-	
 	private String token;
-	
 	//用于夜间消息保存 以单条航班或者是航线为唯一ID
 	private String flightInfoId;
-	
 	//消息模板ID
 	private long msgTempleId;
-	
 	//消息模板中对应的参数
 	private Map<String, String> params;
-	
 	//跳转参数 可附带到手机端
 	private Map<String, String> jumpParams;
-	
 	//推送的用户ID
 	private String userId;
-	
 	//用于消息推送成功之后标记保存redis
 	private String redisKey;
-	
 	private String changeRedisKey;
-	
 	private String changeContent;
-	
 	private double returnPoint;
-	
 	private double returnPrice;
-	
 	private String planid;
-	
 	private String eventType;
 	private String eventTitle;
 	private String flightDate;

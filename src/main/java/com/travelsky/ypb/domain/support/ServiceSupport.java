@@ -12,6 +12,6 @@ public interface ServiceSupport {
      * 事件主体
      * @param instance
      */
-    void process(Instance instance);
+    Instance process(Instance instance);
 
 }

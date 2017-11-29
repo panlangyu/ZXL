@@ -20,5 +20,11 @@ public class FlightShopResult {
 	public void setLowestPriceList(List<LowestPrice>  lowestPriceList) {
 		this.lowestPriceList = lowestPriceList;
 	}
-	
+
+	@Override
+	public String toString() {
+		return "FlightShopResult{" +
+				"lowestPriceList=" + lowestPriceList +
+				'}';
+	}
 }

@@ -1,7 +1,9 @@
 package com.travelsky.ypb.business.task;
 
+import com.travelsky.ypb.domain.log.Log;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -9,17 +11,22 @@ import java.util.Iterator;
 
 /**
  * Created by huc on 2017/11/27.
- * 缓存管理
+ * [一级]缓存管理
  */
-public class CacheManager {
+public class CacheManager{
+
     private static HashMap cacheMap = new HashMap();
-    public  static long TIME_OUT = 1000; //TODO 缓存过期时间
-    private  static Logger log = LoggerFactory.getLogger("cacheManager");
+    public  static long TOKEN_TIME_OUT = 1000; //TODO 缓存过期时间
     //单实例构造方法
     private CacheManager() {
         super();
     }
-    //获取布尔值的缓存
+
+    /**
+     * 获取布尔值的缓存
+     * @param key key
+     * @return boolean
+     */
     public static boolean getSimpleFlag(String key){
         try{
             return (Boolean) cacheMap.get(key);
@@ -27,6 +34,12 @@ public class CacheManager {
             return false;
         }
     }
+
+    /**
+     * 获取long类型的缓存
+     * @param key key
+     * @return long
+     */
     public static long getServerStartdt(String key){
         try {
             return (Long)cacheMap.get(key);
@@ -34,7 +47,13 @@ public class CacheManager {
             return 0;
         }
     }
-    //设置布尔值的缓存
+
+    /**
+     * 设置布尔值的缓存
+     * @param key key
+     * @param flag boolean
+     * @return boolean
+     */
     public synchronized static boolean setSimpleFlag(String key,boolean flag){
         if (flag && getSimpleFlag(key)) {//假如为真不允许被覆盖
             return false;
@@ -43,6 +62,13 @@ public class CacheManager {
             return true;
         }
     }
+
+    /**
+     * 设置long类型的缓存
+     * @param key key
+     * @param serverbegrundt long
+     * @return boolean
+     */
     public synchronized static boolean setSimpleFlag(String key,long serverbegrundt){
         if (cacheMap.get(key) == null) {
             cacheMap.put(key,serverbegrundt);
@@ -52,17 +78,29 @@ public class CacheManager {
         }
     }
 
-    //得到缓存。同步静态方法
+    /**
+     * 得到缓存。同步静态方法
+     * @param key key
+     * @return cache
+     */
     private synchronized static Cache getCache(String key) {
+
         return (Cache) cacheMap.get(key);
     }
 
-    //判断是否存在一个缓存
+    /**
+     * 判断是否存在一个缓存
+     * @param key key
+     * @return boolean
+     */
     private synchronized static boolean hasCache(String key) {
+
         return cacheMap.containsKey(key);
     }
 
-    //清除所有缓存
+    /**
+     * 清除所有缓存
+     */
     public synchronized static void clearAll() {
         cacheMap.clear();
     }
@@ -87,38 +125,93 @@ public class CacheManager {
         }
     }
 
-    //清除指定的缓存
+    /**
+     * 清除指定的缓存
+     * @param key key
+     */
     public synchronized static void clearOnly(String key) {
+
         cacheMap.remove(key);
     }
 
-    //载入缓存
+    /**
+     * 载入缓存
+     * @param key key
+     * @param obj cache
+     */
     public synchronized static void putCache(String key, Cache obj) {
+
         cacheMap.put(key, obj);
     }
 
-    //获取缓存信息
+
+    /**
+     * 获取token缓存信息
+     * @param key key
+     * @return cache
+     */
+    public static Cache getCacheToken(String key) {
+        Cache cache = null;
+        if (hasCache(key)){
+            cache = tokenCache(key);
+        }else {
+            Log.i(CacheManager.class,"getCacheToken","缓存信息不存在");
+            cache = tokenCache(key);
+        }
+        return cache;
+    }
+
+    /**
+     * 获取标准缓存信息
+     * @param key
+     * @return cache
+     */
     public static Cache getCacheInfo(String key) {
         Cache cache = null;
         if (hasCache(key)){
-            cache = cache(key);
+            cache = getCache(key);
+            if (cacheExpired(cache)) { //调用判断是否终止方法
+                cache.setExpired(true);
+                clearOnly(key);
+                cache = null;
+            }else {
+                cache = getCache(key);
+            }
         }else {
-            log.info("缓存信息不存在");
-            cache = cache(key);
+            Log.i(CacheManager.class,"getCacheInfo","缓存信息不存在");
         }
         return cache;
     }
 
-    public static Cache cache(String key){
+
+    /**
+     * token 缓存
+     * @param key key
+     * @return cache
+     */
+    public static Cache tokenCache(String key){
         Cache cache = getCache(key);
-        if (cacheExpired(cache)) { //调用判断是否终止方法
-            cache.setExpired(true);
-            CacheManager.putCacheInfo("key","token",CacheManager.TIME_OUT,true);
+        if (cache == null) {
+            CacheManager.putCacheInfo(key, "token", CacheManager.TOKEN_TIME_OUT, true);
+            cache = getCache(key);
+        }else {
+            if (cacheExpired(cache)) { //调用判断是否终止方法
+                cache.setExpired(true);
+                CacheManager.putCacheInfo(key, "token", CacheManager.TOKEN_TIME_OUT, true);
+                cache = getCache(key);
+            }
         }
         return cache;
     }
 
-    //载入缓存信息
+
+    /**
+     * 载入缓存信息
+     * @param key key
+     * @param obj cache
+     * @param dt dt
+     * @param expired boolean
+     */
     public static void putCacheInfo(String key, Object obj, long dt,boolean expired) {
         Cache cache = new Cache();
         cache.setKey(key);
@@ -127,7 +220,13 @@ public class CacheManager {
         cache.setExpired(expired); //缓存默认载入时，终止状态为FALSE
         cacheMap.put(key, cache);
     }
-    //重写载入缓存信息方法
+
+    /**
+     * 重写载入缓存信息方法
+     * @param key ky
+     * @param obj cache
+     * @param dt dt
+     */
     public static void putCacheInfo(String key,Object obj,long dt){
         Cache cache = new Cache();
         cache.setKey(key);
@@ -137,7 +236,12 @@ public class CacheManager {
         cacheMap.put(key,cache);
     }
 
-    // TODO 判断缓存是否终止
+
+    /**
+     * 判断缓存是否终止
+     * @param cache cache
+     * @return boolean
+     */
     public static boolean cacheExpired(Cache cache) {
         if (null == cache) { //传入的缓存不存在
             return false;
@@ -147,17 +251,25 @@ public class CacheManager {
         if (cacheDt <= 0||cacheDt > nowDt) { //过期时间小于等于零时,或者过期时间大于当前时间时，则为FALSE
             return false;
         } else { //大于过期时间 即过期
-            log.info("缓存过期");
+            Log.i(CacheManager.class,"cacheExpired","缓存过期");
             return true;
         }
     }
 
-    //获取缓存中的大小
+    /**
+     * 获取缓存中的大小
+     * @return int
+     */
     public static int getCacheSize() {
+
         return cacheMap.size();
     }
 
-    //获取指定的类型的大小
+    /**
+     * 获取指定的类型的大小
+     * @param type type
+     * @return int
+     */
     public static int getCacheSize(String type) {
         int k = 0;
         Iterator i = cacheMap.entrySet().iterator();
@@ -176,7 +288,10 @@ public class CacheManager {
         return k;
     }
 
-    //获取缓存对象中的所有键值名称
+    /**
+     * 获取缓存对象中的所有键值名称
+     * @return ArrayList
+     */
     public static ArrayList getCacheAllkey() {
         ArrayList a = new ArrayList();
         try {
@@ -185,12 +300,18 @@ public class CacheManager {
                 java.util.Map.Entry entry = (java.util.Map.Entry) i.next();
                 a.add(entry.getKey());
             }
-        } catch (Exception ex) {} finally {
+        } catch (Exception ex) {
+
+        } finally {
             return a;
         }
     }
 
-    //获取缓存对象中指定类型 的键值名称
+    /**
+     * 获取缓存对象中指定类型的键值名称
+     * @param type type
+     * @return ArrayList
+     */
     public static ArrayList getCacheListkey(String type) {
         ArrayList a = new ArrayList();
         String key;
@@ -207,6 +328,8 @@ public class CacheManager {
             return a;
         }
     }
+
+
 
 
 }

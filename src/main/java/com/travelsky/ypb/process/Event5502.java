@@ -3,11 +3,12 @@ package com.travelsky.ypb.process;
 import com.travelsky.ypb.domain.message.Instance;
 import com.travelsky.ypb.domain.support.EventService;
 import com.travelsky.ypb.domain.support.ServiceSupport;
-import com.travelsky.ypb.domain.xml.CabinTicket;
+import com.travelsky.ypb.model.airplan.YpbFlightPlan;
 import com.travelsky.ypb.publics.CommonUtil;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -15,23 +16,23 @@ import java.util.Map;
  * <p>Description:</p>
  * @author huc
  */
-@Service()
+@Service
 public class Event5502 extends EventService<Instance> implements ServiceSupport{
     private static final Logger log = Logger.getLogger(Event5502.class);
 
     @Override
-    public void process(final Instance instance) {
+    public Instance process(final Instance instance) {
         //TODO process code ...
-        log.info(String.valueOf(instance));
         String planDate = CommonUtil.getStrOfDate(instance.getFlightDate());
-        System.out.println(planDate);
-        // TODO 查询有效飞行计划
 
+        // TODO 查询有效飞行计划
+        List<YpbFlightPlan> flightPlan = getFlightPlan(instance);
+        System.out.println(flightPlan.size());
 
 
         // TODO 查询Seamless
-        Map seamLess = getSeamLess(instance);
-        System.out.println(seamLess);
+        Map seamLess =  getSeamLess(instance);
+        instance.setCabinTicket(seamLess);
 
 
         //TODO 查询最低价
@@ -50,6 +51,7 @@ public class Event5502 extends EventService<Instance> implements ServiceSupport{
 
 
 
+        return instance;
     }
 
 

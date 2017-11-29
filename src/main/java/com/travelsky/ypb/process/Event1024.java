@@ -15,14 +15,11 @@ public class Event1024 extends EventService implements ServiceSupport{
 
 
 	@Override
-	public void process(final Instance instance) {
+	public Instance process(final Instance instance) {
 		//TODO process code...
 
 
-
-
-
-
+		return instance;
 	}
 
 

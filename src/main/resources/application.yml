@@ -11,5 +11,8 @@ spring:
     in-memory: true
     pool:
       enabled: true
+  aop:
+    auto: true
+    proxy-target-class: true
 
 activeMq: UME_YPB_QUEUE

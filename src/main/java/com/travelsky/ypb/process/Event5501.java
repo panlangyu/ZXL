@@ -20,10 +20,9 @@ public class Event5501 extends EventService implements ServiceSupport{
 	Logger log = LoggerFactory.getLogger("5501");
 
 	@Override
-	public void process(final Instance instance) {
+	public Instance process(final Instance instance) {
 		// TODO process code ...
 
-		log.info(instance.toString());
 
 
 		// TODO 查询航线飞行计划
@@ -31,8 +30,7 @@ public class Event5501 extends EventService implements ServiceSupport{
 
 
 		// TODO 查询seamless
-		CabinTicket cabinTicket = (CabinTicket)getSeamLess(instance);
-		System.out.println(cabinTicket);
+
 
 
 		// TODO 查询航线最低价
@@ -46,6 +44,7 @@ public class Event5501 extends EventService implements ServiceSupport{
 		// TODO 消息发送
 
 
+		return instance;
 	}
 
 

@@ -65,13 +65,13 @@ public class Cache {
     public static void main(String[] args) throws InterruptedException {
         CacheManager.putCacheInfo("key","token",CacheManager.TIME_OUT,true);
         Thread.sleep(100);
-        System.out.println(String.valueOf(CacheManager.getCacheInfo("key")));
-        Thread.sleep(400);
-        System.out.println(String.valueOf(CacheManager.getCacheInfo("key")));
+        System.out.println(String.valueOf(CacheManager.getCacheToken("key")));
+        Thread.sleep(500);
+        System.out.println(String.valueOf(CacheManager.getCacheToken("key")));
         Thread.sleep(486);
-        System.out.println(String.valueOf(CacheManager.getCacheInfo("key")));
-        Thread.sleep(900);
-        System.out.println(String.valueOf(CacheManager.getCacheInfo("key")));
+        System.out.println(String.valueOf(CacheManager.getCacheToken("key")));
+        Thread.sleep(1000);
+        System.out.println(String.valueOf(CacheManager.getCacheToken("key")));
 
 
 

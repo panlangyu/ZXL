@@ -22,7 +22,7 @@ public class Event5507 extends EventService implements ServiceSupport {
 
 
     @Override
-    public void process(final Instance instance) {
+    public Instance process(final Instance instance) {
         //TODO process code ...
 
 
@@ -30,8 +30,7 @@ public class Event5507 extends EventService implements ServiceSupport {
 
 
         // TODO 查询seamless
-        CabinTicket seamLess = (CabinTicket) getSeamLess(instance);
-        log.info(String.valueOf(seamLess));
+
 
 
         // TODO 查询最低价
@@ -41,5 +40,8 @@ public class Event5507 extends EventService implements ServiceSupport {
 
 
         // TODO 消息发送
+
+
+        return instance;
     }
 }

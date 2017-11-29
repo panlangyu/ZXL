@@ -9,35 +9,35 @@ import java.util.Map;
  * @author huc
  */
 public class CabinTicket {
-	private static String A;
-	private static  String B;
-	private  static String C;
-	private static  String D;
-	private static  String E;
-	private static  String F;
-	private static  String G;
-	private  static String H;
-	private static  String I;
-	private static  String J;
-	private static  String K;
-	private static  String L;
-	private static  String M;
-	private  static String N;
-	private  static String O;
-	private  static String P;
-	private static  String Q;
-	private static  String R;
-	private  static String S;
-	private  static String T;
-	private static  String U;
-	private static  String V;
-	private static  String W;
-	private  static String X;
-	private  static String Y;
-	private static  String Z;
+	private static int A;
+	private static  int B;
+	private  static int C;
+	private static  int D;
+	private static  int E;
+	private static  int F;
+	private static  int G;
+	private  static int H;
+	private static  int I;
+	private static  int J;
+	private static  int K;
+	private static  int L;
+	private static  int M;
+	private  static int N;
+	private  static int O;
+	private  static int P;
+	private static  int Q;
+	private static  int R;
+	private  static int S;
+	private  static int T;
+	private static  int U;
+	private static  int V;
+	private static  int W;
+	private  static int X;
+	private  static int Y;
+	private static  int Z;
 	
-	static String getCabin(String XCabin) {
-		Map<String, String> map = new HashMap<String, String>();
+	static int getCabin(String XCabin) {
+		Map<String, Integer> map = new HashMap<String, Integer>();
 		map.put("A", A);
 		map.put("B", B);
 		map.put("C", C);
@@ -67,160 +67,160 @@ public class CabinTicket {
 		return map.get(XCabin);
 	}
 	
-	public String getA() {
+	public int getA() {
 		return A;
 	}
-	public void setA(String a) {
+	public void setA(int a) {
 		A = a;
 	}
-	public String getB() {
+	public int getB() {
 		return B;
 	}
-	public void setB(String b) {
+	public void setB(int b) {
 		B = b;
 	}
-	public String getC() {
+	public int getC() {
 		return C;
 	}
-	public void setC(String c) {
+	public void setC(int c) {
 		C = c;
 	}
-	public String getD() {
+	public int getD() {
 		return D;
 	}
-	public void setD(String d) {
+	public void setD(int d) {
 		D = d;
 	}
-	public String getE() {
+	public int getE() {
 		return E;
 	}
-	public void setE(String e) {
+	public void setE(int e) {
 		E = e;
 	}
-	public String getF() {
+	public int getF() {
 		return F;
 	}
-	public void setF(String f) {
+	public void setF(int f) {
 		F = f;
 	}
-	public String getG() {
+	public int getG() {
 		return G;
 	}
-	public void setG(String g) {
+	public void setG(int g) {
 		G = g;
 	}
-	public String getH() {
+	public int getH() {
 		return H;
 	}
-	public void setH(String h) {
+	public void setH(int h) {
 		H = h;
 	}
-	public String getI() {
+	public int getI() {
 		return I;
 	}
-	public void setI(String i) {
+	public void setI(int i) {
 		I = i;
 	}
-	public String getJ() {
+	public int getJ() {
 		return J;
 	}
-	public void setJ(String j) {
+	public void setJ(int j) {
 		J = j;
 	}
-	public String getK() {
+	public int getK() {
 		return K;
 	}
-	public void setK(String k) {
+	public void setK(int k) {
 		K = k;
 	}
-	public String getL() {
+	public int getL() {
 		return L;
 	}
-	public void setL(String l) {
+	public void setL(int l) {
 		L = l;
 	}
-	public String getM() {
+	public int getM() {
 		return M;
 	}
-	public void setM(String m) {
+	public void setM(int m) {
 		M = m;
 	}
-	public String getN() {
+	public int getN() {
 		return N;
 	}
-	public void setN(String n) {
+	public void setN(int n) {
 		N = n;
 	}
-	public String getO() {
+	public int getO() {
 		return O;
 	}
-	public void setO(String o) {
+	public void setO(int o) {
 		O = o;
 	}
-	public String getP() {
+	public int getP() {
 		return P;
 	}
-	public void setP(String p) {
+	public void setP(int p) {
 		P = p;
 	}
-	public String getQ() {
+	public int getQ() {
 		return Q;
 	}
-	public void setQ(String q) {
+	public void setQ(int q) {
 		Q = q;
 	}
-	public String getR() {
+	public int getR() {
 		return R;
 	}
-	public void setR(String r) {
+	public void setR(int r) {
 		R = r;
 	}
-	public String getS() {
+	public int getS() {
 		return S;
 	}
-	public void setS(String s) {
+	public void setS(int s) {
 		S = s;
 	}
-	public String getT() {
+	public int getT() {
 		return T;
 	}
-	public void setT(String t) {
+	public void setT(int t) {
 		T = t;
 	}
-	public String getU() {
+	public int getU() {
 		return U;
 	}
-	public void setU(String u) {
+	public void setU(int u) {
 		U = u;
 	}
-	public String getV() {
+	public int getV() {
 		return V;
 	}
-	public void setV(String v) {
+	public void setV(int v) {
 		V = v;
 	}
-	public String getW() {
+	public int getW() {
 		return W;
 	}
-	public void setW(String w) {
+	public void setW(int w) {
 		W = w;
 	}
-	public String getX() {
+	public int getX() {
 		return X;
 	}
-	public void setX(String x) {
+	public void setX(int x) {
 		X = x;
 	}
-	public String getY() {
+	public int getY() {
 		return Y;
 	}
-	public void setY(String y) {
+	public void setY(int y) {
 		Y = y;
 	}
-	public String getZ() {
+	public int getZ() {
 		return Z;
 	}
-	public void setZ(String z) {
+	public void setZ(int z) {
 		Z = z;
 	}
 	@Override
@@ -230,8 +230,8 @@ public class CabinTicket {
 						A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R,S, T, U, V, W, X, Y, Z);
 	}
 	
-	public Map<String, String> toMap(){
-		Map<String, String> map  =  new HashMap<String, String>();
+	public Map<String, Integer> toMap(){
+		Map<String, Integer> map  =  new HashMap<String, Integer>();
 		map.put("A", A);
 		map.put("B", B);
 		map.put("C", C);
