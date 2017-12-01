@@ -2,11 +2,13 @@ package com.travelsky.ypb.configuration;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
 
 /**
  * Created by huc on 2017/11/29.
  */
 @Configuration
+@PropertySource("classpath:messages.properties")
 @ConfigurationProperties(prefix = "com.travelsky.ypb")
 public class AppConfig {
 
@@ -37,6 +39,11 @@ public class AppConfig {
     private String eventType5502;
     private String eventType5507;
     private String eventType5501;
+    private String lowestPriceUrl;
+    private String grabTicketUrl;
+    private String tokenTimeOut;
+    private String airline;
+    private String colon;
 
     public String getAppId() {
         return appId;
@@ -252,5 +259,53 @@ public class AppConfig {
 
     public void setEventType5501(String eventType5501) {
         this.eventType5501 = eventType5501;
+    }
+
+    public String getLowesPriceUrl() {
+        return lowestPriceUrl;
+    }
+
+    public void setLowesPriceUrl(String lowesPriceUrl) {
+        this.lowestPriceUrl = lowesPriceUrl;
+    }
+
+    public String getGrabTicketUrl() {
+        return grabTicketUrl;
+    }
+
+    public void setGrabTicketUrl(String grabTicketUrl) {
+        this.grabTicketUrl = grabTicketUrl;
+    }
+
+    public String getLowestPriceUrl() {
+        return lowestPriceUrl;
+    }
+
+    public void setLowestPriceUrl(String lowestPriceUrl) {
+        this.lowestPriceUrl = lowestPriceUrl;
+    }
+
+    public String getTokenTimeOut() {
+        return tokenTimeOut;
+    }
+
+    public void setTokenTimeOut(String tokenTimeOut) {
+        this.tokenTimeOut = tokenTimeOut;
+    }
+
+    public String getAirline() {
+        return airline;
+    }
+
+    public void setAirline(String airline) {
+        this.airline = airline;
+    }
+
+    public String getColon() {
+        return colon;
+    }
+
+    public void setColon(String colon) {
+        this.colon = colon;
     }
 }

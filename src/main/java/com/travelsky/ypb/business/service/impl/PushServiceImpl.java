@@ -2,11 +2,15 @@ package com.travelsky.ypb.business.service.impl;
 
 import com.travelsky.ypb.business.service.iface.IPushServer;
 import com.travelsky.ypb.business.task.CacheManager;
+import com.travelsky.ypb.configuration.AppConfig;
 import com.travelsky.ypb.domain.log.Log;
 import com.travelsky.ypb.domain.message.Instance;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.travelsky.ypb.publics.HttpClient;
+import org.apache.commons.httpclient.HttpMethod;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.io.IOException;
 
 /**
  * Created by huc on 2017/11/26.
@@ -15,33 +19,40 @@ import org.springframework.stereotype.Service;
 @Service
 public  class PushServiceImpl implements IPushServer {
 
-    private static final Logger log = LoggerFactory.getLogger("PushServer");
+    @Autowired
+    private CacheManager cacheManager;
+
+    @Autowired
+    private HttpClient http;
+
+    @Autowired
+    private AppConfig appConfig;
 
     @Override
     public String push(Instance instance) {
         //TODO 获取token
-        instance.setToken(newToken(instance.getAppid()));
-        Log.i(this.getClass(),"push",instance.getToken());
+        instance.setToken(newToken(instance.getAppid()[0]));
+        Log.i(this.getClass(),"pushing",instance.getToken());
         //TODO 发送消息
+        org.apache.commons.httpclient.HttpClient client = http.getHttpClient();
+        HttpMethod httpPost;
+        String result = "";
+        try {
+            httpPost = http.postMethod(appConfig.getPushUrl(), instance.getValue());
+            client.executeMethod(httpPost);
+            result = httpPost.getResponseBodyAsString();
+        } catch (IOException e) {
 
-
-        return null;
+        }
+        Log.i(this.getClass(),"publish",result);
+        return result;
     }
+
 
     @Override
     public String newToken(String appId) {
-        return (String) CacheManager.getCacheToken(appId).getValue();
-    }
 
-
-    public static void main(String[] args) throws InterruptedException {
-
-        System.out.println(CacheManager.getCacheInfo("hello"));
-        CacheManager.putCacheInfo("hello","World",CacheManager.TOKEN_TIME_OUT);
-        System.out.println(CacheManager.getCacheInfo("hello"));
-
-        Thread.sleep(2000);
-        System.out.println(CacheManager.getCacheInfo("hello"));
+        return (String) cacheManager.getCacheToken(appId).getValue();
     }
 
 

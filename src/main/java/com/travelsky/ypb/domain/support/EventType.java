@@ -6,21 +6,18 @@ package com.travelsky.ypb.domain.support;
  * @author huc
  */
 public enum EventType {
-	UNDEFINED("0000","com.travelsky.domain.ypb.EventBody","process"),
-    EVENT_TYPE_5501("5501","com.travelsky.ypb.process.Event5501","process"),
-    EVENT_TYPE_5502("5502","com.travelsky.ypb.process.Event5502","process"),
-    EVENT_TYPE_5507("5507","com.travelsky.ypb.process.Event5507","process"),
-    EVENT_TYPE_1024("1024","com.travelsky.ypb.process.Event1024","process"),//抢票事件
-    EVENT_TYPE_5508("5508","com.travelsky.ypb.process.Event5508","process");
+    EVENT_TYPE_5501("5501","com.travelsky.ypb.process.Event5501"),
+    EVENT_TYPE_5502("5502","com.travelsky.ypb.process.Event5502"),
+    EVENT_TYPE_5507("5507","com.travelsky.ypb.process.Event5507"),
+    EVENT_TYPE_5508("5508","com.travelsky.ypb.process.Event5508"),
+    EVENT_TYPE_1024("1024","com.travelsky.ypb.process.Event1024");//抢票事件
 
-    private String typeCode;//5501, 5502
-    private String typeClazz;//类
-    private String initMethod;
+    private String typeCode;//
+    private String typeClazz;//
 
-    private EventType(String typeCode,String typeClazz,String initMethod){
+    private EventType(String typeCode,String typeClazz){
         this.typeCode = typeCode;
         this.typeClazz = typeClazz;
-        this.initMethod = initMethod;
     }
 
     private EventType(String typeCode){
@@ -43,13 +40,6 @@ public enum EventType {
         this.typeClazz = typeClazz;
     }
 
-    public String getInitMethod() {
-        return initMethod;
-    }
-
-    public void setInitMethod(String initMethod) {
-        this.initMethod = initMethod;
-    }
 
     /**
      * @param typeCode
@@ -62,7 +52,7 @@ public enum EventType {
                 }
             }
         }
-        return EventType.UNDEFINED;
+        return null;
     }
     
 }

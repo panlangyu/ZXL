@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="test">
+
+	<resultMap id="bAppMachineLogMap" type="com.travelsky.ypb.model.BAppMachineLog" >
+		<id column="LOGID" property="logId" />
+		<result column="VESIONNO" property="vesionNo" />
+		<result column="VESIONNAME" property="vesionName" />
+		<result column="PACKAGENAME" property="packageName" />
+		<result column="TERMINAL" property="terminal" />
+		<result column="MACHINEID" property="machineId" />
+		<result column="MACHINEBRAND" property="machineBrand" />
+		<result column="MACHINEREGION" property="machineRegion" />
+		<result column="MACHINEIP" property="machineIp" />
+		<result column="CREATEDBY" property="createdBy" />
+		<result column="CREATEDDATE" property="createdDate" />
+		<result column="MOBILENO" property="mobileNo" />
+	</resultMap>
+
+	<!--表名 -->
+	<sql id="tableName">
+		"B_APP_MACHINE_LOG"
+	</sql>
+
+	<!-- 字段 -->
+	<sql id="Field">
+		"LOGID",
+		"VESIONNO",
+		"VESIONNAME",
+		"PACKAGENAME",
+		"TERMINAL",
+		"MACHINEID",
+		"MACHINEBRAND",
+		"MACHINEREGION",
+		"MACHINEIP",
+		"CREATEDBY",
+		"CREATEDDATE",
+		"MOBILENO"
+	</sql>
+	
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		#{logId},
+		#{vesionNo},
+		#{vesionName},
+		#{packageName},
+		#{terminal},
+		#{machineId},
+		#{machineBrand},
+		#{machineRegion},
+		#{machineIp},
+		#{createdBy},
+		#{createdDate},
+		#{mobileNo}
+	</sql>
+
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="Object" resultMap="bAppMachineLogMap" >
+		select
+		<include refid="Field"></include>
+		from
+		<include refid="tableName"></include>
+		where 1=1
+	</select>
+	
+	<!-- 条件列表 -->
+	<select id="listOne" parameterType="String" resultMap="bAppMachineLogMap">
+		select
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include>
+		where 
+		   "LOGID" = #{logId}
+	</select>
+	
+	<!-- 插入数据 -->
+	<insert id="insertOne" parameterType="com.travelsky.ypb.model.BAppMachineLog"  useGeneratedKeys="false">
+		insert into
+		<include refid="tableName"></include>
+		(
+		<include refid="Field"></include>
+		) values (
+		<include refid="FieldValue"></include>
+		)
+	</insert>
+	
+    <!-- 删除-->
+	<delete id="delete" parameterType="String">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			"LOGID" = #{logId}
+	</delete>
+
+    <!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			"LOGID" in
+		<foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+	
+	<!-- 修改 -->
+	<update id="updateOne" parameterType="com.travelsky.ypb.model.BAppMachineLog">
+		update
+		<include refid="tableName"></include>
+			set 
+				<!-- <if test="logId != null" >	
+				"LOGID" = #{logId,jdbcType=VARCHAR},	
+				</if> -->
+				<if test="vesionNo != null" >
+				"VESIONNO" = #{vesionNo,jdbcType=VARCHAR},	
+				</if>
+				<if test="vesionName != null" >
+				"VESIONNAME" = #{vesionName,jdbcType=VARCHAR},	
+				</if>
+				<if test="packageName != null" >
+				"PACKAGENAME" = #{packageName,jdbcType=VARCHAR},	
+				</if>
+				<if test="terminal != null" >
+				"TERMINAL" = #{terminal,jdbcType=VARCHAR},	
+				</if>
+				<if test="machineId != null" >
+				"MACHINEID" = #{machineId,jdbcType=VARCHAR},
+				</if>
+				<if test="machineBrand != null" >	
+				"MACHINEBRAND" = #{machineBrand,jdbcType=VARCHAR},	
+				</if>
+				<if test="machineRegion != null" >
+				"MACHINEREGION" = #{machineRegion,jdbcType=VARCHAR},	
+				</if>
+				<if test="machineIp != null" >
+				"MACHINEIP" = #{machineIp,jdbcType=VARCHAR},	
+				</if>
+				<if test="createdBy != null" >
+				"CREATEDBY" = #{createdBy,jdbcType=VARCHAR},	
+				</if>
+				<if test="createdDate != null" >
+				"CREATEDDATE" = #{createdDate,jdbcType=VARCHAR},	
+				</if>
+				<if test="mobileNo != null" >
+				"MOBILENO" = #{mobileNo,jdbcType=VARCHAR}	
+				</if>
+			where 
+				"LOGID" = #{logId}
+	</update>
+	
+</mapper>

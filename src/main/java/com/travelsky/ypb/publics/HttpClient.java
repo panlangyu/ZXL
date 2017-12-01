@@ -1,9 +1,15 @@
 package com.travelsky.ypb.publics;
 
 import com.alibaba.fastjson.JSONObject;
-import com.travelsky.ypb.domain.log.Log;
+import com.travelsky.ypb.configuration.AppConfig;
 import com.travelsky.ypb.domain.xml.FareInterface;
-import org.apache.log4j.Logger;
+import com.travelsky.ypb.umeticket.http.HttpClientManager;
+import com.travelsky.ypb.umeticket.http.HttpClientManagerImp;
+import org.apache.commons.httpclient.HttpMethod;
+import org.apache.commons.httpclient.NameValuePair;
+import org.apache.commons.httpclient.methods.PostMethod;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Unmarshaller;
@@ -16,14 +22,14 @@ import java.net.URLConnection;
  * <p>Description:用于访问http接口</p>
  * @author huc
  */
-public final class HttpUtils {
+@Component
+public final class HttpClient {
 
-    private static final Logger LOGGER = Logger.getLogger(HttpUtils.class);
-    // 218.17.237.47:7080 获取最低票价URL
-    private static final String LOWES_PRICE_URL = "http://218.17.237.47:7080/YPBShopping/xml/getLowestPriceOfPlan";
-    private static final String GRAB_TICKET_URL = "http://10.128.150:7080/ycbback/gradTicket/noticeBuyTicket.do?";
-    //内网
-    //private static final String LOWES_PRICE_URL = "http://10.128.150.122:7080/YPBShopping/xml/getLowestPriceReal";
+    @Autowired
+    protected AppConfig appConfig;
+
+
+    private static HttpClientManager http = HttpClientManagerImp.getInstance();
 
     /**
      * 查询最低票价
@@ -31,11 +37,11 @@ public final class HttpUtils {
      * @param
      * @return FareInterface
      */
-    public static FareInterface httpLowestPrice(JSONObject object) {
+    public FareInterface httpLowestPrice(JSONObject object) {
         FareInterface fareInterface = null;
         String params = "key=" + object.toJSONString();
         try {
-            String lowestStr = httpPost(LOWES_PRICE_URL, params);
+            String lowestStr = httpPost(appConfig.getLowesPriceUrl(), params);
             if (lowestStr.contains("100102")) {
                 return fareInterface;
             } else {
@@ -52,6 +58,10 @@ public final class HttpUtils {
         return fareInterface;
     }
 
+    public String getToken(String agrs){
+        JSONObject json = new JSONObject();
+        return http.httpGetRequest(appConfig.getGetTokenUrl()+agrs);
+    }
 
     /**
      * 向指定 URL 发送POST方法的请求
@@ -59,7 +69,7 @@ public final class HttpUtils {
      * @param param 请求参数，请求参数应该是 name1=value1&name2=value2 的形式。
      * @return 所代表远程资源的响应结果
      */
-    public static String httpPost(String url, String param) {
+    public String httpPost(String url, String param) {
         PrintWriter out = null;
         BufferedReader in = null;
         String result = "";
@@ -98,6 +108,21 @@ public final class HttpUtils {
         return result;
     }
 
+    public org.apache.commons.httpclient.HttpClient getHttpClient(){
+        org.apache.commons.httpclient.HttpClient httpClient = new org.apache.commons.httpclient.HttpClient();
+        httpClient.getHttpConnectionManager().getParams().setConnectionTimeout(5000);
+        httpClient.getHttpConnectionManager().getParams().setSoTimeout(5000);
+        return httpClient;
+    }
+
+    public HttpMethod postMethod(String url, NameValuePair[] param) throws IOException{
+        PostMethod post = new PostMethod(url);
+        post.setRequestHeader("Content-Type","application/x-www-form-urlencoded;charset=utf-8");
+        post.setRequestBody(param);
+        post.releaseConnection();
+        return post;
+    }
+
 
     /**
      * 通知抢票计划
@@ -105,9 +130,9 @@ public final class HttpUtils {
      * @param
      * @return
      */
-    public static String gradTicket(String departureAirport, String arrivalAirport, String flightDate, String flightNo, String BClass) {
+    public String gradTicket(String departureAirport, String arrivalAirport, String flightDate, String flightNo, String BClass) {
         String param = "departureAirport=" + departureAirport + "&arrivalAirport=" + arrivalAirport + "&flightDate=" + flightDate + "&clazz=" + BClass + "&flightNo=" + flightNo;
-        String httpPost = httpPost(GRAB_TICKET_URL, param);
+        String httpPost = httpPost(appConfig.getGrabTicketUrl(), param);
         return httpPost;
     }
 

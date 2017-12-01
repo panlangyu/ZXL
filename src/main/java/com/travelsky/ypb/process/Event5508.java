@@ -12,7 +12,6 @@ import com.travelsky.ypb.model.airplan.YpbFlightPlan;
 import com.travelsky.ypb.publics.CommonUtil;
 import org.springframework.stereotype.Service;
 
-import javax.lang.model.element.NestingKind;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,7 +19,6 @@ import java.util.Map;
 /**
  * <p>Tilte:计划订阅通知 (按航班)</p>
  * <p>Description:</p>
- *
  * @author huc
  */
 @Service
@@ -40,48 +38,50 @@ public class Event5508 extends EventService implements ServiceSupport {
         instance.setArrivalAirport(flightPlan.getDestcity());
         instance.setFlightNo(flightPlan.getFlightno());
         instance.setAirlineName(flightPlan.getAirlinecodes());
-        instance.setAppid(flightPlan.getAppid());
-        instance.setUserId(flightPlan.getUserid());
+        instance.setAppid(new String[]{flightPlan.getAppid()});
+        instance.setUserId(new String[]{flightPlan.getUserid()});
         instance.setTakeoffBegin(flightPlan.getTakeoffbegin());
         instance.setTakeoffEnd(flightPlan.getTakeoffend());
         instance.setFlightPlan(flightPlan);
+        instance.setpType(flightPlan.getPtype());
 
         // TODO 查询seamless
         Map<String,String> seamLess = getSeamLess(instance);
         CabinTicket cabin = CommonUtil.mapToObject(seamLess,CabinTicket.class);
         String ticketCount = String.valueOf(ticketSum(cabin));
         instance.setCabinTicket(seamLess);
+        instance.setSeamLess(seamLess);
         Log.i(this.getClass(),"seamLess",seamLess);
         instance.setTicketCount(ticketCount);
 
         // TODO 查询最低价
         List<LowestPrice> lowestList = getLowestPrice(instance);
         instance.setLowestPrice(lowestList);
+        LowestPrice lowestPrice = getLowestPrice(lowestList);
 
         // TODO 拼装消息
         String airlineInfo = fmt(InitAirport.aou.get(instance.getAirlineName()),instance.getFlightNo());
         StringBuilder cabinInfo = new StringBuilder();
         StringBuilder endInfo = new StringBuilder();
-        cabinInfo.append(getCabinInfo(instance));
-        LowestPrice lowestPrice = getLowestPrice(lowestList);
+        cabinInfo.append(getCabinInfo(instance,lowestPrice,5508));
+
         endInfo.append(getEndInfo(instance,lowestPrice));
-        Log.i(this.getClass(),"",messageFormat(String.valueOf(airlineInfo),
+        Log.i(this.getClass(),"messageFormat",messageFormat(String.valueOf(airlineInfo),
                 String.valueOf(cabinInfo),String.valueOf(endInfo),ticketCount,5508));
-        Map<String,String> params = new HashMap<String,String>();
+        Map<String,String> params = new HashMap<>();
         params.put("ticketCount", ticketCount);
         params.put("endInfo", String.valueOf(endInfo));
         params.put("cabinInfo", String.valueOf(cabinInfo));
         params.put("airlineInfo", airlineInfo);
         instance.setParams(params);
-
-        Map<String, String> jumpParams = new HashMap<String, String>();
+        Map<String, String> jumpParams = new HashMap<>();
         jumpParams.put("key", appConfig.getKey());
         instance.setJumpParams(jumpParams);
 
         // TODO 消息发送
+        instance.setMsgTempleId(Long.valueOf(appConfig.getEventType5508()));
+        instance.setValue(setValue(instance));
         pushServer.push(instance);
-
-
 
         return instance;
     }

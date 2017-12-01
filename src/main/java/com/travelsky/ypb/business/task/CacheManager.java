@@ -1,8 +1,9 @@
 package com.travelsky.ypb.business.task;
 
+import com.travelsky.ypb.configuration.AppConfig;
 import com.travelsky.ypb.domain.log.Log;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.travelsky.ypb.publics.HttpClient;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -13,10 +14,17 @@ import java.util.Iterator;
  * Created by huc on 2017/11/27.
  * [一级]缓存管理
  */
+@Component
 public class CacheManager{
 
+    @Autowired
+    protected AppConfig appConfig;
+
+    @Autowired
+    protected HttpClient httpClient;
+
     private static HashMap cacheMap = new HashMap();
-    public  static long TOKEN_TIME_OUT = 1000; //TODO 缓存过期时间
+    public  static long TOKEN_TIME_OUT = 900000; //TODO 缓存过期时间
     //单实例构造方法
     private CacheManager() {
         super();
@@ -27,7 +35,7 @@ public class CacheManager{
      * @param key key
      * @return boolean
      */
-    public static boolean getSimpleFlag(String key){
+    public boolean getSimpleFlag(String key){
         try{
             return (Boolean) cacheMap.get(key);
         }catch(NullPointerException e){
@@ -40,7 +48,7 @@ public class CacheManager{
      * @param key key
      * @return long
      */
-    public static long getServerStartdt(String key){
+    public long getServerStartdt(String key){
         try {
             return (Long)cacheMap.get(key);
         } catch (Exception ex) {
@@ -54,7 +62,7 @@ public class CacheManager{
      * @param flag boolean
      * @return boolean
      */
-    public synchronized static boolean setSimpleFlag(String key,boolean flag){
+    public synchronized boolean setSimpleFlag(String key,boolean flag){
         if (flag && getSimpleFlag(key)) {//假如为真不允许被覆盖
             return false;
         }else{
@@ -69,7 +77,7 @@ public class CacheManager{
      * @param serverbegrundt long
      * @return boolean
      */
-    public synchronized static boolean setSimpleFlag(String key,long serverbegrundt){
+    public synchronized boolean setSimpleFlag(String key,long serverbegrundt){
         if (cacheMap.get(key) == null) {
             cacheMap.put(key,serverbegrundt);
             return true;
@@ -83,7 +91,7 @@ public class CacheManager{
      * @param key key
      * @return cache
      */
-    private synchronized static Cache getCache(String key) {
+    private synchronized Cache getCache(String key) {
 
         return (Cache) cacheMap.get(key);
     }
@@ -93,7 +101,7 @@ public class CacheManager{
      * @param key key
      * @return boolean
      */
-    private synchronized static boolean hasCache(String key) {
+    private synchronized boolean hasCache(String key) {
 
         return cacheMap.containsKey(key);
     }
@@ -101,7 +109,7 @@ public class CacheManager{
     /**
      * 清除所有缓存
      */
-    public synchronized static void clearAll() {
+    public synchronized void clearAll() {
         cacheMap.clear();
     }
 
@@ -109,7 +117,7 @@ public class CacheManager{
      * 清除某一类特定缓存,通过遍历HASHMAP下的所有对象，来判断它的KEY与传入的TYPE是否匹配
      * @param type key的前缀
      */
-    public synchronized static void clearAll(String type) {
+    public synchronized void clearAll(String type) {
         Iterator i = cacheMap.entrySet().iterator();
         String key;
         try {
@@ -129,7 +137,7 @@ public class CacheManager{
      * 清除指定的缓存
      * @param key key
      */
-    public synchronized static void clearOnly(String key) {
+    public synchronized void clearOnly(String key) {
 
         cacheMap.remove(key);
     }
@@ -139,18 +147,17 @@ public class CacheManager{
      * @param key key
      * @param obj cache
      */
-    public synchronized static void putCache(String key, Cache obj) {
+    public synchronized void putCache(String key, Cache obj) {
 
         cacheMap.put(key, obj);
     }
-
 
     /**
      * 获取token缓存信息
      * @param key key
      * @return cache
      */
-    public static Cache getCacheToken(String key) {
+    public Cache getCacheToken(String key) {
         Cache cache = null;
         if (hasCache(key)){
             cache = tokenCache(key);
@@ -166,7 +173,7 @@ public class CacheManager{
      * @param key
      * @return cache
      */
-    public static Cache getCacheInfo(String key) {
+    public Cache getCacheInfo(String key) {
         Cache cache = null;
         if (hasCache(key)){
             cache = getCache(key);
@@ -189,15 +196,18 @@ public class CacheManager{
      * @param key key
      * @return cache
      */
-    public static Cache tokenCache(String key){
+    public Cache tokenCache(String key){
         Cache cache = getCache(key);
         if (cache == null) {
-            CacheManager.putCacheInfo(key, "token", CacheManager.TOKEN_TIME_OUT, true);
+            String token = httpClient.getToken(key);
+            this.putCacheInfo(key, token, CacheManager.TOKEN_TIME_OUT, true);
             cache = getCache(key);
         }else {
-            if (cacheExpired(cache)) { //调用判断是否终止方法
+            if (cacheExpired(cache)) {
+                //调用判断是否终止方法
+                String token = httpClient.getToken(key);
                 cache.setExpired(true);
-                CacheManager.putCacheInfo(key, "token", CacheManager.TOKEN_TIME_OUT, true);
+                this.putCacheInfo(key, token, CacheManager.TOKEN_TIME_OUT, true);
                 cache = getCache(key);
             }
         }
@@ -212,7 +222,7 @@ public class CacheManager{
      * @param dt dt
      * @param expired boolean
      */
-    public static void putCacheInfo(String key, Object obj, long dt,boolean expired) {
+    public void putCacheInfo(String key, Object obj, long dt,boolean expired) {
         Cache cache = new Cache();
         cache.setKey(key);
         cache.setTimeOut(dt + System.currentTimeMillis()); //设置多久后更新缓存
@@ -227,7 +237,7 @@ public class CacheManager{
      * @param obj cache
      * @param dt dt
      */
-    public static void putCacheInfo(String key,Object obj,long dt){
+    public void putCacheInfo(String key,Object obj,long dt){
         Cache cache = new Cache();
         cache.setKey(key);
         cache.setTimeOut(dt+System.currentTimeMillis());
@@ -242,7 +252,7 @@ public class CacheManager{
      * @param cache cache
      * @return boolean
      */
-    public static boolean cacheExpired(Cache cache) {
+    public boolean cacheExpired(Cache cache) {
         if (null == cache) { //传入的缓存不存在
             return false;
         }
@@ -260,7 +270,7 @@ public class CacheManager{
      * 获取缓存中的大小
      * @return int
      */
-    public static int getCacheSize() {
+    public int getCacheSize() {
 
         return cacheMap.size();
     }
@@ -270,7 +280,7 @@ public class CacheManager{
      * @param type type
      * @return int
      */
-    public static int getCacheSize(String type) {
+    public int getCacheSize(String type) {
         int k = 0;
         Iterator i = cacheMap.entrySet().iterator();
         String key;
@@ -292,7 +302,7 @@ public class CacheManager{
      * 获取缓存对象中的所有键值名称
      * @return ArrayList
      */
-    public static ArrayList getCacheAllkey() {
+    public ArrayList getCacheAllkey() {
         ArrayList a = new ArrayList();
         try {
             Iterator i = cacheMap.entrySet().iterator();
@@ -312,7 +322,7 @@ public class CacheManager{
      * @param type type
      * @return ArrayList
      */
-    public static ArrayList getCacheListkey(String type) {
+    public ArrayList getCacheListkey(String type) {
         ArrayList a = new ArrayList();
         String key;
         try {

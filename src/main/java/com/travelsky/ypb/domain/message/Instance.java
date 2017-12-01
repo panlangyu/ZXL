@@ -2,7 +2,9 @@ package com.travelsky.ypb.domain.message;
 
 import com.travelsky.ypb.domain.xml.LowestPrice;
 import com.travelsky.ypb.model.airplan.YpbFlightPlan;
+import org.apache.commons.httpclient.NameValuePair;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -28,9 +30,12 @@ public class Instance {
     private String weekday;
     private YpbFlightPlan flightPlan;
     private List<LowestPrice> lowestPrice;
-    private Map<String,String> seamLess;
+    private Map seamLess;
+    private NameValuePair[] value;
+    private Map planMap;
+    private String pType;
 
-    private String appid;
+    private String[] appid;
     private String token;
     //消息模板ID
     private long msgTempleId;
@@ -39,7 +44,7 @@ public class Instance {
     //跳转参数 可附带到手机端
     private Map<String, String> jumpParams;
     //推送的用户ID
-    private String userId;
+    private String[]  userId;
     private double returnPoint;
     private double returnPrice;
 
@@ -172,11 +177,11 @@ public class Instance {
         this.lowestPrice = lowestPrice;
     }
 
-    public String getAppid() {
+    public String[] getAppid() {
         return appid;
     }
 
-    public void setAppid(String appid) {
+    public void setAppid(String[] appid) {
         this.appid = appid;
     }
 
@@ -212,11 +217,11 @@ public class Instance {
         this.jumpParams = jumpParams;
     }
 
-    public String getUserId() {
+    public String[] getUserId() {
         return userId;
     }
 
-    public void setUserId(String userId) {
+    public void setUserId(String[] userId) {
         this.userId = userId;
     }
 
@@ -236,12 +241,36 @@ public class Instance {
         this.returnPrice = returnPrice;
     }
 
-    public Map<String, String> getSeamLess() {
+    public Map getSeamLess() {
         return seamLess;
     }
 
-    public void setSeamLess(Map<String, String> seamLess) {
+    public void setSeamLess(Map seamLess) {
         this.seamLess = seamLess;
+    }
+
+    public NameValuePair[] getValue() {
+        return value;
+    }
+
+    public void setValue(NameValuePair[] value) {
+        this.value = value;
+    }
+
+    public Map getPlanMap() {
+        return planMap;
+    }
+
+    public void setPlanMap(Map planMap) {
+        this.planMap = planMap;
+    }
+
+    public String getpType() {
+        return pType;
+    }
+
+    public void setpType(String pType) {
+        this.pType = pType;
     }
 
     @Override
@@ -264,12 +293,15 @@ public class Instance {
                 ", flightPlan=" + flightPlan +
                 ", lowestPrice=" + lowestPrice +
                 ", seamLess=" + seamLess +
-                ", appid='" + appid + '\'' +
+                ", value=" + Arrays.toString(value) +
+                ", planMap=" + planMap +
+                ", pType='" + pType + '\'' +
+                ", appid=" + Arrays.toString(appid) +
                 ", token='" + token + '\'' +
                 ", msgTempleId=" + msgTempleId +
                 ", params=" + params +
                 ", jumpParams=" + jumpParams +
-                ", userId='" + userId + '\'' +
+                ", userId=" + Arrays.toString(userId) +
                 ", returnPoint=" + returnPoint +
                 ", returnPrice=" + returnPrice +
                 '}';

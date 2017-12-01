@@ -4,7 +4,7 @@ import com.travelsky.ypb.process.Event5501;
 
 /**
  * Created by huc on 2017/11/27.
- * 单列工厂
+ * 单列工厂[懒]
  */
 public class SingletoFactory {
 
