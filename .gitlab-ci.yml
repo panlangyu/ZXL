@@ -1,10 +1,8 @@
-stages:
-- deploy
-deploy:
-  stage: deploy
-  script:
-    - deploy Messages
-  only:
-    - devlop
+image: maven:3-jdk-8
+
+test:
+  stage: test
+  script: 
+    - mvn test
   tags:
-    - shell
+    - hwy
