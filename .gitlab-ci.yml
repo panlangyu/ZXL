@@ -1,5 +1,5 @@
 stages:
-  - deploy
+- deploy
 cache:
   key: ${CI_BUILD_REF_NAME}
   paths:
