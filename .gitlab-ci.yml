@@ -2,13 +2,9 @@
 stages:
   - build
   - test
-  only:
-    - develop
 # 定义 job
 job1:
   stage: test
-  only:
-    - develop
   script:
     - echo "I am job1"
     - echo "I am in test stage"
