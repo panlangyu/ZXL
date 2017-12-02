@@ -22,7 +22,6 @@ lint:
   stage: lint
   only:
     - develop
-    - master
   script:
     - gulp jshint
 # 运行测试用例
@@ -30,7 +29,6 @@ test:
   stage: test
   only:
     - develop
-    - master
   script:
     - npm run unit-test
 # 编译
@@ -38,9 +36,7 @@ build:
   stage: build
   only:
     - develop
-    - master
   script:
     - gulp build
 
 
-    
