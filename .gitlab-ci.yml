@@ -1,10 +1,29 @@
-# 定义 stages
+image: maven:3-jdk-8
+
 stages:
   - build
   - test
-# 定义 job
-job1:
+  - deploy
+
+job_build:
+  stage: build
+  script:
+    - mvn clean install
+  only:
+    - develop
+  tags:
+    - dev
+
+job_test:
   stage: test
   script:
-    - echo "I am job1"
-    - echo "I am in test stage"
+    - mvn test
+  tags:
+    - dev
+
+job_deploy:
+  stage: deploy
+  script:
+    - echo "deploy over..."
+  tags:
+    - dev
