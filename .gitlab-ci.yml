@@ -1,8 +1,43 @@
-image: maven:3-jdk-8
-
+stages:
+  - install_deps
+  - lint
+  - test
+  - build
+cache:
+  key: ${CI_BUILD_REF_NAME}
+  paths:
+    - node_modules/
+    - bower_components/
+# 安装依赖
+install_deps:
+  stage: install_deps
+  only:
+    - develop
+    - master
+  script:
+    - cnpm install
+    - bower install --allow-root
+# 运行代码检测
+lint:
+  stage: lint
+  only:
+    - develop
+    - master
+  script:
+    - gulp jshint
+# 运行测试用例
 test:
   stage: test
-  script: 
-    - mvn test
-  tags:
-    - hwy
+  only:
+    - develop
+    - master
+  script:
+    - npm run unit-test
+# 编译
+build:
+  stage: build
+  only:
+    - develop
+    - master
+  script:
+    - gulp build
