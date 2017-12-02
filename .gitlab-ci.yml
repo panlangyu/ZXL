@@ -1,8 +1,7 @@
 stages:
-  - install_deps
-  - lint
   - test
   - build
+  - deploy
 cache:
   key: ${CI_BUILD_REF_NAME}
   paths:
