@@ -8,7 +8,8 @@ stages:
 job_build:
   stage: build
   script:
-    - mvn clean install
+    - mvn clean
+    - echo "hello world"
   only:
     - develop
   tags:
@@ -20,6 +21,7 @@ job_test:
     - mvn test
   tags:
     - dev
+
 
 job_deploy:
   stage: deploy
