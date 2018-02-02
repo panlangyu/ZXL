@@ -1,18 +1,20 @@
 package com.travelsky.ypb.domain.log;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
+import com.travelsky.ypb.listener.Listener;
+import org.apache.logging.log4j.LogManager;
 
 /**
  * Log 日志输出
  */
+@SuppressWarnings("ALL")
 public class Log {
 
-    private static final Logger Logger = LoggerFactory.getLogger("LogProxy");
+    private static org.apache.logging.log4j.Logger logger = LogManager.getLogger(Listener.class.getName());;
 
-    public static final ThreadLocal<StringBuilder> threadLocals = new ThreadLocal<StringBuilder>();
+    private static final ThreadLocal<StringBuilder> threadLocals = new ThreadLocal<>();
 
-    public static final ThreadLocal<Long> threadTimeLocals = new ThreadLocal<Long>();
+    private static final ThreadLocal<Long> threadTimeLocals = new ThreadLocal<>();
 
     public static void beforeInvoke(Class targetClass, String method, Object[] args) {
         long startTime = System.currentTimeMillis();
@@ -42,7 +44,7 @@ public class Log {
         if (sb != null) {
             noticeLog("\t[consuming time cast[%s] return[%s].... ]", (endTime - startTime),
                     null != result ? result.toString() : "null");
-            Logger.info(sb.toString());
+            logger.info(String.valueOf(sb));
         }
     }
 
@@ -50,7 +52,7 @@ public class Log {
         StringBuilder sb = threadLocals.get();
         if (sb != null) {
             noticeLog("\t[exception [%s] invoke method[%s]  message[%s]  information[%s]]....",args);
-            Logger.info(String.valueOf(sb));
+            logger.info(String.valueOf(sb));
         }
     }
 
@@ -86,4 +88,6 @@ public class Log {
     }
 
 
+    private Log() {
+    }
 }

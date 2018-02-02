@@ -6,9 +6,9 @@ import com.travelsky.ypb.domain.message.Instance;
  * Created by huc on 2017/11/26.
  * 消息推送接口
  */
-public interface IPushServer {
+public interface IPushServer<T extends Instance> {
 
-    String push(Instance instance);
+    String push(T t);
 
     String newToken(String appId);
 }

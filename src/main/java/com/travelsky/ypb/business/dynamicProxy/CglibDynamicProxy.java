@@ -7,6 +7,7 @@ import org.springframework.cglib.proxy.Enhancer;
 import org.springframework.cglib.proxy.MethodInterceptor;
 import org.springframework.cglib.proxy.MethodProxy;
 
+import javax.xml.bind.JAXBException;
 import java.lang.reflect.Method;
 
 /**
@@ -14,7 +15,9 @@ import java.lang.reflect.Method;
  * 对继承的类进行代理，用final修饰的类除外，被final修饰不能被继承
  */
 public class CglibDynamicProxy implements MethodInterceptor{
+
     private Enhancer enhancer = new Enhancer();
+
     public Object newProxyInstance(Class clazz){
         //设置需要创建子类的类
         enhancer.setSuperclass(clazz);
@@ -28,10 +31,9 @@ public class CglibDynamicProxy implements MethodInterceptor{
         return proxy.invokeSuper(obj, args);
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws JAXBException {
         ServiceSupport proxy = (ServiceSupport)new CglibDynamicProxy().newProxyInstance(Event5501.class);
         proxy.process(new Instance());
-        System.out.println(proxy);
     }
 
 

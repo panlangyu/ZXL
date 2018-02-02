@@ -5,17 +5,24 @@ import com.alibaba.fastjson.JSONObject;
 import com.travelsky.ypb.domain.support.EventResponse;
 import com.travelsky.ypb.domain.support.EventType;
 
+
 /**
  * Created by huc on 2017/11/22.
+ *
  */
 public class InitMessageBody {
+
+    static org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(InitMessageBody.class);
+
+    private InitMessageBody() {
+    }
 
     public static final String suffix = "##";
 
     public static EventResponse init(final String msg){
+        logger.info(msg);
         return proces(msg);
     }
-
 
     public static EventResponse proces(final String msg){
         EventResponse response = new EventResponse();
@@ -32,8 +39,13 @@ public class InitMessageBody {
         response.setEventTitle(eventTitle);
         response.setEventTimeStamp(eventTimeStamp);
         response.setEventId(eventId);
+        instance.setEventType(eventType);
+        instance.setTitle(eventTitle);
+        instance.setOriginalMessage(msg);
         response.setEventBody(instance);
+
         response.setClazz(EventType.fromTypeCode(eventType).getTypeClazz());
         return response;
     }
+
 }

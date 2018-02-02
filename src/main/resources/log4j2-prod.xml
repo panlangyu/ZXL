@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="info">
+	<Appenders>
+		<Console
+			name="Console"
+			target="SYSTEM_OUT"
+			follow="true">
+			<ThresholdFilter
+				level="INFO"
+				onMatch="ACCEPT"
+				onMismatch="DENY" />
+			<PatternLayout charset="utf-8">
+				<pattern>[%d{yyyy-MM-dd HH:mm:ss}] [%thread] [%level] [%logger] %m%n
+				</pattern>
+			</PatternLayout>
+		</Console>
+		<!--/home/app/-->
+		<File
+			name="YpbMessagesSysInfo"
+			fileName="/home/app/logs/YpbMessages/sys.log">
+			<PatternLayout charset="utf-8">
+				<pattern>[%d{yyyy-MM-dd HH:mm:ss}] [%thread] [%level] [%logger] %m%n
+				</pattern>
+			</PatternLayout>
+		</File>
+
+		<RollingFile
+			name="YpbMessagesMainInfo"
+			fileName="/home/app/logs/YpbMessages/mainInfo.log"
+			filePattern="/home/app/logs/YpbMessages/mainInfo-%d{MM-dd-yyyy}-%i.log.gz">
+			<Filters>
+				<ThresholdFilter level="INFO" />
+				<!-- <ThresholdFilter level="WARN" onMatch="DENY" onMismatch="NEUTRAL"/> -->
+			</Filters>
+			<PatternLayout charset="utf-8">
+				<pattern>[%d{yyyy-MM-dd HH:mm:ss}] [%thread] [%level] [%logger] %m%n
+				</pattern>
+			</PatternLayout>
+			<Policies>
+				<TimeBasedTriggeringPolicy />
+				<SizeBasedTriggeringPolicy size="200 MB" />
+			</Policies>
+		</RollingFile>
+
+		<RollingFile
+			name="YpbMessagesMainError"
+			fileName="/home/app/logs/YpbMessages/mainError.log"
+			filePattern="/home/app/logs/YpbMessages/mainError-%d{MM-dd-yyyy}-%i.log.gz">
+			<Filters>
+				<ThresholdFilter level="error" />
+			</Filters>
+			<PatternLayout charset="utf-8">
+				<pattern>[%d{yyyy-MM-dd HH:mm:ss}] [%thread] [%level] [%logger] %m%n
+				</pattern>
+			</PatternLayout>
+			<Policies>
+				<TimeBasedTriggeringPolicy />
+				<SizeBasedTriggeringPolicy size="200 MB" />
+			</Policies>
+		</RollingFile>
+
+		<RollingFile
+			name="YpbMessagesAccessInfo"
+			fileName="/home/app/logs/YpbMessages/accessInfo.log"
+			filePattern="/home/app/logs/YpbMessages/accessInfo-%d{MM-dd-yyyy}-%i.log.gz">
+			<Filters>
+				<ThresholdFilter level="INFO" />
+				<!-- <ThresholdFilter level="WARN" onMatch="DENY" onMismatch="NEUTRAL"/> -->
+			</Filters>
+			<PatternLayout charset="utf-8">
+				<pattern>[%d{yyyy-MM-dd HH:mm:ss}] [%thread] [%level] [%logger] %m%n
+				</pattern>
+			</PatternLayout>
+			<Policies>
+				<TimeBasedTriggeringPolicy />
+				<SizeBasedTriggeringPolicy size="200 MB" />
+			</Policies>
+		</RollingFile>
+
+		<RollingFile
+			name="YpbMessagesAccessError"
+			fileName="/home/app/logs/YpbMessages/accessError.log"
+			filePattern="/home/app/logs/YpbMessages/accessError-%d{MM-dd-yyyy}-%i.log.gz">
+			<Filters>
+				<ThresholdFilter level="error" />
+			</Filters>
+			<PatternLayout charset="utf-8">
+				<pattern>[%d{yyyy-MM-dd HH:mm:ss}] [%thread] [%level] [%logger] %m%n
+				</pattern>
+			</PatternLayout>
+			<Policies>
+				<TimeBasedTriggeringPolicy />
+				<SizeBasedTriggeringPolicy size="200 MB" />
+			</Policies>
+		</RollingFile>
+		
+		<RollingFile
+			name="YpbMessagesConsoleInfo"
+			fileName="/home/app/logs/YpbMessages/connectorInfo.log"
+			filePattern="/home/app/logs/YpbMessages/connector/connectorInfo/connectorInfo-%d{MM-dd-yyyy}-%i.log.gz">
+			<Filters>
+				<ThresholdFilter level="INFO" />
+				<!-- <ThresholdFilter level="WARN" onMatch="DENY" onMismatch="NEUTRAL"/> -->
+			</Filters>
+			<PatternLayout charset="utf-8">
+				<pattern>[%d{yyyy-MM-dd HH:mm:ss}] [%thread] [%level] [%logger] %m%n
+				</pattern>
+			</PatternLayout>
+			<Policies>
+				<TimeBasedTriggeringPolicy />
+				<SizeBasedTriggeringPolicy size="200 MB" />
+			</Policies>
+		</RollingFile>
+
+		<RollingFile
+			name="YpbMessagesConsoleError"
+			fileName="/home/app/logs/YpbMessages/connectorError.log"
+			filePattern="/home/app/logs/YpbMessages/connector/connectorError/connectorError-%d{MM-dd-yyyy}-%i.log.gz">
+			<Filters>
+				<ThresholdFilter level="error" />
+			</Filters>
+			<PatternLayout charset="utf-8">
+				<pattern>[%d{yyyy-MM-dd HH:mm:ss}] [%thread] [%level] [%logger] %m%n
+				</pattern>
+			</PatternLayout>
+			<Policies>
+				<TimeBasedTriggeringPolicy />
+				<SizeBasedTriggeringPolicy size="200 MB" />
+			</Policies>
+		</RollingFile>
+	</Appenders>
+
+	<Loggers>
+		<Root level="INFO">
+			<AppenderRef ref="Console" />
+			<AppenderRef ref="YpbMessagesSysInfo" />
+		</Root>
+		<logger
+			name="org.springframework.boot"
+			level="INFO" />
+		<logger
+			name="YpbMessagesMain"
+			level="info"
+			additivity="false">
+			<AppenderRef ref="YpbMessagesMainInfo" />
+			<AppenderRef ref="YpbMessagesMainError" />
+		</logger>
+
+		<logger
+			name="YpbMessagesConsole"
+			level="info"
+			additivity="false">
+			<AppenderRef ref="YpbMessagesConsoleInfo" />
+			<AppenderRef ref="YpbMessagesConsoleError" />
+		</logger>
+
+		<logger
+			name="YpbMessagesAccess"
+			level="info"
+			additivity="false">
+			<AppenderRef ref="YpbMessagesAccessInfo" />
+			<AppenderRef ref="YpbMessagesAccessError" />
+		</logger>
+
+	</Loggers>
+</Configuration> 

@@ -1,7 +1,8 @@
 package com.travelsky.ypb.domain.message;
 
-import com.travelsky.ypb.domain.xml.LowestPrice;
-import com.travelsky.ypb.model.airplan.YpbFlightPlan;
+import com.travelsky.ypb.domain.model.FlightPlan;
+import com.travelsky.ypb.domain.model.TicketChangePrice;
+import com.travelsky.ypb.model.lowestPriceOfPlan.LowestPrice;
 import org.apache.commons.httpclient.NameValuePair;
 
 import java.util.Arrays;
@@ -14,40 +15,51 @@ import java.util.Map;
  */
 public class Instance {
 
-    private String flightDate;
-    private String flightNo;
-    private String departureAirport;
-    private String departureAirportCn;
-    private String arrivalAirport;
-    private String arrivalAirportCn;
-    private String airlineName;
-    private String airlineCn;
-    private String ticketCount;
-    private Map cabinTicket;
-    private String takeoffBegin;
-    private String takeoffEnd;
-    private String planid;
-    private String weekday;
-    private YpbFlightPlan flightPlan;
-    private List<LowestPrice> lowestPrice;
-    private Map seamLess;
-    private NameValuePair[] value;
-    private Map planMap;
-    private String pType;
+    private String flightDate;             //起飞日期
+    private String flightNo;               //航班号
+    private String departureAirport;       //出发地
+    private String departureAirportCn;     //出发地中文
+    private String arrivalAirport;         //到达地
+    private String arrivalAirportCn;       //到达地中文
+    private String airlineName;            //航空公司
+    private String airlineCn;              //航空公司中文
+    private String ticketCountSum;         //总票量
+    private Map cabinTicket;               //seamless
+    private String takeoffBegin;           //起飞时间
+    private String takeoffEnd;             //到达时间
+    private String planid;                 //计划ID
+    private String weekday;                //星期
+    private FlightPlan flightPlan;         //飞行计划
+    private List<LowestPrice> lowestPrice; //最低价
+    private Map seamLess;                  //eamless
+    private NameValuePair[] value;         //拼装参数
+    private Map planMap;                   //飞行计划
+    private String pType;                  //计划类型
+    private LowestPrice price;             //最低价
+    private String ticketCount;            //Y仓余票
+    private String shareFlightNo;          //共享航班主飞航班号
+    private List<FlightPlan> flightPlanList;//飞行计划
+    private TicketChangePrice ticketChangePrice;//价格变动
+    private String[] appid;                // appid
+    private String token;                  // toke
+    private long msgTempleId;              //模版ID
+    private Map<String, String> params;    //模版参数
+    private Map<String, String> jumpParams;//客户端跳转参数
+    private String[]  userId;              //userId
+    private double returnPoint;            //折扣
+    private double returnPrice;            //折扣价
+    private String eventType;              //时间类型
+    private String messagesBody;           //信息体
+    private String originalMessage;       //原始报文
+    private String title;
 
-    private String[] appid;
-    private String token;
-    //消息模板ID
-    private long msgTempleId;
-    //消息模板中对应的参数
-    private Map<String, String> params;
-    //跳转参数 可附带到手机端
-    private Map<String, String> jumpParams;
-    //推送的用户ID
-    private String[]  userId;
-    private double returnPoint;
-    private double returnPrice;
+    public TicketChangePrice getTicketChangePrice() {
+        return ticketChangePrice;
+    }
 
+    public void setTicketChangePrice(TicketChangePrice ticketChangePrice) {
+        this.ticketChangePrice = ticketChangePrice;
+    }
 
     public String getFlightDate() {
         return flightDate;
@@ -161,11 +173,11 @@ public class Instance {
         this.arrivalAirportCn = arrivalAirportCn;
     }
 
-    public YpbFlightPlan getFlightPlan() {
+    public FlightPlan getFlightPlan() {
         return flightPlan;
     }
 
-    public void setFlightPlan(YpbFlightPlan flightPlan) {
+    public void setFlightPlan(FlightPlan flightPlan) {
         this.flightPlan = flightPlan;
     }
 
@@ -273,37 +285,111 @@ public class Instance {
         this.pType = pType;
     }
 
+    public List<FlightPlan> getFlightPlanList() {
+        return flightPlanList;
+    }
+
+    public void setFlightPlanList(List<FlightPlan> flightPlanList) {
+        this.flightPlanList = flightPlanList;
+    }
+
+    public String getEventType() {
+        return eventType;
+    }
+
+    public void setEventType(String eventType) {
+        this.eventType = eventType;
+    }
+
+    public LowestPrice getPrice() {
+        return price;
+    }
+
+    public void setPrice(LowestPrice price) {
+        this.price = price;
+    }
+
+    public String getTicketCountSum() {
+        return ticketCountSum;
+    }
+
+    public void setTicketCountSum(String ticketCountSum) {
+        this.ticketCountSum = ticketCountSum;
+    }
+
+    public String getShareFlightNo() {
+        return shareFlightNo;
+    }
+
+    public void setShareFlightNo(String shareFlightNo) {
+        this.shareFlightNo = shareFlightNo;
+    }
+
+    public String getMessagesBody() {
+        return messagesBody;
+    }
+
+    public void setMessagesBody(String messagesBody) {
+        this.messagesBody = messagesBody;
+    }
+
+    public String getOriginalMessage() {
+        return originalMessage;
+    }
+
+    public void setOriginalMessage(String originalMessage) {
+        this.originalMessage = originalMessage;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
     @Override
     public String toString() {
-        return "Instance{" +
-                "flightDate='" + flightDate + '\'' +
-                ", flightNo='" + flightNo + '\'' +
-                ", departureAirport='" + departureAirport + '\'' +
-                ", departureAirportCn='" + departureAirportCn + '\'' +
-                ", arrivalAirport='" + arrivalAirport + '\'' +
-                ", arrivalAirportCn='" + arrivalAirportCn + '\'' +
-                ", airlineName='" + airlineName + '\'' +
-                ", airlineCn='" + airlineCn + '\'' +
-                ", ticketCount='" + ticketCount + '\'' +
-                ", cabinTicket=" + cabinTicket +
-                ", takeoffBegin='" + takeoffBegin + '\'' +
-                ", takeoffEnd='" + takeoffEnd + '\'' +
-                ", planid='" + planid + '\'' +
-                ", weekday='" + weekday + '\'' +
-                ", flightPlan=" + flightPlan +
-                ", lowestPrice=" + lowestPrice +
-                ", seamLess=" + seamLess +
-                ", value=" + Arrays.toString(value) +
-                ", planMap=" + planMap +
-                ", pType='" + pType + '\'' +
-                ", appid=" + Arrays.toString(appid) +
-                ", token='" + token + '\'' +
-                ", msgTempleId=" + msgTempleId +
-                ", params=" + params +
-                ", jumpParams=" + jumpParams +
-                ", userId=" + Arrays.toString(userId) +
-                ", returnPoint=" + returnPoint +
-                ", returnPrice=" + returnPrice +
-                '}';
+        final StringBuffer sb = new StringBuffer("Instance{");
+        sb.append("flightDate='").append(flightDate).append('\'');
+        sb.append(", flightNo='").append(flightNo).append('\'');
+        sb.append(", departureAirport='").append(departureAirport).append('\'');
+        sb.append(", departureAirportCn='").append(departureAirportCn).append('\'');
+        sb.append(", arrivalAirport='").append(arrivalAirport).append('\'');
+        sb.append(", arrivalAirportCn='").append(arrivalAirportCn).append('\'');
+        sb.append(", airlineName='").append(airlineName).append('\'');
+        sb.append(", airlineCn='").append(airlineCn).append('\'');
+        sb.append(", ticketCountSum='").append(ticketCountSum).append('\'');
+        sb.append(", cabinTicket=").append(cabinTicket);
+        sb.append(", takeoffBegin='").append(takeoffBegin).append('\'');
+        sb.append(", takeoffEnd='").append(takeoffEnd).append('\'');
+        sb.append(", planid='").append(planid).append('\'');
+        sb.append(", weekday='").append(weekday).append('\'');
+        sb.append(", flightPlan=").append(flightPlan);
+        sb.append(", lowestPrice=").append(lowestPrice);
+        sb.append(", seamLess=").append(seamLess);
+        sb.append(", value=").append(value == null ? "null" : Arrays.asList(value).toString());
+        sb.append(", planMap=").append(planMap);
+        sb.append(", pType='").append(pType).append('\'');
+        sb.append(", price=").append(price);
+        sb.append(", ticketCount='").append(ticketCount).append('\'');
+        sb.append(", shareFlightNo='").append(shareFlightNo).append('\'');
+        sb.append(", flightPlanList=").append(flightPlanList);
+        sb.append(", ticketChangePrice=").append(ticketChangePrice);
+        sb.append(", appid=").append(appid == null ? "null" : Arrays.asList(appid).toString());
+        sb.append(", token='").append(token).append('\'');
+        sb.append(", msgTempleId=").append(msgTempleId);
+        sb.append(", params=").append(params);
+        sb.append(", jumpParams=").append(jumpParams);
+        sb.append(", userId=").append(userId == null ? "null" : Arrays.asList(userId).toString());
+        sb.append(", returnPoint=").append(returnPoint);
+        sb.append(", returnPrice=").append(returnPrice);
+        sb.append(", eventType='").append(eventType).append('\'');
+        sb.append(", messagesBody='").append(messagesBody).append('\'');
+        sb.append(", originalMessage='").append(originalMessage).append('\'');
+        sb.append(", title='").append(title).append('\'');
+        sb.append('}');
+        return sb.toString();
     }
 }

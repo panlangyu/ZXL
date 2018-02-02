@@ -1,0 +1,24 @@
+{
+  "properties": [
+    {
+      "name": "zookeeper.connection",
+      "type": "java.lang.String",
+      "description": "Description for zookeeper.connection."
+    },
+    {
+      "name": "zookeeper.session.timeout",
+      "type": "java.lang.String",
+      "description": "Description for zookeeper.session.timeout."
+    },
+    {
+      "name": "zookeeper.node.name",
+      "type": "java.lang.String",
+      "description": "Description for zookeeper.node.name."
+    },
+    {
+      "name": "activeMq",
+      "type": "java.lang.String",
+      "description": "Description for activeMq."
+    }
+  ]
+}

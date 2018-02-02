@@ -22,7 +22,6 @@ job_test:
   tags:
     - dev
 
-
 job_deploy:
   stage: deploy
   script:

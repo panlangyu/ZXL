@@ -8,64 +8,35 @@ import java.util.Map;
  * <p>Description:JSON转换对象</p>
  * @author huc
  */
+@SuppressWarnings("ALL")
 public class CabinTicket {
-	private static int A;
-	private static  int B;
-	private  static int C;
-	private static  int D;
-	private static  int E;
-	private static  int F;
-	private static  int G;
-	private  static int H;
-	private static  int I;
-	private static  int J;
-	private static  int K;
-	private static  int L;
-	private static  int M;
-	private  static int N;
-	private  static int O;
-	private  static int P;
-	private static  int Q;
-	private static  int R;
-	private  static int S;
-	private  static int T;
-	private static  int U;
-	private static  int V;
-	private static  int W;
-	private  static int X;
-	private  static int Y;
-	private static  int Z;
-	
-	static int getCabin(String XCabin) {
-		Map<String, Integer> map = new HashMap<String, Integer>();
-		map.put("A", A);
-		map.put("B", B);
-		map.put("C", C);
-		map.put("D", D);
-		map.put("E", E);
-		map.put("F", F);
-		map.put("G", G);
-		map.put("H", H);
-		map.put("I", I);
-		map.put("J", J);
-		map.put("K", K);
-		map.put("M", M);
-		map.put("L", L);
-		map.put("N", N);
-		map.put("O", O);
-		map.put("P", P);
-		map.put("Q", Q);
-		map.put("R", R);
-		map.put("S", S);
-		map.put("T", T);
-		map.put("U", U);
-		map.put("V", V);
-		map.put("W", W);
-		map.put("X", X);
-		map.put("Y", Y);
-		map.put("Z", Z);
-		return map.get(XCabin);
-	}
+	private int A;
+	private  int B;
+	private  int C;
+	private  int D;
+	private  int E;
+	private  int F;
+	private  int G;
+	private  int H;
+	private  int I;
+	private  int J;
+	private  int K;
+	private  int L;
+	private  int M;
+	private  int N;
+	private  int O;
+	private  int P;
+	private  int Q;
+	private  int R;
+	private  int S;
+	private  int T;
+	private  int U;
+	private  int V;
+	private  int W;
+	private  int X;
+	private  int Y;
+	private  int Z;
+
 	
 	public int getA() {
 		return A;

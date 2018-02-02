@@ -4,6 +4,7 @@ package com.travelsky.ypb.business.task;
  * Created by huc on 2017/11/27.
  * token 缓存
  */
+@SuppressWarnings("ALL")
 public class Cache {
 
     private String key;//缓存ID
@@ -62,10 +63,6 @@ public class Cache {
                 '}';
     }
 
-    public static void main(String[] args) throws InterruptedException {
-
-
-    }
 }
 
 

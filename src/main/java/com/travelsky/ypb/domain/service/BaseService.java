@@ -5,8 +5,10 @@ import com.travelsky.ypb.domain.dao.BaseDao;
 import java.util.List;
 
 /**
+ * serevice
  * Created by huc on 2017/11/23.
  */
+@SuppressWarnings("ALL")
 public abstract class BaseService <T extends Object>{
 
     protected abstract BaseDao getDao();
@@ -31,8 +33,8 @@ public abstract class BaseService <T extends Object>{
         return getDao().findList(t);
     }
 
-    public void delete(long id) {
-        getDao().delete(id);
+    public int delete(long id) {
+        return getDao().delete(id);
     }
 
     public void delete(T t) {

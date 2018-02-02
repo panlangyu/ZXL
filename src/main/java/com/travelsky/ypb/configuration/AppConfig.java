@@ -3,6 +3,7 @@ package com.travelsky.ypb.configuration;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.core.annotation.Order;
 
 /**
  * Created by huc on 2017/11/29.
@@ -10,6 +11,7 @@ import org.springframework.context.annotation.PropertySource;
 @Configuration
 @PropertySource("classpath:messages.properties")
 @ConfigurationProperties(prefix = "com.travelsky.ypb")
+@Order(5)
 public class AppConfig {
 
     private String appId;
@@ -30,6 +32,9 @@ public class AppConfig {
     private String firstClass;
     private String businessClass;
     private String economyClass;
+    private String firstClassEn;
+    private String businessClassEn;
+    private String economyClassEN;
     private String CNY;
     private String slash;
     private String period;
@@ -39,11 +44,56 @@ public class AppConfig {
     private String eventType5502;
     private String eventType5507;
     private String eventType5501;
+    private String eventType5505;
+    private String eventType5506;
     private String lowestPriceUrl;
     private String grabTicketUrl;
     private String tokenTimeOut;
     private String airline;
     private String colon;
+    private String pTypeAirline;
+    private String pTypeFlight;
+    private String msgTime;
+    private String requestParams;
+    private String airLineCabinPolicy;
+    private String redisCabinKey;
+    private String goodMessages;
+    private String badMessages;
+    private String changeMessages;
+    private String buyMessages;
+    private String rosefor;
+    private String left;
+    private String decline;
+    private String grabvotes;
+
+    private int corePoolSize;
+    private int maxPoolSize;
+    private int queueCapacity;
+    private String mqExecutor;
+    private int keepAlive;
+    private String title5501;
+    private String title5502;
+    private String title5505;
+    private String title5506;
+    private String title5507;
+    private String title5508;
+    private String fullPrice;
+
+    public String getEventType5505() {
+        return eventType5505;
+    }
+
+    public void setEventType5505(String eventType5505) {
+        this.eventType5505 = eventType5505;
+    }
+
+    public String getEventType5506() {
+        return eventType5506;
+    }
+
+    public void setEventType5506(String eventType5506) {
+        this.eventType5506 = eventType5506;
+    }
 
     public String getAppId() {
         return appId;
@@ -307,5 +357,237 @@ public class AppConfig {
 
     public void setColon(String colon) {
         this.colon = colon;
+    }
+
+    public String getpTypeAirline() {
+        return pTypeAirline;
+    }
+
+    public void setpTypeAirline(String pTypeAirline) {
+        this.pTypeAirline = pTypeAirline;
+    }
+
+    public String getpTypeFlight() {
+        return pTypeFlight;
+    }
+
+    public void setpTypeFlight(String pTypeFlight) {
+        this.pTypeFlight = pTypeFlight;
+    }
+
+    public String getMsgTime() {
+        return msgTime;
+    }
+
+    public void setMsgTime(String msgTime) {
+        this.msgTime = msgTime;
+    }
+
+    public String getFirstClassEn() {
+        return firstClassEn;
+    }
+
+    public void setFirstClassEn(String firstClassEn) {
+        this.firstClassEn = firstClassEn;
+    }
+
+    public String getBusinessClassEn() {
+        return businessClassEn;
+    }
+
+    public void setBusinessClassEn(String businessClassEn) {
+        this.businessClassEn = businessClassEn;
+    }
+
+    public String getEconomyClassEN() {
+        return economyClassEN;
+    }
+
+    public void setEconomyClassEN(String economyClassEN) {
+        this.economyClassEN = economyClassEN;
+    }
+
+    public String getRequestParams() {
+        return requestParams;
+    }
+
+    public void setRequestParams(String requestParams) {
+        this.requestParams = requestParams;
+    }
+
+    public String getAirLineCabinPolicy() {
+        return airLineCabinPolicy;
+    }
+
+    public void setAirLineCabinPolicy(String airLineCabinPolicy) {
+        this.airLineCabinPolicy = airLineCabinPolicy;
+    }
+
+    public String getRedisCabinKey() {
+        return redisCabinKey;
+    }
+
+    public void setRedisCabinKey(String redisCabinKey) {
+        this.redisCabinKey = redisCabinKey;
+    }
+
+    public int getCorePoolSize() {
+        return corePoolSize;
+    }
+
+    public void setCorePoolSize(int corePoolSize) {
+        this.corePoolSize = corePoolSize;
+    }
+
+    public int getMaxPoolSize() {
+        return maxPoolSize;
+    }
+
+    public void setMaxPoolSize(int maxPoolSize) {
+        this.maxPoolSize = maxPoolSize;
+    }
+
+    public int getQueueCapacity() {
+        return queueCapacity;
+    }
+
+    public void setQueueCapacity(int queueCapacity) {
+        this.queueCapacity = queueCapacity;
+    }
+
+    public String getMqExecutor() {
+        return mqExecutor;
+    }
+
+    public void setMqExecutor(String mqExecutor) {
+        this.mqExecutor = mqExecutor;
+    }
+
+    public int getKeepAlive() {
+        return keepAlive;
+    }
+
+    public void setKeepAlive(int keepAlive) {
+        this.keepAlive = keepAlive;
+    }
+
+    public String getGoodMessages() {
+        return goodMessages;
+    }
+
+    public void setGoodMessages(String goodMessages) {
+        this.goodMessages = goodMessages;
+    }
+
+    public String getBadMessages() {
+        return badMessages;
+    }
+
+    public void setBadMessages(String badMessages) {
+        this.badMessages = badMessages;
+    }
+
+    public String getChangeMessages() {
+        return changeMessages;
+    }
+
+    public void setChangeMessages(String changeMessages) {
+        this.changeMessages = changeMessages;
+    }
+
+    public String getBuyMessages() {
+        return buyMessages;
+    }
+
+    public void setBuyMessages(String buyMessages) {
+        this.buyMessages = buyMessages;
+    }
+
+    public String getRosefor() {
+        return rosefor;
+    }
+
+    public void setRosefor(String rosefor) {
+        this.rosefor = rosefor;
+    }
+
+    public String getLeft() {
+        return left;
+    }
+
+    public void setLeft(String left) {
+        this.left = left;
+    }
+
+    public String getDecline() {
+        return decline;
+    }
+
+    public void setDecline(String decline) {
+        this.decline = decline;
+    }
+
+    public String getGrabvotes() {
+        return grabvotes;
+    }
+
+    public void setGrabvotes(String grabvotes) {
+        this.grabvotes = grabvotes;
+    }
+
+    public String getTitle5501() {
+        return title5501;
+    }
+
+    public void setTitle5501(String title5501) {
+        this.title5501 = title5501;
+    }
+
+    public String getTitle5502() {
+        return title5502;
+    }
+
+    public void setTitle5502(String title5502) {
+        this.title5502 = title5502;
+    }
+
+    public String getTitle5505() {
+        return title5505;
+    }
+
+    public void setTitle5505(String title5505) {
+        this.title5505 = title5505;
+    }
+
+    public String getTitle5506() {
+        return title5506;
+    }
+
+    public void setTitle5506(String title5506) {
+        this.title5506 = title5506;
+    }
+
+    public String getTitle5507() {
+        return title5507;
+    }
+
+    public void setTitle5507(String title5507) {
+        this.title5507 = title5507;
+    }
+
+    public String getTitle5508() {
+        return title5508;
+    }
+
+    public void setTitle5508(String title5508) {
+        this.title5508 = title5508;
+    }
+
+    public String getFullPrice() {
+        return fullPrice;
+    }
+
+    public void setFullPrice(String fullPrice) {
+        this.fullPrice = fullPrice;
     }
 }

@@ -14,6 +14,7 @@ import java.util.Iterator;
  * Created by huc on 2017/11/27.
  * [一级]缓存管理
  */
+@SuppressWarnings("ALL")
 @Component
 public class CacheManager{
 
@@ -24,7 +25,7 @@ public class CacheManager{
     protected HttpClient httpClient;
 
     private static HashMap cacheMap = new HashMap();
-    public  static long TOKEN_TIME_OUT = 900000; //TODO 缓存过期时间
+    private static long timeOut = 900000;
     //单实例构造方法
     private CacheManager() {
         super();
@@ -129,7 +130,7 @@ public class CacheManager{
                 }
             }
         } catch (Exception ex) {
-
+            Log.i(this.getClass(),"",ex);
         }
     }
 
@@ -200,14 +201,14 @@ public class CacheManager{
         Cache cache = getCache(key);
         if (cache == null) {
             String token = httpClient.getToken(key);
-            this.putCacheInfo(key, token, CacheManager.TOKEN_TIME_OUT, true);
+            this.putCacheInfo(key, token, timeOut, true);
             cache = getCache(key);
         }else {
             if (cacheExpired(cache)) {
                 //调用判断是否终止方法
                 String token = httpClient.getToken(key);
                 cache.setExpired(true);
-                this.putCacheInfo(key, token, CacheManager.TOKEN_TIME_OUT, true);
+                this.putCacheInfo(key, token, timeOut, true);
                 cache = getCache(key);
             }
         }
@@ -293,7 +294,7 @@ public class CacheManager{
                 }
             }
         } catch (Exception ex) {
-            ex.printStackTrace();
+            Log.i(this.getClass(),"getCacheSize",ex);
         }
         return k;
     }
@@ -311,10 +312,9 @@ public class CacheManager{
                 a.add(entry.getKey());
             }
         } catch (Exception ex) {
-
-        } finally {
-            return a;
+            Log.i(this.getClass(),"",ex);
         }
+        return a;
     }
 
     /**
@@ -334,12 +334,20 @@ public class CacheManager{
                     a.add(key);
                 }
             }
-        } catch (Exception ex) {} finally {
-            return a;
+        } catch (Exception ex) {
+            Log.i(this.getClass(),"",ex);
         }
+        return a;
     }
 
 
+    public long getTimeOut() {
 
+        return timeOut;
+    }
 
+    public void setTimeOut(long timeOut) {
+
+        this.timeOut = timeOut;
+    }
 }

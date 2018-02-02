@@ -1,20 +1,13 @@
 package com.travelsky.ypb.domain.support;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
-import com.travelsky.ypb.business.flightplan.FlightPlaneManage;
 import com.travelsky.ypb.business.service.impl.PushServiceImpl;
-import com.travelsky.ypb.configuration.AppConfig;
-import com.travelsky.ypb.configuration.InitAirport;
 import com.travelsky.ypb.domain.message.Instance;
+import com.travelsky.ypb.domain.model.FlightPlan;
+import com.travelsky.ypb.domain.service.TicketChangePriceService;
 import com.travelsky.ypb.domain.xml.CabinTicket;
-import com.travelsky.ypb.domain.xml.LowestPrice;
-import com.travelsky.ypb.model.airplan.YpbFlightPlan;
+import com.travelsky.ypb.model.lowestPriceOfPlan.LowestPrice;
 import com.travelsky.ypb.publics.CommonUtil;
-import com.travelsky.ypb.publics.HttpClient;
-import com.travelsky.ypb.rmi.client.core.RmiRegisterClient;
-import com.travelsky.ypb.umeticket.domain.response.TicketResponse;
-import com.travelsky.ypb.umeticket.util.imp.TicketByAirlineUtil;
 import org.apache.commons.httpclient.NameValuePair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -28,122 +21,33 @@ import java.util.Map;
  * Created by huc on 2017/11/22.
  * 公共方法
  */
+@SuppressWarnings("ALL")
 @Component
-public abstract class EventService<T extends Instance> {
-
-    @Autowired
-    private RmiRegisterClient rmiClient;
-
-    @Autowired
-    protected AppConfig appConfig;
+public abstract class EventService<T extends Instance> extends Support<Instance> {
 
     @Autowired
     protected PushServiceImpl pushServer;
 
     @Autowired
-    private HttpClient httpClient;
+    protected TicketChangePriceService changePriceService;
 
-    /**
-     * 航班公共获取Seamless余票信息
-     *
-     * @param t Instance
-     * @return Map
-     */
-    protected Map getSeamLess(T t) {
-        JSONObject json = new JSONObject();
-        TicketResponse response = null;
-        json.put("dept", t.getDepartureAirport());
-        json.put("dest", t.getArrivalAirport());
-        json.put("deptDate", t.getFlightDate());
-        json.put("flightNo", t.getFlightNo());
-        json.put("airline", t.getAirlineName());
-        if (t.getpType().equals("1")) {
-            response = TicketByAirlineUtil.getTicketByFlight(String.valueOf(json), TicketResponse.class);
-            return response.getFlightAll();
-        } else {
-            response = TicketByAirlineUtil.getTicketByRoute(JSON.toJSONString(json), TicketResponse.class);
-            return response.getAirlineAll();
-        }
-    }
-
-
-    /**
-     * 查询飞行计划
-     *
-     * @param t T
-     * @return list
-     */
-    protected List<YpbFlightPlan> getFlightPlan(T t) {
-        FlightPlaneManage client = rmiClient.createClient(FlightPlaneManage.SERVICE_NAME, FlightPlaneManage.class);
-        YpbFlightPlan bean = new YpbFlightPlan();
-        bean.setPlanid(t.getPlanid());
-        bean.setDeptcity(t.getDepartureAirport());
-        bean.setDestcity(t.getArrivalAirport());
-        bean.setFlightdate(t.getFlightDate());
-        bean.setFlightno(t.getFlightNo());
-        return client.queryAirlinePlan(bean);
-    }
-
-
-    protected Map<String, YpbFlightPlan> listToMap(List<YpbFlightPlan> list) {
-        Map<String, YpbFlightPlan> planMap = new HashMap<>();
-        for (YpbFlightPlan plan : list) {
+    protected Map<String, FlightPlan> listToMap(List<FlightPlan> list) {
+        Map<String, FlightPlan> planMap = new HashMap<>();
+        for (FlightPlan plan : list) {
             planMap.put(plan.getUserid(), plan);
         }
         return planMap;
     }
 
-
-    /**
-     * 航班总余票量
-     *
-     * @param cabin CabinTicket
-     * @return int
-     */
-    protected int ticketSum(final CabinTicket cabin) {
-
-        return cabin.getF() + cabin.getC() + cabin.getY();
-    }
-
-
     protected int ticketSumForAirline(Map<String, Map<String, CabinTicket>> map) {
         int sum = 0;
         for (String key : map.keySet()) {
-//            CabinTicket ticket = CommonUtil.mapToObject(((Map<String, CabinTicket>) map.get(key)),CabinTicket.class);
             CabinTicket ticket = CommonUtil.mapToObject(map.get(key), CabinTicket.class);
-
             sum += ticket.getF() + ticket.getC() + ticket.getY();
         }
         return sum;
     }
 
-
-    /**
-     * 获取最低价
-     * @param t t
-     * @return list
-     */
-    protected List<LowestPrice> getLowestPrice(T t) {
-        JSONObject object = InitAirport.json;
-        JSONObject json = new JSONObject();
-        json.put("ori", t.getDepartureAirport());
-        json.put("des", t.getArrivalAirport());
-        json.put("departureDate", CommonUtil.personPNRDate(t.getFlightDate()));
-        json.put("airline", (t.getAirlineName() == null ? "" : t.getAirlineName()));
-        json.put("fltno", (t.getFlightNo() == null ? "" : t.getFlightNo().substring(2)));
-        json.put("bkClass", "");
-        json.put("dev", "");
-        json.put("deptm", "00:00-23:59");
-        object.put("rcParams", json);
-        return httpClient.httpLowestPrice(json).getOutput().getResult().getFlightShopResult().getLowestPriceList();
-    }
-
-    /**
-     * 字符串组合
-     *
-     * @param args 参数
-     * @return str
-     */
     protected String fmt(String... args) {
         StringBuilder builder = new StringBuilder();
         if (null != args) {
@@ -156,7 +60,6 @@ public abstract class EventService<T extends Instance> {
 
     /**
      * 消息模板拼装
-     *
      * @param airlineInfo a
      * @param cabinInfo   c
      * @param endInfo     e
@@ -165,14 +68,17 @@ public abstract class EventService<T extends Instance> {
     protected String messageFormat(String airlineInfo, String cabinInfo, String endInfo, String ticketCount, int type) {
         switch (type) {
             case 5508:
-                return fmt(airlineInfo, appConfig.getOf(), appConfig.getFlight(), appConfig.getComma(), cabinInfo, appConfig.getHas(), ticketCount,
-                        appConfig.getPage(), endInfo);
+                return fmt(airlineInfo, appConfig.getOf(), appConfig.getFlight(), appConfig.getComma()
+                        , cabinInfo, appConfig.getHas(), ticketCount, appConfig.getPage(), endInfo);
             case 5502:
-                return fmt(airlineInfo, appConfig.getOf(), appConfig.getFlight(), appConfig.getComma(), cabinInfo, appConfig.getHas(), ticketCount,
-                        appConfig.getPage(), endInfo);
+                return fmt(airlineInfo, appConfig.getOf(), appConfig.getFlight(), appConfig.getComma()
+                        , cabinInfo, appConfig.getHas(), ticketCount, appConfig.getPage(), endInfo);
             case 5507:
-                return fmt(airlineInfo, appConfig.getOf(), appConfig.getAirline(), appConfig.getComma(), cabinInfo, appConfig.getHas(), ticketCount,
-                        appConfig.getPage(), endInfo);
+                return fmt(airlineInfo, appConfig.getOf(), appConfig.getAirline(), appConfig.getComma()
+                        , cabinInfo, appConfig.getHas(), ticketCount, appConfig.getPage(), endInfo);
+            case 5501:
+                return fmt(airlineInfo, appConfig.getOf(), appConfig.getAirline(), appConfig.getComma()
+                        , cabinInfo, appConfig.getHas(), ticketCount, appConfig.getPage(), endInfo);
             default:
                 return null;
         }
@@ -201,7 +107,6 @@ public abstract class EventService<T extends Instance> {
         return lowestPrice;
     }
 
-
     /**
      * t
      *
@@ -209,7 +114,6 @@ public abstract class EventService<T extends Instance> {
      * @return t
      */
     protected String getCabinInfo(T t, LowestPrice lowestPrice, int eventType) {
-
         String head = (eventType == 5502 ? appConfig.getEconomyClass() : appConfig.getTicketCountCn());
         String takeOff = ("0".equals(t.getpType()) ? lowestPrice.getDeptm().substring(0, 2)
                 + appConfig.getColon() + lowestPrice.getDeptm().substring(3, 4) : t.getTakeoffBegin());
@@ -226,20 +130,21 @@ public abstract class EventService<T extends Instance> {
      */
     protected String getEndInfo(T t, LowestPrice lowestPrice) {
         String classTicket = String.valueOf(t.getCabinTicket().get(lowestPrice.getBkclass()));
+        CabinTicket cabinTicket = CommonUtil.mapToObject(t.getSeamLess(),CabinTicket.class);
+        String dis =  String.valueOf((lowestPrice.getDiscountValue().equals(1.0) ? appConfig.getFullPrice()
+                : (Float.parseFloat(lowestPrice.getDiscountValue()) * 10) + appConfig.getDiscount()));
         if ("0".equals(t.getpType())) {
             Map map = (Map) t.getCabinTicket().get(lowestPrice.getAirline() + lowestPrice.getFltno());
             classTicket = String.valueOf(map.get(lowestPrice.getBkclass()));
         }
         return fmt(appConfig.getParenthesesCodeLeft(), appConfig.getLowestPrice(),
                 appConfig.getCNY(), String.valueOf(lowestPrice.getDiscountPrice()),
-                appConfig.getComma(), CommonUtil.getCabinName(lowestPrice.getCabin()),
+                appConfig.getComma(), getCabinName(lowestPrice.getCabin()),
                 lowestPrice.getBkclass(), appConfig.getSlash(),
-                String.valueOf(lowestPrice.getDiscountValue()),
-                appConfig.getDiscount(), appConfig.getSlash(), classTicket,
+                dis, appConfig.getSlash(), classTicket,
                 appConfig.getPage(), appConfig.getParenthesesCodeRight(),
-                appConfig.getPeriod(), CommonUtil.getMessageEndInfoTime());
+                appConfig.getPeriod(), CommonUtil.getMessageEndInfoTime(appConfig.getMsgTime()));
     }
-
 
     /**
      * 拼装key value 请求参数
@@ -249,7 +154,7 @@ public abstract class EventService<T extends Instance> {
      */
     protected NameValuePair[] setValue(Instance instance) {
 
-        return  new NameValuePair[]{
+        return new NameValuePair[]{
                 new NameValuePair("appid", instance.getAppid()[0]),
                 new NameValuePair("userId", instance.getUserId()[0]),
                 new NameValuePair("templateId", String.valueOf(instance.getMsgTempleId())),
@@ -258,5 +163,55 @@ public abstract class EventService<T extends Instance> {
                 new NameValuePair("token", instance.getToken())
         };
     }
+
+    protected Map assembleParams(String ticketCount,String endInfo ,String cabinInfo ,String airlineInfo){
+        Map<String,String> params = new HashMap<>();
+        params.put("ticketCount", ticketCount);
+        params.put("endInfo", endInfo);
+        params.put("cabinInfo", cabinInfo);
+        params.put("airlineInfo", airlineInfo);
+        return params;
+    }
+
+    protected Map assembleParamsSpecial(String ticketCount,String endInfo ,String cabinInfo ,String airlineInfo){
+        Map<String,String> params = new HashMap<>();
+        params.put("ticketCount", ticketCount);
+        params.put("endInfo", endInfo);
+        params.put("airlinedate", cabinInfo);
+        params.put("airline", airlineInfo);
+        return params;
+    }
+
+    protected Map roseFmt(String airlineInfo ,String endInfo){
+        Map params = new HashMap<>();
+        params.put("airlineInfo",airlineInfo);
+        params.put("endInfo",endInfo);
+        return params;
+    }
+
+
+    protected Map jumpParams(){
+        Map map = new HashMap();
+        map.put("key",appConfig.getKey());
+        return map;
+    }
+
+    public String getCabinName(String cabin) {
+        Map<String, String> cabinMap = new HashMap<>();
+        cabinMap.put(appConfig.getEconomyClassEN(), appConfig.getEconomyClass());
+        cabinMap.put(appConfig.getBusinessClassEn(), appConfig.getBusinessClass());
+        cabinMap.put(appConfig.getFirstClassEn(), appConfig.getFirstClass());
+        String cabins = cabinMap.get(cabin);
+        if (cabins == null || "".equals(cabins))
+            return appConfig.getEconomyClass();
+        else {
+            return cabins;
+        }
+    }
+
+
+
+
+
 
 }

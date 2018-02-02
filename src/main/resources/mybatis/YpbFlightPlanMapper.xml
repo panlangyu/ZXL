@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.travelsky.ypb.domain.model.FlightPlan">
+
+    <sql id="tableName">
+		ETP_T_YPBFLIGHTPLAN
+	</sql>
+
+    <sql id="fields">
+		PLANID,
+		USERID,
+		MOBILE,
+		PTYPE,
+		DEPTCITY,
+		DESTCITY,
+		FLIGHTNO,
+		FLIGHTDATE,
+		AIRLINECODES,
+		EQUIPMENTAGE,
+		DISCOUNT,
+		CLAZZ,
+		TAKEOFFBEGIN,
+		TAKEOFFEND,
+		CREATED_TIME,
+		UPDATED_TIME,
+		APPID,
+		FCABINTICKETCOUNT,
+		CCABINTICKETCOUNT,
+		YCABINTICKETCOUNT,
+		TOTALCABINTICKETCOUNT,
+		MINPRICE,
+		MINPRICEDISCOUNT,
+		MINDISCOUNTTICKETCOUNT,
+		MINDISCOUNTCABIN,
+		CREATED_BY,
+		UPDATED_BY,
+		DELETE_FLAG,
+		MINDISCOUNTCLAZZ,
+		CODESHARE,
+		TERMDEP,
+		TERMARR
+	</sql>
+
+    <resultMap id="resultMaps" type="com.travelsky.ypb.domain.model.FlightPlan">
+        <result column="PLANID" property="planid"/>
+        <result column="USERID" property="userid"/>
+        <result column="MOBILE" property="mobile"/>
+        <result column="PTYPE" property="ptype"/>
+        <result column="DEPTCITY" property="deptcity"/>
+        <result column="DESTCITY" property="destcity"/>
+        <result column="FLIGHTNO" property="flightno"/>
+        <result column="FLIGHTDATE" property="flightdate"/>
+        <result column="PEKFLYDATE" property="pekflydate"/>
+        <result column="AIRLINECODES" property="airlinecodes"/>
+        <result column="EQUIPMENTCODE" property="equipmentcode"/>
+        <result column="EQUIPMENTAGE" property="equipmentage"/>
+        <result column="DISCOUNT" property="discount"/>
+        <result column="CLAZZ" property="clazz"/>
+        <result column="TAKEOFFBUCKETING" property="takeoffbucketing"/>
+        <result column="TAKEOFFBEGIN" property="takeoffbegin"/>
+        <result column="TAKEOFFEND" property="takeoffend"/>
+        <result column="CREATED_TIME" property="createdtime"/>
+        <result column="UPDATED_TIME" property="updatedtime"/>
+        <result column="APPID" property="appid"/>
+        <result column="FCABINTICKETCOUNT" property="fcabinticketcount"/>
+        <result column="CCABINTICKETCOUNT" property="ccabinticketcount"/>
+        <result column="YCABINTICKETCOUNT" property="ycabinticketcount"/>
+        <result column="TOTALCABINTICKETCOUNT" property="totalcabinticketcount"/>
+        <result column="MINPRICE" property="minprice"/>
+        <result column="MINPRICEDISCOUNT" property="minpricediscount"/>
+        <result column="MINDISCOUNTTICKETCOUNT" property="mindiscountticketcount"/>
+        <result column="MINDISCOUNTCABIN" property="mindiscountcabin"/>
+        <result column="DELETE_FLAG" property="deleteflag"/>
+        <result column="CREATED_BY" property="createdby"/>
+        <result column="UPDATED_BY" property="updatedby"/>
+        <result column="TERMDEP" property="termdep"/>
+        <result column="TERMARR" property="termarr"/>
+    </resultMap>
+
+    <!-- 动态查询飞行计划 -->
+    <select id="findList" parameterType="com.travelsky.ypb.domain.model.FlightPlan" resultMap="resultMaps">
+        SELECT
+        <include refid="fields"></include>
+        FROM
+        <include refid="tableName"></include>
+        WHERE DELETE_FLAG = 'N'
+        <if test="planid != null and planid != ''">
+            and PLANID = #{planid}
+        </if>
+        <if test="userid != null and userid != ''">
+            and USERID = #{userid}
+        </if>
+        <if test="deptcity != null and deptcity != ''">
+            and DEPTCITY = #{deptcity}
+        </if>
+        <if test="destcity != null and destcity != ''">
+            and DESTCITY = #{destcity}
+        </if>
+        <if test="flightno != null and flightno != ''">
+            and FLIGHTNO = #{flightno}
+        </if>
+        <if test="flightdate != null and flightdate != ''">
+            and flightdate = #{flightdate}
+        </if>
+        <if test="appid != null and appid != ''">
+            and APPID = #{appid}
+        </if>
+        <if test="ptype != null and ptype != ''">
+            and PTYPE = #{ptype}
+        </if>
+    </select>
+
+
+    <delete id="delete" parameterType="com.travelsky.ypb.domain.model.FlightPlan" flushCache="false">
+		DELETE FROM ETP_T_YPBFLIGHTPLAN WHERE PLANID = #{planid} AND USERID = #{userid}
+	</delete>
+
+    <update id="update" parameterType="com.travelsky.ypb.domain.model.FlightPlan" flushCache="false">
+        UPDATE ETP_T_YPBFLIGHTPLAN
+        SET
+        FCABINTICKETCOUNT = #{fcabinticketcount,jdbcType=VARCHAR},
+        CCABINTICKETCOUNT = #{ccabinticketcount,jdbcType=VARCHAR},
+        YCABINTICKETCOUNT = #{ycabinticketcount,jdbcType=VARCHAR},
+        TOTALCABINTICKETCOUNT = #{totalcabinticketcount,jdbcType=VARCHAR},
+
+        MINPRICE = #{minprice,jdbcType=VARCHAR},
+        MINPRICEDISCOUNT = #{minpricediscount,jdbcType=VARCHAR},
+        MINDISCOUNTTICKETCOUNT = #{mindiscountticketcount,jdbcType=VARCHAR},
+        MINDISCOUNTCABIN = #{mindiscountcabin,jdbcType=VARCHAR},
+        MINDISCOUNTCLAZZ = #{mindiscountclazz,jdbcType=VARCHAR},
+        UPDATED_TIME = to_char(SYSDATE,'YYYY-MM-DD HH24:MI:SS')
+
+        <where>
+            DEPTCITY = #{deptcity,jdbcType=VARCHAR}
+            AND DESTCITY = #{destcity,jdbcType=VARCHAR}
+            <if test="flightdate!=null and flightdate!=''">
+                AND FLIGHTDATE = #{flightdate,jdbcType=VARCHAR}
+            </if>
+            <if test="flightno!=null and flightno!=''">
+                AND FLIGHTNO = #{flightno,jdbcType=VARCHAR}
+            </if>
+        </where>
+
+    </update>
+
+</mapper>

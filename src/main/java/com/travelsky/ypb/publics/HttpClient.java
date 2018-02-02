@@ -2,6 +2,7 @@ package com.travelsky.ypb.publics;
 
 import com.alibaba.fastjson.JSONObject;
 import com.travelsky.ypb.configuration.AppConfig;
+import com.travelsky.ypb.domain.log.Log;
 import com.travelsky.ypb.domain.xml.FareInterface;
 import com.travelsky.ypb.umeticket.http.HttpClientManager;
 import com.travelsky.ypb.umeticket.http.HttpClientManagerImp;
@@ -9,31 +10,37 @@ import org.apache.commons.httpclient.HttpMethod;
 import org.apache.commons.httpclient.NameValuePair;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Unmarshaller;
 import java.io.*;
+import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.URLConnection;
+import java.net.URLEncoder;
 
 /**
  * <p>Tilte:Http访问工具类</p>
  * <p>Description:用于访问http接口</p>
  * @author huc
  */
+@SuppressWarnings("ALL")
 @Component
-public final class HttpClient {
+@Order(2)
+public class HttpClient {
 
     @Autowired
     protected AppConfig appConfig;
 
+    HttpClientManager http = HttpClientManagerImp.getInstance();
 
-    private static HttpClientManager http = HttpClientManagerImp.getInstance();
+    @Value("${com.travelsky.ypb.airLineCabinPolicy:unknown}")
+    public String policyUrl;
 
     /**
      * 查询最低票价
-     *
      * @param
      * @return FareInterface
      */
@@ -53,29 +60,30 @@ public final class HttpClient {
                 }
             }
         } catch (Exception e) {
-
+            Log.i(this.getClass(),"httpLowestPrice",e);
         }
         return fareInterface;
     }
 
     public String getToken(String agrs){
-        JSONObject json = new JSONObject();
+
         return http.httpGetRequest(appConfig.getGetTokenUrl()+agrs);
     }
 
-    /**
-     * 向指定 URL 发送POST方法的请求
-     * @param url   发送请求的 URL
-     * @param param 请求参数，请求参数应该是 name1=value1&name2=value2 的形式。
-     * @return 所代表远程资源的响应结果
-     */
+    public String getAirlineCabinPolicy(){
+        return httpPost(policyUrl,"key="+appConfig.getRequestParams());
+    }
+
     public String httpPost(String url, String param) {
         PrintWriter out = null;
         BufferedReader in = null;
-        String result = "";
+        InputStreamReader inputStreamReader = null;
+        InputStream inputStream = null;
+        StringBuilder result = new StringBuilder();
         try {
             URL realUrl = new URL(url);
-            URLConnection conn = realUrl.openConnection();
+            URLEncoder.encode(url,"UTF-8");
+            HttpURLConnection conn = (HttpURLConnection) realUrl.openConnection();
             conn.setRequestProperty("accept", "*/*");
             conn.setRequestProperty("connection", "Keep-Alive");
             conn.setRequestProperty("user-agent",
@@ -86,13 +94,16 @@ public final class HttpClient {
             out = new PrintWriter(conn.getOutputStream());
             out.print(param);
             out.flush();
-            in = new BufferedReader(
-                    new InputStreamReader(conn.getInputStream(), "UTF-8"));
+            inputStream = conn.getInputStream();
+
+            inputStreamReader =  new InputStreamReader(inputStream ,"UTF-8");
+            in = new BufferedReader(inputStreamReader);
             String line;
             while ((line = in.readLine()) != null) {
-                result += line;
+                result.append(line);
             }
         } catch (Exception e) {
+            Log.i(this.getClass(),"httpPost",e);
         }
         finally {
             try {
@@ -102,10 +113,17 @@ public final class HttpClient {
                 if (in != null) {
                     in.close();
                 }
+                if (inputStream != null){
+                    inputStream.close();
+                }
+                if (inputStreamReader != null){
+                    inputStreamReader.close();
+                }
             } catch (IOException ex) {
+                Log.i(this.getClass(),"httpPost",ex);
             }
         }
-        return result;
+        return String.valueOf(result);
     }
 
     public org.apache.commons.httpclient.HttpClient getHttpClient(){
@@ -115,7 +133,7 @@ public final class HttpClient {
         return httpClient;
     }
 
-    public HttpMethod postMethod(String url, NameValuePair[] param) throws IOException{
+    public HttpMethod postMethod(String url, NameValuePair[] param){
         PostMethod post = new PostMethod(url);
         post.setRequestHeader("Content-Type","application/x-www-form-urlencoded;charset=utf-8");
         post.setRequestBody(param);
@@ -123,17 +141,11 @@ public final class HttpClient {
         return post;
     }
 
-
-    /**
-     * 通知抢票计划
-     *
-     * @param
-     * @return
-     */
     public String gradTicket(String departureAirport, String arrivalAirport, String flightDate, String flightNo, String BClass) {
-        String param = "departureAirport=" + departureAirport + "&arrivalAirport=" + arrivalAirport + "&flightDate=" + flightDate + "&clazz=" + BClass + "&flightNo=" + flightNo;
-        String httpPost = httpPost(appConfig.getGrabTicketUrl(), param);
-        return httpPost;
+        String param = "departureAirport=" + departureAirport + "&arrivalAirport="
+                + arrivalAirport + "&flightDate=" + flightDate + "&clazz=" + BClass
+                + "&flightNo=" + flightNo;
+        return httpPost(appConfig.getGrabTicketUrl(), param);
     }
 
 

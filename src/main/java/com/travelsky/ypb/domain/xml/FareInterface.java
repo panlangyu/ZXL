@@ -9,6 +9,7 @@ import java.io.Serializable;
  * <p>Description:</p>
  * @author huc
  */
+@SuppressWarnings("ALL")
 @XmlRootElement(name = "FareInterface")
 public class FareInterface implements Serializable{
 	

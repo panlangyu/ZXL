@@ -15,79 +15,49 @@ import java.util.Arrays;
 @Aspect
 @Order(-5)
 public class LogProxyHandler {
-    
-    /**
-     * @param pjp 环绕切点
-     * @return o
-     */
-    //@Around("execution(public * com.travelsky.ypb.process.*..process(..))")
+
     @Around("target(com.travelsky.ypb.domain.support.ServiceSupport)")
     public Object aroundJoinPoint(ProceedingJoinPoint pjp) {
         Object result = null;
-        // *) 函数调用前, 拦截处理, 作ThreadLocal的初始化工作
-        Log.beforeInvoke(pjp.getTarget().getClass(), pjp.getSignature().getName(), pjp.getArgs()); // -----(1)
+        Log.beforeInvoke(pjp.getTarget().getClass(), pjp.getSignature().getName(), pjp.getArgs());
         try {
             result = pjp.proceed();
-            // *) 函数成功返回后, 拦截处理, 进行日志的集中输出
-            Log.returnInvoke(result); // -----(2)
+            Log.returnInvoke(result);
         } catch (Throwable e) {
-            // *) 出现异常后, 拦截处理, 进行日志集中输入 // -----(3)
             Log.throwableInvoke(pjp.getTarget().getClass().getSimpleName(), pjp.getSignature().getName(), e.getMessage(),
-                    Arrays.toString(new StackTraceElement[]{e.getStackTrace()[0], e.getStackTrace()[1]}));
+                    Arrays.toString(new StackTraceElement[]{e.getStackTrace()[0], e.getStackTrace()[1],
+                            e.getStackTrace()[2], e.getStackTrace()[3],e.getStackTrace()[5], e.getStackTrace()[6],e.getStackTrace()[7], e.getStackTrace()[8]}));
         }
         return result;
     }
 
-    /**
-     * @param pjp 环绕切点
-     * @return o
-     */
     @Around("execution(* com.travelsky.ypb.domain.support.EventService.*(..))")
     public Object around(ProceedingJoinPoint pjp) {
         Object result = null;
-        // *) 函数调用前, 拦截处理, 作ThreadLocal的初始化工作
-        Log.beforeInvoke(pjp.getTarget().getClass(), pjp.getSignature().getName(), pjp.getArgs()); // -----(1)
+        Log.beforeInvoke(pjp.getTarget().getClass(), pjp.getSignature().getName(), pjp.getArgs());
         try {
             result = pjp.proceed();
-            // *) 函数成功返回后, 拦截处理, 进行日志的集中输出
             Log.returnInvoke(result); // -----(2)
         } catch (Throwable e) {
-            // *) 出现异常后, 拦截处理, 进行日志集中输入 // -----(3)
             Log.throwableInvoke("[result = exception: {%s}]", e.getMessage());
         }
         return result;
     }
 
-
-    /**
-     * 方法调用前触发
-     *
-     * @param joinPoint 切点
-     */
     @Before("execution(public * com.travelsky.ypb.process.*..process(..))")
     public void doBeforeInServiceLayer(JoinPoint joinPoint) {
         //TODO process code ...
     }
 
-
-    /**
-     * 方法调用后触发
-     *
-     * @param joinPoint 切点
-     */
     @After("execution(public * com.travelsky.ypb.*..process(..))")
     public void doAfterInServiceLayer(JoinPoint joinPoint) {
         //TODO process code...
     }
 
-    /**
-     * @param joinPoint 切点
-     */
+
     @Pointcut("execution(public * com.travelsky.ypb.process.*..process(..))")
     public void webLog(JoinPoint joinPoint) {
         //TODO process code...
-
-
     }
 
 }

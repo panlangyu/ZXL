@@ -8,9 +8,10 @@ import com.travelsky.ypb.domain.message.Instance;
  * <p>Description:</p>
  * @author huc
  */
+@SuppressWarnings("ALL")
 public class EventResponse {
 	
-	private EventType eventType = EventType.UNDEFINED;
+	private EventType eventType;
 	
 	private String eventTitle;
 	

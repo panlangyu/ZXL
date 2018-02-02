@@ -5,6 +5,7 @@ import com.travelsky.ypb.business.task.CacheManager;
 import com.travelsky.ypb.configuration.AppConfig;
 import com.travelsky.ypb.domain.log.Log;
 import com.travelsky.ypb.domain.message.Instance;
+import com.travelsky.ypb.domain.service.MessagesBodyService;
 import com.travelsky.ypb.publics.HttpClient;
 import org.apache.commons.httpclient.HttpMethod;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +18,7 @@ import java.io.IOException;
  * 消息推送
  */
 @Service
-public  class PushServiceImpl implements IPushServer {
+public  class PushServiceImpl implements IPushServer<Instance> {
 
     @Autowired
     private CacheManager cacheManager;
@@ -27,6 +28,9 @@ public  class PushServiceImpl implements IPushServer {
 
     @Autowired
     private AppConfig appConfig;
+
+    @Autowired
+    MessagesBodyService messagesBodyService;
 
     @Override
     public String push(Instance instance) {
@@ -41,8 +45,10 @@ public  class PushServiceImpl implements IPushServer {
             httpPost = http.postMethod(appConfig.getPushUrl(), instance.getValue());
             client.executeMethod(httpPost);
             result = httpPost.getResponseBodyAsString();
+            // 保存信息内容
+            messagesBodyService.saveMessages(instance);
         } catch (IOException e) {
-
+            Log.i(this.getClass(),"",e);
         }
         Log.i(this.getClass(),"publish",result);
         return result;
