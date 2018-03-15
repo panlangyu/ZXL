@@ -273,6 +273,12 @@
         </dependency>
 
         <dependency>
+            <groupId>springboot-dubbo-client</groupId>
+            <artifactId>springboot-dubbo-client</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+
+        <dependency>
             <groupId>com.travelsky.ypb</groupId>
             <artifactId>YpbOrderService</artifactId>
             <version>1.0.9</version>
@@ -284,12 +290,6 @@
             <artifactId>YpbDubboTemplate</artifactId>
             <version>1.0.5</version>
             <classifier>domain</classifier>
-        </dependency>
-
-        <dependency>
-            <groupId>com.travelsky.ypb</groupId>
-            <artifactId>YpbFlightController</artifactId>
-            <version>1.0.2</version>
         </dependency>
 
     </dependencies>

@@ -29,7 +29,7 @@ public class Event5502 extends EventService<Instance> implements ServiceSupport<
     public Instance process(Instance instance) throws JAXBException {
 
         // 通知抢票
-        grabVotes(instance);
+        //grabVotes(instance);
         // 查询有效飞行计划
         instance.setDepartureAirportCn(cityAirportName(instance.getDepartureAirport()));
         instance.setArrivalAirportCn(cityAirportName(instance.getArrivalAirport()));
@@ -72,9 +72,6 @@ public class Event5502 extends EventService<Instance> implements ServiceSupport<
 
             //  价格变动记录
             paser(instance);
-
-            // 抢票通知
-            //grabVotes(instance);
 
             //  拼装消息体
             String airlineInfo = fmt(getAirlineCN(instance), instance.getFlightNo());

@@ -1,5 +1,6 @@
 package com.travelsky.ypb.domain.message;
 
+import com.travelsky.ypb.business.TicketLootManagerService;
 import com.travelsky.ypb.domain.model.FlightPlan;
 import com.travelsky.ypb.domain.model.TicketChangePrice;
 import com.travelsky.ypb.model.lowestPriceOfPlan.LowestPrice;
@@ -52,6 +53,7 @@ public class Instance {
     private String messagesBody;           //信息体
     private String originalMessage;       //原始报文
     private String title;
+    private TicketLootManagerService service;
 
     public TicketChangePrice getTicketChangePrice() {
         return ticketChangePrice;
@@ -349,6 +351,14 @@ public class Instance {
         this.title = title;
     }
 
+    public void setService(TicketLootManagerService service) {
+        this.service = service;
+    }
+
+    public TicketLootManagerService getService() {
+        return service;
+    }
+
     @Override
     public String toString() {
         final StringBuffer sb = new StringBuffer("Instance{");
@@ -389,6 +399,7 @@ public class Instance {
         sb.append(", messagesBody='").append(messagesBody).append('\'');
         sb.append(", originalMessage='").append(originalMessage).append('\'');
         sb.append(", title='").append(title).append('\'');
+        sb.append(", service='").append(service).append('\'');
         sb.append('}');
         return sb.toString();
     }

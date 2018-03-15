@@ -1,9 +1,11 @@
 package com.travelsky.ypb.listener;
 
 import com.alibaba.dubbo.config.annotation.Reference;
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.travelsky.ypb.business.TicketLootManagerService;
 import com.travelsky.ypb.domain.message.InitMessageBody;
+import com.travelsky.ypb.domain.message.Instance;
 import com.travelsky.ypb.domain.support.EventResponse;
 import com.travelsky.ypb.domain.support.ServiceSupport;
 import com.travelsky.ypb.model.RPCEntity;
@@ -46,9 +48,11 @@ public class Listener {
 
         // TODO 初始化消息体
         EventResponse init = InitMessageBody.init(jsonObject.getString("key"));
+        Instance instance = init.getEventBody();
+        check(instance);
         // TODO 任务分发
         try {
-            ((ServiceSupport)app.getBean(Class.forName(init.getClazz()))).process(init.getEventBody());
+            ((ServiceSupport)app.getBean(Class.forName(init.getClazz()))).process(instance);
             return 0;
         } catch (Exception e) {
             log.error(e.getMessage());
@@ -57,10 +61,37 @@ public class Listener {
     }
 
     @RequestMapping(value = "/index")
-    public String index(){
+    public String index(@RequestParam String param){
+        if (param == null){
+            param = "{\"flightNo\":\"CZ3569\",\"ticketCount\":\"88\",\"flightDate\":\"20180314\",\"departureAirport\":\"SZX\",\"cabinTicket\": {\"A\":\"0\",\"B\":\"0\",\"E\":\"0\",\"F\":\"2\",\"G\":\"0\",\"H\":\"0\",\"J\":\"0\",\"K\":\"0\",\"L\":\"0\",\"M\":\"0\",\"N\":\"0\",\"O\":\"1\",\"P\":\"0\",\"Q\":\"0\",\"R\":\"0\" ,\"S\":\"0\",\"T\":\"0\",\"U\":\"0\",\"V\":\"0\",\"W\":\"0\",\"X\":\"0\",\"Y\":\"85\",\"Z\":\"0\"},\"arrivalAirport\":\"HGH\",\"airlineName\":\"CZ\"}";
+        }
         RPCEntity rpcEntity = new RPCEntity();
-        rpcEntity.setParam("{\"flightDate\":\"20180120\",\"flightNo\":\"ZH9112\",\"departureAirport\":\"SZX\",\"arrivalAirport\":\"PEK\",\"airlineName\":\"ZH\",\"ticketCount\":\"88\",\"cabinTicket\":{\"E\":\"0\",\"F\":\"2\",\"G\":\"0\",\"A\":\"0\",\"B\":\"0\",\"L\":\"0\",\"M\":\"0\",\"N\":\"0\",\"O\":\"1\",\"H\":\"0\",\"J\":\"0\",\"K\":\"0\",\"U\":\"0\",\"T\":\"0\",\"W\":\"0\",\"V\":\"0\",\"Q\":\"0\",\"P\":\"0\",\"S\":\"0\",\"R\":\"0\",\"Y\":\"85\",\"X\":\"0\",\"Z\":\"0\"}}");
-         service.lootTicketInfo(rpcEntity);
-        return "ok.";
+        try{
+            rpcEntity.setParam(param);
+            service.lootTicketInfo(rpcEntity);
+            return "1";
+        }catch (Exception e){
+            return "-1";
+        }
     }
+
+    public void check(Instance t){
+        if (t.getEventType().equals("5502")){
+            RPCEntity rpcEntity = new RPCEntity();
+            log.info(this.getClass()+"抢票通知开始");
+            String request = t.getOriginalMessage().split("##")[7];
+            JSONObject jsonObject = JSON.parseObject(request);
+            rpcEntity.setParam(jsonObject.get("instance"));
+            log.info(this.getClass()+"服务："+service+request);
+            try{
+                service.lootTicketInfo(rpcEntity);
+                log.info(this.getClass()+"抢票通知完成");
+            }catch (Exception e){
+                log.info(this.getClass()+"抢票通知失败" , e);
+            }
+        }
+
+    }
+
+
 }

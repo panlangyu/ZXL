@@ -9,7 +9,6 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
-import org.springframework.jms.annotation.JmsListener;
 import org.springframework.stereotype.Component;
 
 import javax.jms.Message;
@@ -30,7 +29,7 @@ public class InformationListener {
     @Autowired
     ApplicationContext app;
 
-    @JmsListener(destination = "UME_YPB_QUEUE",containerFactory = "jmsQueueListener")
+    //@JmsListener(destination = "UME_YPB_QUEUE",containerFactory = "jmsQueueListener")
     public void receiveMessages(Message message) {
         ActiveMQTextMessage msg = (ActiveMQTextMessage) message;
         try {

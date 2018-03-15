@@ -22,7 +22,6 @@ public class Event1024 extends EventService implements ServiceSupport{
 		//process code...
 		instance.setEventType(1024+"");
 		Log.i(this.getClass(),"process","抢票通知");
-
 		//查询抢票计划
 
 		//查询seamless

@@ -46,7 +46,7 @@ import java.util.concurrent.Executor;
  * Created by huc on 2017/12/6.
  */
 @Service
-public class Support<T extends Instance> {
+public abstract class Support<T extends Instance> {
 
     private static org.apache.logging.log4j.Logger logger = LogManager.getLogger(Support.class.getName());;
 
@@ -200,7 +200,7 @@ public class Support<T extends Instance> {
 
         Log.i(this.getClass(),"获取航线最低价");
         request.setParam(json);
-        /*if (t.getpType().equals("1")){
+       /* if (t.getpType().equals("1")){
             response = lowestPrice.getLowestPriceByFlight(request);
         }
         FareInterface fareInterface = (FareInterface) response.getParam();*/
@@ -330,16 +330,16 @@ public class Support<T extends Instance> {
      * @param t
      */
     public void grabVotes(T t){
-        RPCEntity rpcEntity = new RPCEntity();
+        RPCEntity rpcEntity = new RPCEntity() ;
         Log.i(this.getClass(),"抢票通知开始");
         String request = t.getOriginalMessage().split("##")[7];
         rpcEntity.setParam(request);
         Log.i(this.getClass(),"服务：",service,request);
         try{
-            service.lootTicketInfo(rpcEntity);
+            t.getService().lootTicketInfo(rpcEntity);
             Log.i(this.getClass(),"抢票通知完成");
         }catch (Exception e){
-            Log.i(this.getClass(),"抢票通知失败");
+            Log.i(this.getClass(),"抢票通知失败" , e);
         }
 
 

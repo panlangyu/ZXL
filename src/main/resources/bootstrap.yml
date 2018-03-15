@@ -2,5 +2,5 @@ server:
   port: 7080
 spring:
   profiles:
-#    active: dataSourcePro, dataRedisPro, prod
-    active: dataSourceTest, dataRedisTest, dev
+    active: dataSourcePro, dataRedisPro, prod
+#    active: dataSourceTest, dataRedisTest, dev

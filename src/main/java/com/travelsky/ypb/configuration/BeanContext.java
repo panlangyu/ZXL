@@ -38,7 +38,7 @@ public class BeanContext {
     }
 
     @Bean
-    public ActiveMQConnectionFactory activeMQConnectionFactory (@Value("${spring.activemq.broker-url}")String url,RedeliveryPolicy redeliveryPolicy){
+    public ActiveMQConnectionFactory activeMQConnectionFactory (@Value("${spring.activemq.broker-url}")String url, RedeliveryPolicy redeliveryPolicy){
         ActiveMQConnectionFactory activeMQConnectionFactory = new ActiveMQConnectionFactory(url);
         activeMQConnectionFactory.setRedeliveryPolicy(redeliveryPolicy);
         return activeMQConnectionFactory;

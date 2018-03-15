@@ -34,7 +34,6 @@ public class Log {
             }
         }
         noticeLog("事件[%s] invoke method[%s] \n\t[beforeRed args [%s]]....\n",targetClass.getSimpleName(), method,argBuffer.toString());
-
     }
 
     public static void returnInvoke(Object result) {
@@ -63,7 +62,6 @@ public class Log {
         }
     }
 
-
     /**
      * 日志集中输出
      * @param targetClass 输出类
@@ -87,7 +85,8 @@ public class Log {
                 argBuffer.toString());
     }
 
-
     private Log() {
     }
+
+
 }
