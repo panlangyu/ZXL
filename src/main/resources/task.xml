@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+    http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.3.xsd
+    http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd
+    http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.3.xsd ">
+
+    <!--<bean name="secondCron" class="org.springframework.scheduling.quartz.JobDetailFactoryBean">
+        <property name="jobClass" value="pro.bechat.wallet.job.TransactionJob"/>
+        <property name="jobDataAsMap">
+            <map>
+                <entry key="timeout" value="0"/>
+                <entry key="gethHostAndPort" value="${geth.host.and.port}" />
+            </map>
+        </property>
+    </bean>
+
+    &lt;!&ndash;按照一定频率的触发器&ndash;&gt;
+    &lt;!&ndash;<bean id="simpleTrigger" class="org.springframework.scheduling.quartz.SimpleTriggerFactoryBean">
+        <property name="jobDetail" ref="secondCron"/>
+        <property name="startDelay" value="0"/>
+        <property name="repeatInterval" value="2000"/>
+    </bean>&ndash;&gt;
+
+    &lt;!&ndash;Cron表达式触发器&ndash;&gt;
+    <bean id="cronTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+        <property name="jobDetail" ref="secondCron"/>
+        <property name="cronExpression" value="0/5 * * * * ?"/>
+    </bean>
+
+    &lt;!&ndash;配置调度工厂&ndash;&gt;
+    <bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+        <property name="triggers">
+            <list>
+                &lt;!&ndash;<ref bean="simpleTrigger"/>&ndash;&gt;
+                <ref bean="cronTrigger"/>
+            </list>
+        </property>
+    </bean>-->
+    <bean id="jobFactory" class="pro.bechat.wallet.job.JobFactory"></bean>
+    <bean id="schedulerFactoryBean" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+        <property name="jobFactory" ref="jobFactory"></property>
+    </bean>
+
+</beans>

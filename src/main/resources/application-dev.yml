@@ -1,21 +1,60 @@
 spring:
   application:
-    name: information
-  activemq:
-    broker-url: failover:(tcp://192.168.38.32:61616)?jms.prefetchPolicy.queuePrefetch=1&timeout=30000
-    in-memory: true
-    pool:
-      enabled: true
-    
-  aop:
-    auto: true
-    proxy-target-class: true
+    name: walletcenter
+  cloud:
+#    config:
+#      uri: 39.105.26.249:8888
+#      fail-fast: true
+#      username: user
+#      password: ${CONFIG_SERVER_PASSWORD:password}
+#      retry:
+#        initial-interval: 2000
+#        max-interval: 10000
+#        multiplier: 2
+#        max-attempts: 10
+  datasource:
+        name: wallet
+        url: jdbc:mysql://39.107.103／.65:3306/wallet
+#        url: jdbc:mysql://172.17.0.1:3306/wallet
+        username: root
+        password: wallet201803
+        # 使用druid数据源
+        type: com.alibaba.druid.pool.DruidDataSource
+        driver-class-name: com.mysql.jdbc.Driver
+        filters: stat
+        maxActive: 20
+        initialSize: 1
+        maxWait: 60000
+        minIdle: 1
+        timeBetweenEvictionRunsMillis: 60000
+        minEvictableIdleTimeMillis: 300000
+        validationQuery: select 'x'
+        testWhileIdle: true
+        testOnBorrow: false
+        testOnReturn: false
+        poolPreparedStatements: true
+        maxOpenPreparedStatements: 20
 
-com:
-  travelsky:
-    ypb:
-      core-pool-size: 10
-      queue-capacity: 8
-      max-pool-size: 30
-      mq-executor: Ypb-Messages-MQ-Executor_
-      keep-alive: 60
+#  rabbitmq:
+#    host: 127.0.0.1
+#  sleuth:
+#     sampler:
+#        percentage: 1
+#     integration:
+#        enabled: false
+#     scheduled:
+#        skip-pattern: "^org.*HystrixStreamTask$"
+
+mybatis:
+  mapper-locations: classpath:mybatis/*.xml
+  type-aliases-package: com.winter.model
+
+#pagehelper分页插件
+pagehelper:
+    helperDialect: mysql
+    reasonable: true
+    supportMethodsArguments: true
+    params: count=countSql
+
+
+
