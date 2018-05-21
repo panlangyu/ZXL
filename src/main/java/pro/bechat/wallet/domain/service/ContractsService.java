@@ -6,6 +6,8 @@ import pro.bechat.wallet.domain.dao.BasicMapper;
 import pro.bechat.wallet.domain.dao.ContractMapper;
 import pro.bechat.wallet.domain.model.model.Contract;
 
+import java.util.List;
+
 /**
  * create ContractsService by huc
  * 2018/4/15  下午1:23
@@ -20,6 +22,11 @@ public class ContractsService extends BasicService<Contract> {
     protected BasicMapper basicMapper() {
 
         return mapper;
+    }
+
+    public List<Contract> selectContractPending(){
+
+        return  mapper.selectContractPending();
     }
 
 }

@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="pro.bechat.wallet.domain.dao.UserMapper">
+    <resultMap id="BaseResultMap" type="pro.bechat.wallet.domain.model.model.User">
+        <id column="userId" jdbcType="INTEGER" property="userId"/>
+        <result column="address" jdbcType="VARCHAR" property="address"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    userId,
+    userName,
+    sex,
+    userTrueName,
+    userPhone,
+    userIdCard,
+    userCountry,
+    userEmail,
+    createTime,
+    updateTime,
+    seeds,
+    transactionPW,
+    machinePW,
+    machineId
+  </sql>
+    <select id="selectByPrimaryKey" parameterType="pro.bechat.wallet.domain.model.model.User"
+            resultType="pro.bechat.wallet.domain.model.model.User">
+        select
+        <include refid="Base_Column_List"/>
+        from WLT_T_USERINFO
+        where machineId = #{machineId,jdbcType=INTEGER}
+    </select>
+
+    <insert id="insert" parameterType="pro.bechat.wallet.domain.model.model.User"  useGeneratedKeys="true" keyProperty="userId" keyColumn="id"  >
+    insert into WLT_T_USERINFO (
+    userName,
+    sex,
+    userTrueName,
+    userPhone,
+    userIdCard,
+    userCountry,
+    userEmail,
+    createTime,
+    updateTime,
+    seeds,
+    transactionPW,
+    machinePW,
+    machineId)
+    values (
+    #{userName,jdbcType=VARCHAR},
+    #{sex,jdbcType=VARCHAR},
+    #{userTrueName,jdbcType=VARCHAR},
+      #{userPhone,jdbcType=VARCHAR},
+      #{userIdCard,jdbcType=VARCHAR},
+      #{userCountry,jdbcType=VARCHAR},
+      #{userEmail,jdbcType=VARCHAR},
+      #{createTime,jdbcType=VARCHAR},
+      #{updateTime,jdbcType=VARCHAR},
+      #{seeds,jdbcType=VARCHAR},
+      #{transactionPW,jdbcType=VARCHAR},
+      #{machinePW,jdbcType=VARCHAR},
+      #{machineId,jdbcType=VARCHAR}
+      )
+  </insert>
+
+</mapper>

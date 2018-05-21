@@ -24,24 +24,24 @@
             <property name="forceBigDecimals" value="false" />
         </javaTypeResolver>
         <!-- 生成模型的包名和位置 -->
-        <javaModelGenerator targetPackage="pro.bechat.walletcenter.domain"
+        <javaModelGenerator targetPackage="pro.bechat.wallet.domain.model.model"
                             targetProject="target">
             <property name="enableSubPackages" value="true" />
             <property name="trimStrings" value="true" />
         </javaModelGenerator>
         <!-- 生成映射文件的包名和位置 -->
-        <sqlMapGenerator targetPackage="pro.bechat.walletcenter.domain"
+        <sqlMapGenerator targetPackage="pro.bechat.wallet.domain.dao"
                          targetProject="target">
             <property name="enableSubPackages" value="true" />
         </sqlMapGenerator>
         <!-- 生成DAO的包名和位置 -->
         <javaClientGenerator type="XMLMAPPER"
-                             targetPackage="pro.bechat.walletcenter" implementationPackage="pro.bechat.walletcenter.dao"  targetProject="target">
+                             targetPackage="pro.bechat.walletcenter" implementationPackage="pro.bechat.wallet.domain.dao"  targetProject="target">
             <property name="enableSubPackages" value="true" />
         </javaClientGenerator>
 
         <!-- 要生成哪些表 -->
-        <table tableName="WLT_T_CONTRACT" domainObjectName="Contract"
+        <table tableName="WLT_T_USER" domainObjectName="Contract"
                enableCountByExample="false" enableUpdateByExample="false"
                enableDeleteByExample="false" enableSelectByExample="false"
                selectByExampleQueryId="false"></table>

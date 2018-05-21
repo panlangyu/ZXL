@@ -7,6 +7,7 @@ import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
 import org.web3j.protocol.Web3j;
 import pro.bechat.wallet.domain.service.TransactionRecordService;
+import pro.bechat.wallet.domain.service.WalletService;
 import pro.bechat.wallet.domain.support.Web3Service;
 import rx.Subscription;
 
@@ -34,12 +35,27 @@ public class EthereumPendingTransactionListener implements ApplicationListener<C
     @Autowired
     TransactionRecordService recordService;
 
-    public void onApplicationEvent(ContextRefreshedEvent contextRefreshedEvent) {
+    @Autowired
+    WalletService walletService;
 
+    public static Subscription subscription = null;
+
+
+    public void onApplicationEvent(ContextRefreshedEvent contextRefreshedEvent) {
         if (web3j == null){
             web3j = web3Service.newHttpWeb3j();
         }
+
         logger.info("EthereumPendingTransactionListener:服务监听开始");
-        Subscription subscription = web3j.pendingTransactionObservable().subscribe(web3Service::process);
+        /*EthereumPendingTransactionListener.subscription = web3j.pendingTransactionObservable().subscribe(tx -> {
+            *//**
+             * 如果from 地址不存在本系统，那就是从外部钱包转入，此时记录数据库
+             *//*
+            logger.info("EthereumPendingTransactionListener--->"+tx.getHash());
+
+
+
+        });*/
+
     }
 }

@@ -3,6 +3,8 @@ package pro.bechat.wallet.domain.dao;
 import org.springframework.stereotype.Repository;
 import pro.bechat.wallet.domain.model.model.TransactionRecord;
 
+import java.util.List;
+
 @Repository
 public interface TransactionRecordMapper extends BasicMapper<TransactionRecord>{
     /**
@@ -52,4 +54,6 @@ public interface TransactionRecordMapper extends BasicMapper<TransactionRecord>{
      * @mbggenerated
      */
     int updateByPrimaryKey(TransactionRecord record);
+
+    List<TransactionRecord> selectContractPending();
 }

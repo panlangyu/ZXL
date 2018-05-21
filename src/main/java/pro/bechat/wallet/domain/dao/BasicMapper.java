@@ -56,6 +56,6 @@ public interface BasicMapper<T> {
     int updateByPrimaryKey(T t);
 
 
-    int updateByPrimaryKeySelective(T T);
+    int updateByPrimaryKeySelective(T t);
 
 }

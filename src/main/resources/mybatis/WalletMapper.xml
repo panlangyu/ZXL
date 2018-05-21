@@ -170,4 +170,16 @@
       walletImg = #{walletimg,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
+
+  <select id="exist" parameterType="java.lang.String" resultType="pro.bechat.wallet.domain.model.model.Wallet">
+    select
+    <include refid="Base_Column_List" />
+    from WLT_T_WALLET
+    where  1 =1
+    <if test="_parameter != null and _parameter != '' ">
+      address = #{_parameter,jdbcType=INTEGER}
+    </if>
+
+  </select>
+
 </mapper>

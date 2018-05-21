@@ -9,6 +9,7 @@ import pro.bechat.wallet.domain.model.model.TransactionRecord;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 /**
  * create TransactionRecord by huc
@@ -46,5 +47,10 @@ public class TransactionRecordService extends BasicService<TransactionRecord> {
         //record.setBlocknumber(tx.getBlockNumber().to);
         record.setTransactiontime(localDateTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
         super.save(record);
+    }
+
+    public List<TransactionRecord> selectTransactionPending(){
+
+        return mapper.selectContractPending();
     }
 }

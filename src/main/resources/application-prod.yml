@@ -1,6 +1,6 @@
 spring:
   application:
-    name: walletcenter
+    name: bechatwallet
   cloud:
 #    config:
 #      uri: 39.105.26.249:8888
@@ -14,8 +14,8 @@ spring:
 #        max-attempts: 10
   datasource:
         name: wallet
-        url: jdbc:mysql://39.107.103／.65:3306/wallet
-#        url: jdbc:mysql://172.17.0.1:3306/wallet
+        url: jdbc:mysql://39.107.103.65:3306/wallet_pro
+#        url: jdbc:mysql://127.0.0.1:3306/wallet
         username: root
         password: wallet201803
         # 使用druid数据源
@@ -35,19 +35,9 @@ spring:
         poolPreparedStatements: true
         maxOpenPreparedStatements: 20
 
-#  rabbitmq:
-#    host: 127.0.0.1
-#  sleuth:
-#     sampler:
-#        percentage: 1
-#     integration:
-#        enabled: false
-#     scheduled:
-#        skip-pattern: "^org.*HystrixStreamTask$"
-
 mybatis:
   mapper-locations: classpath:mybatis/*.xml
-  type-aliases-package: com.winter.model
+  type-aliases-package: pro.bechat.wallet
 
 #pagehelper分页插件
 pagehelper:
@@ -56,5 +46,11 @@ pagehelper:
     supportMethodsArguments: true
     params: count=countSql
 
-
+#eureka:
+#  instance:
+#    hostname: 127.0.0.1
+#    prefer-ip-address: true
+#  client:
+#    service-url:
+#      defaultZone: http://user:${REGISTRY_SERVER_PASSWORD:password}@${eureka.instance.hostname}:8085/eureka/
 

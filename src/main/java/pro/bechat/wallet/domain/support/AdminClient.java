@@ -15,7 +15,7 @@ public class AdminClient {
 
 	}
 
-	private static final String hostAndPort = "http://39.107.103.65:8545";
+	private static final String hostAndPort = "http://172.17.0.2:9099";
 
 	public static Admin newInstance() {
 

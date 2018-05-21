@@ -37,7 +37,9 @@ public class EthereumTransactionListener implements ApplicationListener<ContextR
 			return;
 		}
 		// 监听用户转入的交易记录 DefaultBlockParameterName.LATEST
-		web3j.catchUpToLatestAndSubscribeToNewTransactionsObservable(DefaultBlockParameterName.LATEST).subscribe(web3Service::process);
+		web3j.catchUpToLatestAndSubscribeToNewTransactionsObservable(DefaultBlockParameterName.LATEST).subscribe(transaction -> {
+			log.info("EthereumTransactionListener----->:"+transaction.toString());
+		});
 
 	}
 }

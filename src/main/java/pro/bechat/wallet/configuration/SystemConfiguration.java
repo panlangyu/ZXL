@@ -1,9 +1,12 @@
 package pro.bechat.wallet.configuration;
 
+import org.quartz.*;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.quartz.SchedulerFactoryBean;
+import pro.bechat.wallet.job.ContractJob;
+import pro.bechat.wallet.job.TransactionRecordJob;
 
 /**
  * create SystemConfiguration by huc
@@ -65,6 +68,31 @@ public class SystemConfiguration {
         return bean;
     }*/
     //多任务时的Scheduler，动态设置Trigger。一个SchedulerFactoryBean可能会有多个Trigger
+
+    @Bean(name = "contractJob")
+    public JobDetail contractJob() throws SchedulerException {
+        Scheduler scheduler = (Scheduler) SpringContextUtil.getBean("multitaskScheduler");
+        //配置定时任务对应的Job，这里执行的是ScheduledJob2类中定时的方法
+        JobDetail jobDetail = JobBuilder.newJob(ContractJob.class).withIdentity("job1", "group1").build();
+        CronScheduleBuilder scheduleBuilder = CronScheduleBuilder.cronSchedule("0 */5 * * * ?");
+        // 每6s执行一次
+        CronTrigger cronTrigger = TriggerBuilder.newTrigger().withIdentity("trigger1", "group1").withSchedule(scheduleBuilder).build();
+        scheduler.scheduleJob(jobDetail,cronTrigger);
+        return jobDetail;
+    }
+
+    @Bean(name = "transactionReocrdJob")
+    public JobDetail transactionReocrdJob() throws SchedulerException {
+        Scheduler scheduler = (Scheduler) SpringContextUtil.getBean("multitaskScheduler");
+        JobDetail jobDetail = JobBuilder.newJob(TransactionRecordJob.class).withIdentity("job2", "group3").build();
+        CronScheduleBuilder scheduleBuilder = CronScheduleBuilder.cronSchedule("0 */1 * * * ?");
+        CronTrigger cronTrigger = TriggerBuilder.newTrigger().withIdentity("trigger2", "group2").withSchedule(scheduleBuilder).build();
+        scheduler.scheduleJob(jobDetail,cronTrigger);
+        return jobDetail;
+    }
+
+
+
     @Bean(name = "multitaskScheduler")
     public SchedulerFactoryBean schedulerFactoryBean(){
         SchedulerFactoryBean schedulerFactoryBean = new SchedulerFactoryBean();

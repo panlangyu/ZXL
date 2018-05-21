@@ -3,11 +3,13 @@ package pro.bechat.wallet.configuration;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
+import org.springframework.stereotype.Component;
 
 /**
  * create SpringContextUtil by huc
  * 2018/4/18  下午2:19
  */
+@Component
 public class SpringContextUtil  implements ApplicationContextAware {
 
     // Spring应用上下文环境
@@ -38,5 +40,9 @@ public class SpringContextUtil  implements ApplicationContextAware {
      */
     public static Object getBean(String name) throws BeansException {
         return applicationContext.getBean(name);
+    }
+
+    public static Object getBean(Class clazz) throws BeansException {
+        return applicationContext.getBean(clazz);
     }
 }

@@ -236,12 +236,9 @@
       <if test="status != null">
         status = #{status,jdbcType=VARCHAR},
       </if>
-      <if test="transactionindex != null">
-        transactionIndex = #{transactionindex,jdbcType=VARCHAR},
-      </if>
     </set>
     where 1 = 1
-    <if test="transactionHash != null and transactionHash != '' ">
+    <if test="transactionhash != null and transactionhash != '' ">
       AND transactionHash = #{transactionhash,jdbcType=VARCHAR}
     </if>
 
@@ -274,4 +271,13 @@
       transactionIndex = #{transactionindex,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
+
+
+  <select id="selectContractPending" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from WLT_T_TRANSACTIONRECORD
+    WHERE status = -1
+
+  </select>
 </mapper>

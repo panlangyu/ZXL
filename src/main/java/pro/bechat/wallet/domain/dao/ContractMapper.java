@@ -3,6 +3,8 @@ package pro.bechat.wallet.domain.dao;
 import org.springframework.stereotype.Repository;
 import pro.bechat.wallet.domain.model.model.Contract;
 
+import java.util.List;
+
 @Repository
 public interface ContractMapper extends BasicMapper<Contract>{
     /**
@@ -52,4 +54,9 @@ public interface ContractMapper extends BasicMapper<Contract>{
      * @mbggenerated
      */
     int updateByPrimaryKey(Contract record);
+
+    /**
+     * @return List<Contract>
+     */
+    List<Contract> selectContractPending();
 }

@@ -9,9 +9,9 @@ abstract class BasicService<T> {
 
     protected abstract BasicMapper basicMapper();
 
-    public void save(T t){
-
-        basicMapper().insert(t);
+    public int save(T t){
+        int rows = basicMapper().insert(t);
+        return rows;
     }
 
     public List<T> findList(T t){

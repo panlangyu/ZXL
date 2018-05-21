@@ -193,4 +193,12 @@
       updateTime = #{updatetime,jdbcType=VARCHAR}
     where contractId = #{contractid,jdbcType=BIGINT}
   </update>
+
+  <select id="selectContractPending"  resultMap="BaseResultMap" >
+    SELECT
+    <include refid="Base_Column_List" />
+    from WLT_T_CONTRACT
+    where status = 1
+  </select>
+
 </mapper>

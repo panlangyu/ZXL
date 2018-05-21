@@ -6,7 +6,6 @@ import org.apache.commons.lang.ArrayUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.core.methods.response.Transaction;
@@ -58,7 +57,7 @@ public class RecordRedis {
     /**
      * redisKye: contract:transfers:hash 合约转账
      */
-    @Scheduled(fixedRate = 40000)
+   // @Scheduled(fixedRate = 40000)
     public void contractTransfers(){
         if (web3j == null){
             web3j = service.newHttpWeb3j();
