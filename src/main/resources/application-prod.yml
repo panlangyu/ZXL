@@ -14,10 +14,10 @@ spring:
 #        max-attempts: 10
   datasource:
         name: wallet
-        url: jdbc:mysql://39.107.103.65:3306/wallet_pro
+        url: jdbc:mysql://127.0.0.1:3306/wallet
 #        url: jdbc:mysql://127.0.0.1:3306/wallet
-        username: root
-        password: wallet201803
+        username: wallet
+        password: wallet
         # 使用druid数据源
         type: com.alibaba.druid.pool.DruidDataSource
         driver-class-name: com.mysql.jdbc.Driver

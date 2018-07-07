@@ -2,6 +2,4 @@ server:
   port: 8083
 spring:
   profiles:
-    active: prod
-#    active: dataSourcePro, dataRedisPro, prod
-#    active: dataSourceTest, dataRedisTest, dev
+    active: dev

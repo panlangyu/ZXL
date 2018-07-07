@@ -2,7 +2,7 @@ package pro.bechat.wallet.domain.exception;
 
 /**
  * @ClassName: RpcServiceException
- * @author 麦子 wheat235@gmail.com
+ * @author
  */
 public class RpcServiceException extends Exception {
 

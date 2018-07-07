@@ -3,11 +3,11 @@ spring:
     name: bechatwallet
   cloud:
   datasource:
-        name: wallet
-        url: jdbc:mysql://39.107.103.65:3306/wallet
+        name: block_chain
+        url: jdbc:mysql://39.105.26.249:3306/block_chain
 #        url: jdbc:mysql://172.17.0.1:3306/wallet
         username: root
-        password: wallet201803
+        password: 68d63351097d882f
         # 使用druid数据源
         type: com.alibaba.druid.pool.DruidDataSource
         driver-class-name: com.mysql.jdbc.Driver
