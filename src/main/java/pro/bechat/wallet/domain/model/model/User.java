@@ -20,7 +20,15 @@ public class User {
     private String transactionPW;
     private String machinePW;
     private String machineId;
+    private String address;
 
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
 
     public String getUserId() {
         return userId;

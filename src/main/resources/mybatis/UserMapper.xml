@@ -19,18 +19,19 @@
     seeds,
     transactionPW,
     machinePW,
-    machineId
+    machineId,
+    address
   </sql>
     <select id="selectByPrimaryKey" parameterType="pro.bechat.wallet.domain.model.model.User"
             resultType="pro.bechat.wallet.domain.model.model.User">
         select
         <include refid="Base_Column_List"/>
-        from WLT_T_USERINFO
+        from USER
         where machineId = #{machineId,jdbcType=INTEGER}
     </select>
 
     <insert id="insert" parameterType="pro.bechat.wallet.domain.model.model.User"  useGeneratedKeys="true" keyProperty="userId" keyColumn="id"  >
-    insert into WLT_T_USERINFO (
+    insert into USER (
     userName,
     sex,
     userTrueName,
@@ -43,7 +44,8 @@
     seeds,
     transactionPW,
     machinePW,
-    machineId)
+    machineId,
+    address)
     values (
     #{userName,jdbcType=VARCHAR},
     #{sex,jdbcType=VARCHAR},
@@ -57,8 +59,13 @@
       #{seeds,jdbcType=VARCHAR},
       #{transactionPW,jdbcType=VARCHAR},
       #{machinePW,jdbcType=VARCHAR},
-      #{machineId,jdbcType=VARCHAR}
+      #{machineId,jdbcType=VARCHAR},
+      #{address,jdbcType=VARCHAR}
       )
   </insert>
+
+    <update id="update" parameterType="pro.bechat.wallet.domain.model.model.User" >
+        update USER
+    </update>
 
 </mapper>

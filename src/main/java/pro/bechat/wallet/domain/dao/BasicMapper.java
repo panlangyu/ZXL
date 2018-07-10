@@ -18,7 +18,6 @@ public interface BasicMapper<T> {
 
     /**
      * 根据主键删除数据
-     *
      * @param id
      * @return
      */

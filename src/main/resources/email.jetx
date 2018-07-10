@@ -1,0 +1,2 @@
+<div style="color='red'">尊敬的${userName}您好，欢迎注册HUC</div>
+<p>您的验证码是${code}</p>
