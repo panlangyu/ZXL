@@ -26,12 +26,12 @@
             resultType="pro.bechat.wallet.domain.model.model.User">
         select
         <include refid="Base_Column_List"/>
-        from USER
+        from HUC_T_USER
         where machineId = #{machineId,jdbcType=INTEGER}
     </select>
 
     <insert id="insert" parameterType="pro.bechat.wallet.domain.model.model.User"  useGeneratedKeys="true" keyProperty="userId" keyColumn="id"  >
-    insert into USER (
+    insert into HUC_T_USER (
     userName,
     sex,
     userTrueName,
@@ -65,7 +65,47 @@
   </insert>
 
     <update id="update" parameterType="pro.bechat.wallet.domain.model.model.User" >
-        update USER
+        update HUC_T_USER
+        <set>
+            <if test="userName != null and userName != '' ">
+                userName = #{userName}
+            </if>
+            <if test="sex != null and sex != '' ">
+                sex = #{sex}
+            </if>
+            <if test="userTrueName != null and userTrueName != '' ">
+                userTrueName = #{userTrueName}
+            </if>
+            <if test="userPhone != null and userPhone != '' ">
+                userPhone = #{userPhone}
+            </if>
+            <if test="userIdCard != null and userIdCard != '' ">
+                userIdCard = #{userIdCard}
+            </if>
+            <if test="userCountry != null and userCountry != '' ">
+                userCountry = #{userCountry}
+            </if>
+            <if test="userEmail != null and userEmail != '' ">
+                userEmail = #{userEmail}
+            </if>
+            <if test="seeds != null and seeds != '' ">
+                seeds = #{seeds}
+            </if>
+            <if test="transactionPW ！= null and transactionPW != '' ">
+                transactionPW = #{transactionPW}
+            </if>
+            <if test="address != null and address != '' ">
+                address = #{address}
+            </if>
+        </set>
     </update>
+
+    <select id="findList" parameterType="pro.bechat.wallet.domain.model.model.User" resultType="pro.bechat.wallet.domain.model.model.User">
+        select * from HUC_T_USER where userEmail = #{userEmail}
+        <if test=" transactionPW != null and transactionPW != '' ">
+            and transactionPW = #{transactionPW}
+        </if>
+
+    </select>
 
 </mapper>

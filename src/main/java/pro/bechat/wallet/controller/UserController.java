@@ -40,7 +40,6 @@ public class UserController {
         return "index ok.";
     }
 
-
     @GetMapping(value = "/sendEmail")
     public String sendEmail(String email){
         JetEngine engine = JetEngine.create();
@@ -58,21 +57,31 @@ public class UserController {
         return code;
     }
 
-    @GetMapping(value = "/register")
+    @PostMapping(value = "/register")
     public String register(@RequestBody User user){
         JSONObject object = new JSONObject();
+        ApiResponse response = null;
+
         int userId = 0;
         try{
             if (!user.getUserEmail().isEmpty() && !user.getTransactionPW().isEmpty()){
-                userId = userService.save(user);
-                object.put("userId",userId);
+                List<User> userList = userService.findList(user);
+                if (userList.size() == 0){
+                    userId = userService.save(user);
+                    object.put("userId",userId);
+                    response = new ApiResponse(4,object);
+                }else{
+                    object.put("msg","用户已经注册");
+                    response = new ApiResponse(1,object);
+                }
+
             }else{
                 object.put("msg","email and password is not null!!!");
             }
         } catch (Exception e){
             object.put("msg",e.getMessage());
         }
-        return JSON.toJSONString(new ApiResponse(4,JSON.toJSONString(object)));
+        return JSON.toJSONString(response);
     }
 
 
@@ -88,17 +97,42 @@ public class UserController {
          }else{
              object.put("msg","用户不存在");
          }
-        return JSON.toJSONString(new ApiResponse(4,JSON.toJSONString(object)));
+        return JSON.toJSONString(new ApiResponse(4,object));
     }
 
+
+    @PostMapping(value = "/findUser")
+    public String findUser(@RequestBody User user){
+        ApiResponse response = null;
+        JSONObject object = new JSONObject();
+        try{
+            List<User> users = userService.findList(user);
+            object.put("data",users);
+            object.put("msg","查询成功");
+            response = new ApiResponse(4,object);
+        }catch (Exception e){
+            object.put("msg","查询失败");
+            response = new ApiResponse(4,object);
+        }
+        return JSON.toJSONString(response);
+    }
 
     @PostMapping(value = "/update")
     public String update(@RequestBody User user){
-
-
-        return null;
+        ApiResponse response = null;
+        JSONObject object = new JSONObject();
+        try{
+            userService.update(user);
+            object.put("msg","更新成功");
+            response = new ApiResponse(4,object);
+        }catch (Exception e){
+            object.put("msg",e.getMessage());
+            response = new ApiResponse(1,object);
+        }
+        return JSON.toJSONString(response);
     }
 
+    @org.jetbrains.annotations.NotNull
     public static String getThree() {
         Random rad = new Random();
         return rad.nextInt(1000000) + "";

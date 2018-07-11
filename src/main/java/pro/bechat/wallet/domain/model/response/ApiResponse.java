@@ -28,7 +28,7 @@ public class ApiResponse {
 
   int code;
   String type;
-  String message;
+  Object message;
   Object data;
   
   public ApiResponse(){}
@@ -41,7 +41,7 @@ public class ApiResponse {
     this.data = data;
   }
 
-  public ApiResponse(int code, String message){
+  public ApiResponse(int code, Object message){
     this.code = code;
     switch(code){
     case ERROR:
@@ -83,11 +83,11 @@ public class ApiResponse {
     this.type = type;
   }
 
-  public String getMessage() {
+  public Object getMessage() {
     return message;
   }
 
-  public void setMessage(String message) {
+  public void setMessage(Object message) {
     this.message = message;
   }
 }

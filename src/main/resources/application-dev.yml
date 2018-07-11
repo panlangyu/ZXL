@@ -3,8 +3,8 @@ spring:
     name: bechatwallet
   cloud:
   datasource:
-        name: block_chain
-        url: jdbc:mysql://39.105.26.249:3306/block_chain
+        name: PMBC
+        url: jdbc:mysql://39.105.26.249:3306/PMBC
 #        url: jdbc:mysql://172.17.0.1:3306/wallet
         username: root
         password: 68d63351097d882f
