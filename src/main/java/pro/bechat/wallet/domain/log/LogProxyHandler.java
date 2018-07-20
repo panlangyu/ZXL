@@ -44,18 +44,18 @@ public class LogProxyHandler {
         return result;
     }
 
-    //@Before("execution(public * pro.bechat.wallet.process.*..process(..))")
+    //@Before("execution(static * pro.bechat.wallet.process.*..process(..))")
     public void doBeforeInServiceLayer(JoinPoint joinPoint) {
         //TODO process code ...
     }
 
-    //@After("execution(public * com.travelsky.ypb.*..process(..))")
+    //@After("execution(static * com.travelsky.ypb.*..process(..))")
     public void doAfterInServiceLayer(JoinPoint joinPoint) {
         //TODO process code...
     }
 
 
-    //@Pointcut("execution(public * pro.bechat.wallet.process.*..process(..))")
+    //@Pointcut("execution(static * pro.bechat.wallet.process.*..process(..))")
     public void webLog(JoinPoint joinPoint) {
         //TODO process code...
     }

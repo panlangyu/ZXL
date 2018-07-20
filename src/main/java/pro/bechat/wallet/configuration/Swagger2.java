@@ -6,11 +6,11 @@ package pro.bechat.wallet.configuration;
  */
 /*
 @Configuration
-public class Swagger2 {
+static class Swagger2 {
 
 
     @Bean
-    public Docket createRestApi() {
+    static Docket createRestApi() {
         return new Docket(DocumentationType.SWAGGER_2)
                 .apiInfo(apiInfo())
                 .select()

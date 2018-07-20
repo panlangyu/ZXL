@@ -21,7 +21,7 @@ abstract class BasicService<T> {
 
     public void update(T t){
 
-        basicMapper().updateByPrimaryKey(t);
+        basicMapper().update(t);
     }
 
     public int updateByPrimaryKeySelective(T t){

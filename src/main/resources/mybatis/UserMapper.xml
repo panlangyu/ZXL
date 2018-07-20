@@ -68,42 +68,68 @@
         update HUC_T_USER
         <set>
             <if test="userName != null and userName != '' ">
-                userName = #{userName}
+                userName = #{userName},
             </if>
             <if test="sex != null and sex != '' ">
-                sex = #{sex}
+                sex = #{sex},
             </if>
             <if test="userTrueName != null and userTrueName != '' ">
-                userTrueName = #{userTrueName}
+                userTrueName = #{userTrueName},
             </if>
             <if test="userPhone != null and userPhone != '' ">
-                userPhone = #{userPhone}
+                userPhone = #{userPhone},
             </if>
             <if test="userIdCard != null and userIdCard != '' ">
-                userIdCard = #{userIdCard}
+                userIdCard = #{userIdCard},
             </if>
             <if test="userCountry != null and userCountry != '' ">
-                userCountry = #{userCountry}
-            </if>
-            <if test="userEmail != null and userEmail != '' ">
-                userEmail = #{userEmail}
-            </if>
-            <if test="seeds != null and seeds != '' ">
-                seeds = #{seeds}
-            </if>
-            <if test="transactionPW ！= null and transactionPW != '' ">
-                transactionPW = #{transactionPW}
+                userCountry = #{userCountry},
             </if>
             <if test="address != null and address != '' ">
-                address = #{address}
+                address = #{address},
+            </if>
+            <if test="coinType != null and coinType != '' ">
+                coinType = #{coinType},
+            </if>
+            <if test="buyNum != null and  buyNum != '' ">
+                buyNum = #{buyNum},
+            </if>
+            <if test="postalCode != null and  postalCode != '' ">
+                postalCode = #{postalCode}
             </if>
         </set>
+        where userId = #{userId}
     </update>
 
     <select id="findList" parameterType="pro.bechat.wallet.domain.model.model.User" resultType="pro.bechat.wallet.domain.model.model.User">
-        select * from HUC_T_USER where userEmail = #{userEmail}
+        select
+        userId,
+        userName,
+        sex,
+        userTrueName,
+        userPhone,
+        userIdCard,
+        userCountry,
+        userEmail,
+        createTime,
+        updateTime,
+        machinePW,
+        machineId,
+        address,
+        coinType,
+        buyNum,
+        birthDate,
+        postalCode,
+        ethAddress
+        from HUC_T_USER where  1 = 1
+        <if test="userEmail != null and userEmail != '' ">
+            and userEmail = #{userEmail}
+        </if>
         <if test=" transactionPW != null and transactionPW != '' ">
             and transactionPW = #{transactionPW}
+        </if>
+        <if test="userId != '1' and userId !=  1  and userId != '' and userId != null ">
+            and  userId = #{userId}
         </if>
 
     </select>

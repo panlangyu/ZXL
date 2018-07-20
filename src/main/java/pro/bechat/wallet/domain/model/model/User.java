@@ -22,6 +22,53 @@ public class User {
     private String machineId;
     private String address;
 
+    private String coinType;
+    private String buyNum;
+    private String birthDate;
+    private String postalCode;
+    private String ethAddress;
+
+
+    public String getCoinType() {
+        return coinType;
+    }
+
+    public void setCoinType(String coinType) {
+        this.coinType = coinType;
+    }
+
+    public String getBuyNum() {
+        return buyNum;
+    }
+
+    public void setBuyNum(String buyNum) {
+        this.buyNum = buyNum;
+    }
+
+    public String getBirthDate() {
+        return birthDate;
+    }
+
+    public void setBirthDate(String birthDate) {
+        this.birthDate = birthDate;
+    }
+
+    public String getPostalCode() {
+        return postalCode;
+    }
+
+    public void setPostalCode(String postalCode) {
+        this.postalCode = postalCode;
+    }
+
+    public String getEthAddress() {
+        return ethAddress;
+    }
+
+    public void setEthAddress(String ethAddress) {
+        this.ethAddress = ethAddress;
+    }
+
     public String getAddress() {
         return address;
     }
@@ -159,6 +206,12 @@ public class User {
         sb.append(", transactionPW='").append(transactionPW).append('\'');
         sb.append(", machinePW='").append(machinePW).append('\'');
         sb.append(", machineId='").append(machineId).append('\'');
+        sb.append(", address='").append(address).append('\'');
+        sb.append(", coinType='").append(coinType).append('\'');
+        sb.append(", buyNum='").append(buyNum).append('\'');
+        sb.append(", birthDate='").append(birthDate).append('\'');
+        sb.append(", postalCode='").append(postalCode).append('\'');
+        sb.append(", ethAddress='").append(ethAddress).append('\'');
         sb.append('}');
         return sb.toString();
     }

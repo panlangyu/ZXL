@@ -35,13 +35,3 @@ pagehelper:
     reasonable: true
     supportMethodsArguments: true
     params: count=countSql
-
-#eureka:
-#  instance:
-#    hostname: 127.0.0.1
-#    prefer-ip-address: true
-#  client:
-#    service-url:
-#      defaultZone: http://user:${REGISTRY_SERVER_PASSWORD:password}@${eureka.instance.hostname}:8085/eureka/
-
-

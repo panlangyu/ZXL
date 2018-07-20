@@ -35,6 +35,8 @@ public class MySwagger2 extends WebMvcConfigurerAdapter {
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/**").addResourceLocations("classpath:/META-INF/resources/").setCachePeriod(0);
+        registry.addResourceHandler("/static/**").addResourceLocations("classpath:/static/").setCachePeriod(0);
+
     }
 
     private ApiInfo apiInfo() {

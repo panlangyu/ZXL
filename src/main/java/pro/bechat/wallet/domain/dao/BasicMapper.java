@@ -52,7 +52,7 @@ public interface BasicMapper<T> {
      * @param t
      * @return
      */
-    int updateByPrimaryKey(T t);
+    int update(T t);
 
 
     int updateByPrimaryKeySelective(T t);
