@@ -3,11 +3,12 @@ spring:
     name: bechatwallet
   cloud:
   datasource:
-        name: PMBC
-        url: jdbc:mysql://39.105.26.249:3306/PMBC
+        name: VAHWallet
+#        url: jdbc:mysql://39.105.26.249:3306/PMBC
 #        url: jdbc:mysql://172.17.0.1:3306/wallet
-        username: root
-        password: 68d63351097d882f
+        url: jdbc:mysql://192.168.10.108:3306/VAHWallet
+        username: VAHWallet
+        password: 4faP4RmnNb6drfZ4
         # 使用druid数据源
         type: com.alibaba.druid.pool.DruidDataSource
         driver-class-name: com.mysql.jdbc.Driver

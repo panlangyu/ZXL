@@ -2,10 +2,10 @@ package pro.bechat.wallet.controller;
 
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import pro.bechat.wallet.domain.model.response.ApiResponse;
+import pro.bechat.wallet.domain.model.response.Result;
+import pro.bechat.wallet.domain.service.MnemonitService;
 import pro.bechat.wallet.domain.service.UserService;
 
 import java.util.logging.Logger;
@@ -16,7 +16,7 @@ import java.util.logging.Logger;
  */
 @RestController
 @RequestMapping("/user")
-@Api(value="用户业务接口",tags={"user service"})
+@Api(value = "用户业务接口", tags = {"user service"})
 public class UserController {
 
     Logger logger = Logger.getLogger(UserController.class.getSimpleName());
@@ -24,15 +24,23 @@ public class UserController {
     @Autowired
     UserService userService;
 
-    @RequestMapping(value = "/index",method = RequestMethod.GET)
+    @Autowired
+    MnemonitService mnemonitService;
+
+    @RequestMapping(value = "/index", method = RequestMethod.GET)
     @ResponseBody
-    public String index(){
+    public String index() {
         return "index ok.";
     }
 
 
-
-
-
+    @GetMapping(value = "/mnemonit")
+    public Result productMnemonit() {
+        try {
+            return Result.getSuccess(mnemonitService.getMnemonit());
+        } catch (Exception e) {
+            return Result.getErro("资源不正确");
+        }
+    }
 
 }
