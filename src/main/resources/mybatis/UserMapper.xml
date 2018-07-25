@@ -88,4 +88,13 @@
         from VAH_T_USER
         where id = #{id} AND status = 1
     </select>
+
+    <update id="updateUserHeadPic">
+        update VAH_T_USER set headImg = #{picUrl} where  id = #{id}
+    </update>
+
+
+    <update id="updateUserNameAndSexAndPic" parameterType="java.lang.Integer">
+        update VAH_T_USER set sex = #{sex} , nickName = #{name} ,  headImg = #{pic} where  id = #{id}
+    </update>
 </mapper>

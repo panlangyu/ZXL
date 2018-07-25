@@ -39,4 +39,19 @@ public interface UserMapper extends BasicMapper<User>{
      * @return
      */
     User findUserById(@Param("id") int id);
+
+    /**
+     * 用户修改性别和姓名
+     * @param name
+     * @param sex
+     * @return
+     */
+    int updateUserNameAndSexAndPic(@Param("name") String name,@Param("sex") int sex,@Param("id")int id,@Param("pic") String pic);
+
+    /**
+     * 修改用户地址
+     * @param picUrl
+     * @return
+     */
+    int updateUserHeadPic(@Param("picUrl")String picUrl,@Param("id")int id);
 }

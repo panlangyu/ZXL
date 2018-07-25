@@ -4,6 +4,7 @@ import io.jsonwebtoken.Claims;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import pro.bechat.wallet.domain.model.response.Result;
@@ -46,4 +47,25 @@ public class UserController {
             return Result.getErro(e.getMessage());
         }
     }
+
+    @PostMapping("/updateUserHeadPic")
+    public Result updateUserPic(int id, String pic) {
+        try {
+            userService.updateUserPic(id, pic);
+            return Result.getSuccess("修改用户头像成功");
+        } catch (Exception e) {
+            return Result.getErro(e.getMessage());
+        }
+    }
+
+    @PostMapping("/updateUserInfo")
+    public Result updateUserNameAndSex(int id, String name,int sex,String pic) {
+        try {
+            userService.updateUser(id, name,sex,pic);
+            return Result.getSuccess("修改用户头像成功");
+        } catch (Exception e) {
+            return Result.getErro(e.getMessage());
+        }
+    }
+
 }

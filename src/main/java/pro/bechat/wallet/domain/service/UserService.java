@@ -132,4 +132,38 @@ public class UserService extends BasicService<User> {
         return user;
     }
 
+    /**
+     * 查询用户
+     *
+     * @param nickName
+     * @param sex
+     * @param
+     */
+    public void updateUser(int id, String nickName, int sex,String pic) throws Exception {
+        if (sex != 1 && sex != 0) {
+            throw new Exception("用户性别错误");
+        }
+        if (nickName == null || nickName.equals("")) {
+            throw new Exception("请输入正确的用户名");
+        }
+        int i = userMapper.updateUserNameAndSexAndPic(nickName, sex, id,pic);
+        if (i == 1) {
+            return;
+        } else {
+            throw new Exception("修改用户信息失败");
+        }
+    }
+
+    public void updateUserPic(int id, String pic) throws Exception {
+        if (pic == null || !pic.contains("http:")) {
+            throw new Exception("传递图片地址错误");
+        }
+        int i = userMapper.updateUserHeadPic(pic, id);
+        if (i == 1) {
+            return;
+        } else {
+            throw new Exception("修改用户信息失败");
+        }
+    }
+
 }
