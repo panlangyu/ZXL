@@ -1,84 +1,49 @@
 package pro.bechat.wallet.controller;
 
+import io.jsonwebtoken.Claims;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
-import pro.bechat.wallet.domain.model.model.User;
-import pro.bechat.wallet.domain.model.response.ApiResponse;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import pro.bechat.wallet.domain.model.response.Result;
-import pro.bechat.wallet.domain.service.MnemonitService;
 import pro.bechat.wallet.domain.service.UserService;
 import pro.bechat.wallet.publics.TokenUtil;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.util.logging.Logger;
 
 /**
- * create IndexController by huc
- * 2018/4/19  上午6:4
+ * @Author ch
+ * @Date Create int 2018/7/25 17:20
+ * @email 869360026@qq.com
  */
 @RestController
 @RequestMapping("/user")
-@Api(value = "用户业务接口", tags = {"user service"})
+@Api(value = "用户相关", tags = {"校验cookie "})
 public class UserController {
-
-    Logger logger = Logger.getLogger(UserController.class.getSimpleName());
+    Logger logger = Logger.getLogger(CommonController.class.getSimpleName());
 
     @Autowired
     UserService userService;
 
     @Autowired
-    MnemonitService mnemonitService;
+    HttpServletRequest request;
 
-    @RequestMapping(value = "/index", method = RequestMethod.GET)
-    @ResponseBody
-    public String index() {
-        return "index ok.";
-    }
-
-
-    @GetMapping(value = "/mnemonit")
-    public Result productMnemonit() {
+    @GetMapping("/user")
+    public Result getUserById() {
         try {
-            return Result.getSuccess(mnemonitService.getMnemonit());
-        } catch (Exception e) {
-            return Result.getErro("资源不正确");
-        }
-    }
-
-
-    @GetMapping("/register")
-    public Result register(@RequestParam(name = "phone", defaultValue = "") String phone,
-                           @RequestParam(name = "pass", defaultValue = "") String pass,
-                           @RequestParam(name = "invitationCode", defaultValue = "") String invitationCode,
-                           @RequestParam(name = "keyWorkds", defaultValue = "") String keyWorkds
-    ) {
-        try {
-            userService.register(phone, pass, keyWorkds, invitationCode);
-            return Result.getSuccess("注册成功");
+            String token = request.getHeader("token");
+            int id = 0;
+            try {
+                Claims claims = TokenUtil.verifyToken(token);
+                id = Integer.parseInt(claims.getId());
+            } catch (Exception e) {
+                return Result.getErro("token校验失败");
+            }
+            return Result.getSuccess(userService.findUserById(id));
         } catch (Exception e) {
             return Result.getErro(e.getMessage());
         }
     }
-
-
-
-    @Autowired
-    private HttpServletResponse response;
-
-    @RequestMapping("/login")
-    public Result login(String tel, String password) {
-        try {
-            User user = userService.login(tel,password);
-            String token = TokenUtil.generToken(user.getId()+"", null, null);
-            response.setHeader("token",token);
-            return  Result.getSuccess(user);
-        } catch (Exception e) {
-            return  Result.getSuccess(e.getMessage());
-        }
-    }
-
-
 }

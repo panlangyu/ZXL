@@ -32,4 +32,11 @@ public interface UserMapper extends BasicMapper<User>{
      * @return
      */
     int updateInvitaionCode(@Param("id") int id,@Param("invitationCode") String invitationCode);
+
+    /**
+     * 根据用户id查询信息
+     * @param id
+     * @return
+     */
+    User findUserById(@Param("id") int id);
 }

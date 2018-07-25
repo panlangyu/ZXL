@@ -108,7 +108,6 @@ public class UserService extends BasicService<User> {
         if (null == user) {
             throw new Exception("用户不存在");
         }
-
         if (user.getPasswd().equals(MD5Utils.md5Hex(pass + user.getMnemonit()))) {
             user.setPasswd("");
             user.setSeeds("");
@@ -117,6 +116,20 @@ public class UserService extends BasicService<User> {
         } else {
             throw new Exception("密码与账户不符合");
         }
+    }
+
+
+    public User findUserById(int id) throws Exception {
+        User user = null;
+        try {
+            user = userMapper.findUserById(id);
+        } catch (Exception e) {
+            throw new Exception("系统异常");
+        }
+        if (null == user) {
+            throw new Exception("用户不存在");
+        }
+        return user;
     }
 
 }

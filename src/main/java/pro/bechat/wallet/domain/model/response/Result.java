@@ -64,6 +64,10 @@ public class Result {
         return new Result(ERROR,"error",msg,null);
     }
 
+    public static Result getErro(int code,String msg){
+        return new Result(code,"error",msg,null);
+    }
+
     public static Result getSuccess(Object data){
         return new Result(0,"error","获取",data);
     }

@@ -1,11 +1,14 @@
 package pro.bechat.wallet.interceptor;
 
+import com.alibaba.fastjson.JSON;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
+import pro.bechat.wallet.domain.model.response.Result;
 import pro.bechat.wallet.publics.TokenUtil;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -23,32 +26,24 @@ public class TokenInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object o) throws Exception {
 
         String requestURI = httpServletRequest.getRequestURI();
+        //便利用户cookie
         String tokenStr = httpServletRequest.getHeader("token");
-        String token = "";
         if (requestURI.contains("/user/")) {
-            if(requestURI.contains("/user/login")){
-                return true;
-            }
-            token = httpServletRequest.getHeader("token");
-            if (token == null && tokenStr == null) {
-                System.out.println("real token:======================is null");
-                String str = "{'errorCode':801,'message':'缺少token，无法验证','data':null}";
+            if (tokenStr == null && tokenStr == null) {
+                String str = JSON.toJSONString(Result.getErro(10083,"token失效"));
                 dealErrorReturn(httpServletRequest, httpServletResponse, str);
                 return false;
             }
-            if (tokenStr != null) {
-                token = tokenStr;
-            }
+
             try {
-                token = TokenUtil.updateToken(token);
-            }catch (Exception e){
-                System.out.println("real token:======================is null");
-                String str = "{'errorCode':801,'message':'token错误','data':null}";
+                TokenUtil.verifyToken(tokenStr);
+            } catch (Exception e) {
+                String str = "{'code':10083,'type':'error','message':'cookie失效'}";
                 dealErrorReturn(httpServletRequest, httpServletResponse, str);
                 return false;
             }
         }
-        httpServletResponse.setHeader("token", token);
+        httpServletResponse.setHeader("token", tokenStr);
         return true;
     }
 

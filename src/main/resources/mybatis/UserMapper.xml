@@ -4,7 +4,6 @@
     <resultMap id="BaseResultMap" type="pro.bechat.wallet.domain.model.model.User">
         <id column="userId" jdbcType="INTEGER" property="id"/>
         <result column="phoneNum" jdbcType="VARCHAR" property="phoneNum"/>
-        <result column="passWd" jdbcType="VARCHAR" property="passwd"/>
         <result column="seeds" jdbcType="VARCHAR" property="seeds"/>
         <result column="headImg" jdbcType="VARCHAR" property="headImg"/>
         <result column="status" jdbcType="INTEGER" property="status"/>
@@ -13,7 +12,6 @@
         <result column="createTime" jdbcType="TIMESTAMP" property="createTime"/>
         <result column="updateTime" jdbcType="TIMESTAMP" property="updateTime"/>
         <result column="relationship" jdbcType="VARCHAR" property="relationship"/>
-        <result column="mnemonit" jdbcType="VARCHAR" property="mnemonit"/>
         <result column="invitationCode" jdbcType="VARCHAR" property="invitationCode"/>
     </resultMap>
     <sql id="Base_Column_List">
@@ -84,4 +82,10 @@
     <update id="updateInvitaionCode">
         update VAH_T_USER set invitationCode = #{invitationCode} where  id = #{id}
     </update>
+    <select id="findUserById" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        from VAH_T_USER
+        where id = #{id} AND status = 1
+    </select>
 </mapper>
