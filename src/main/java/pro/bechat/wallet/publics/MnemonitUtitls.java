@@ -10,6 +10,7 @@ import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
 
 import static org.web3j.crypto.Hash.sha256;
 
@@ -142,7 +143,7 @@ public class MnemonitUtitls {
      *
      * @return
      */
-    private static List<String> populateWordList() throws IOException {
+    public static List<String> populateWordList() throws IOException {
         InputStream inputStream = Thread.currentThread().getContextClassLoader()
                 .getResourceAsStream("english_worlds.txt");
         return readAllLines(inputStream);
@@ -155,5 +156,14 @@ public class MnemonitUtitls {
             data.add(line);
         }
         return data;
+    }
+
+    public static String getRandomName() throws IOException {
+        if (WORD_LIST == null) {
+            WORD_LIST = populateWordList();
+        }
+        Random random = new Random();
+        int i = random.nextInt(2048);
+        return WORD_LIST.get(i);
     }
 }
