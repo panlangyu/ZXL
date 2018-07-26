@@ -36,3 +36,12 @@ pagehelper:
     reasonable: true
     supportMethodsArguments: true
     params: count=countSql
+
+logging:
+  level:
+    pro.bechat.wallet.domain.dao: DEBUG
+
+#配置servert.host暴露IP
+server:
+  address:192.168.10.117
+
