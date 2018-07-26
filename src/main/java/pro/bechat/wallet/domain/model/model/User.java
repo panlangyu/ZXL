@@ -1,160 +1,73 @@
 package pro.bechat.wallet.domain.model.model;
 
+import java.util.Date;
+
 /**
  * create User by huc
  * 2018/4/20  下午2:16
  */
 public class User {
 
-    private String userId;
-    private String userName;
-    private String sex;
-    private String userTrueName;
-    private String userPhone;
-    private String userIdCard;
-    private String userCountry;
-    private String userEmail;
-    private String createTime;
-    private String updateTime;
+    public static int STATUS_NOMARL = 1;
+    public static int STATUS_OUT = 2;
+    public static int STATUS_FREE = 3;
+
+    private int id;
+
+    private String phoneNum;
+
+    private String passwd;
+
     private String seeds;
-    private String transactionPW;
-    private String machinePW;
-    private String machineId;
-    private String address;
 
-    private String coinType;
-    private String buyNum;
-    private String birthDate;
-    private String postalCode;
-    private String ethAddress;
+    private String headImg;
 
+    private int status;
 
-    public String getCoinType() {
-        return coinType;
+    private String nickName;
+
+    private int sex;
+
+    private Date createTime;
+
+    private Date updateTime;
+
+    private String relationship;
+
+    private String invitationCode;
+
+    private String mnemonit;
+
+    public String getInvitationCode() {
+        return invitationCode;
     }
 
-    public void setCoinType(String coinType) {
-        this.coinType = coinType;
+    public void setInvitationCode(String invitationCode) {
+        this.invitationCode = invitationCode;
     }
 
-    public String getBuyNum() {
-        return buyNum;
+    public int getId() {
+        return id;
     }
 
-    public void setBuyNum(String buyNum) {
-        this.buyNum = buyNum;
+    public void setId(int id) {
+        this.id = id;
     }
 
-    public String getBirthDate() {
-        return birthDate;
+    public String getPhoneNum() {
+        return phoneNum;
     }
 
-    public void setBirthDate(String birthDate) {
-        this.birthDate = birthDate;
+    public void setPhoneNum(String phoneNum) {
+        this.phoneNum = phoneNum;
     }
 
-    public String getPostalCode() {
-        return postalCode;
+    public String getPasswd() {
+        return passwd;
     }
 
-    public void setPostalCode(String postalCode) {
-        this.postalCode = postalCode;
-    }
-
-    public String getEthAddress() {
-        return ethAddress;
-    }
-
-    public void setEthAddress(String ethAddress) {
-        this.ethAddress = ethAddress;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
-    public String getUserId() {
-        return userId;
-    }
-
-    public void setUserId(String userIdl) {
-        this.userId = userIdl;
-    }
-
-    public String getUserName() {
-        return userName;
-    }
-
-    public void setUserName(String userName) {
-        this.userName = userName;
-    }
-
-    public String getSex() {
-        return sex;
-    }
-
-    public void setSex(String sex) {
-        this.sex = sex;
-    }
-
-    public String getUserTrueName() {
-        return userTrueName;
-    }
-
-    public void setUserTrueName(String userTrueName) {
-        this.userTrueName = userTrueName;
-    }
-
-    public String getUserPhone() {
-        return userPhone;
-    }
-
-    public void setUserPhone(String userPhone) {
-        this.userPhone = userPhone;
-    }
-
-    public String getUserIdCard() {
-        return userIdCard;
-    }
-
-    public void setUserIdCard(String userIdCard) {
-        this.userIdCard = userIdCard;
-    }
-
-    public String getUserCountry() {
-        return userCountry;
-    }
-
-    public void setUserCountry(String userCountry) {
-        this.userCountry = userCountry;
-    }
-
-    public String getUserEmail() {
-        return userEmail;
-    }
-
-    public void setUserEmail(String userEmail) {
-        this.userEmail = userEmail;
-    }
-
-    public String getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(String createTime) {
-        this.createTime = createTime;
-    }
-
-    public String getUpdateTime() {
-        return updateTime;
-    }
-
-    public void setUpdateTime(String updateTime) {
-        this.updateTime = updateTime;
+    public void setPasswd(String passwd) {
+        this.passwd = passwd;
     }
 
     public String getSeeds() {
@@ -165,54 +78,67 @@ public class User {
         this.seeds = seeds;
     }
 
-    public String getTransactionPW() {
-        return transactionPW;
+    public String getHeadImg() {
+        return headImg;
     }
 
-    public void setTransactionPW(String transactionPW) {
-        this.transactionPW = transactionPW;
+    public void setHeadImg(String headImg) {
+        this.headImg = headImg;
     }
 
-    public String getMachinePW() {
-        return machinePW;
+    public int getStatus() {
+        return status;
     }
 
-    public void setMachinePW(String machinePW) {
-        this.machinePW = machinePW;
+    public void setStatus(int status) {
+        this.status = status;
     }
 
-    public String getMachineId() {
-        return machineId;
+    public String getNickName() {
+        return nickName;
     }
 
-    public void setMachineId(String macineId) {
-        this.machineId = macineId;
+    public void setNickName(String nickName) {
+        this.nickName = nickName;
     }
 
-    @Override
-    public String toString() {
-        final StringBuffer sb = new StringBuffer("User{");
-        sb.append("userId='").append(userId).append('\'');
-        sb.append(", userName='").append(userName).append('\'');
-        sb.append(", sex='").append(sex).append('\'');
-        sb.append(", userTrueName='").append(userTrueName).append('\'');
-        sb.append(", userPhone='").append(userPhone).append('\'');
-        sb.append(", userIdCard='").append(userIdCard).append('\'');
-        sb.append(", userCountry='").append(userCountry).append('\'');
-        sb.append(", userEmail='").append(userEmail).append('\'');
-        sb.append(", createTime='").append(createTime).append('\'');
-        sb.append(", updateTime='").append(updateTime).append('\'');
-        sb.append(", seeds='").append(seeds).append('\'');
-        sb.append(", transactionPW='").append(transactionPW).append('\'');
-        sb.append(", machinePW='").append(machinePW).append('\'');
-        sb.append(", machineId='").append(machineId).append('\'');
-        sb.append(", address='").append(address).append('\'');
-        sb.append(", coinType='").append(coinType).append('\'');
-        sb.append(", buyNum='").append(buyNum).append('\'');
-        sb.append(", birthDate='").append(birthDate).append('\'');
-        sb.append(", postalCode='").append(postalCode).append('\'');
-        sb.append(", ethAddress='").append(ethAddress).append('\'');
-        sb.append('}');
-        return sb.toString();
+    public int getSex() {
+        return sex;
+    }
+
+    public void setSex(int sex) {
+        this.sex = sex;
+    }
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
+
+    public Date getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
+    }
+
+    public String getRelationship() {
+        return relationship;
+    }
+
+    public void setRelationship(String relationship) {
+        this.relationship = relationship;
+    }
+
+    public String getMnemonit() {
+        return mnemonit;
+    }
+
+    public void setMnemonit(String mnemonit) {
+        this.mnemonit = mnemonit;
     }
 }

@@ -12,9 +12,7 @@ import org.springframework.context.annotation.ComponentScan;
 public class MessagesApplication {
 
     public static void main(String[] args){
-
         SpringApplication.run(MessagesApplication.class, args);
-
     }
 
 

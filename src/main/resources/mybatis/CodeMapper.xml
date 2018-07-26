@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="pro.bechat.wallet.domain.dao.CodeMapper">
+    <resultMap id="BaseResultMap" type="pro.bechat.wallet.domain.model.model.Code">
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="tel" jdbcType="VARCHAR" property="tel"/>
+        <result column="content" jdbcType="VARCHAR" property="content"/>
+        <result column="sendid" jdbcType="VARCHAR" property="sendid"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="status" jdbcType="INTEGER" property="status"/>
+    </resultMap>
+
+    <sql id="base_sql">
+        id,tel,content,sendid,create_time,status
+    </sql>
+
+    <insert id="insert" keyColumn="id" useGeneratedKeys="true" keyProperty="id"
+            parameterType="pro.bechat.wallet.domain.model.model.Code">
+        INSERT INTO VAH_T_SMS (
+	            tel,
+	            content,
+	            sendid,
+	            create_time,
+	            status
+        )
+        VALUE
+        	(
+        		#{tel},
+        		#{content},
+        		#{sendid},
+        		NOW(),
+        		#{status}
+        	)
+    </insert>
+
+    <select id="lastSmsCode" parameterType="java.lang.String"
+            resultMap="BaseResultMap"
+    >
+        SELECT
+        <include refid="base_sql"/>
+        from VAH_T_SMS
+        WHERE tel = #{phone}
+        ORDER BY id DESC LIMIT 0,1;
+    </select>
+
+    <update id="update_status" parameterType="java.lang.Long">
+      UPDATE VAH_T_SMS
+      SET `status` = 2
+      WHERE
+	        id = #{id};
+    </update>
+</mapper>
