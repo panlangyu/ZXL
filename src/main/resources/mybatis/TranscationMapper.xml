@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="pro.bechat.wallet.domain.dao.TranscationMapper">
+
+    <!-- 封装对象 -->
+    <resultMap id="BaseResultMap" type="pro.bechat.wallet.domain.model.vo.TranscationVo">
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="txType" jdbcType="INTEGER" property="txType"/>
+        <result column="hash" jdbcType="VARCHAR" property="hash"/>
+        <result column="amount" jdbcType="DECIMAL" property="amount"/>
+        <result column="createTime" jdbcType="TIMESTAMP" property="createTime"/>
+    </resultMap>
+
+    <!-- 查询用户钱包下币种详情订单记录 -->
+    <select id="selectUserCoinTransactionList" resultMap="BaseResultMap">
+        SELECT  id,txType,`hash`,amount,createTime FROM VAH_T_TRANSCATION
+
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+            <if test="userId != null and userId != 0">
+                AND userId = #{userId}
+            </if>
+            <if test="coinType != null and coinType.length() > 0">
+                AND coinType = #{coinType}
+            </if>
+
+            <if test="startTime != null and startTime.length() > 0">
+                AND createTime BETWEEN  #{startTime} AND #{endTime}
+            </if>
+
+            AND txType &lt; 3
+
+        </trim>
+
+    </select>
+
+    <!-- 修改钱包资产 转出订单记录 -->
+    <insert id="insertWalletTurnOut" parameterType="pro.bechat.wallet.domain.model.model.Transcation" useGeneratedKeys="true"
+            keyProperty="id">
+
+        INSERT INTO VAH_T_TRANSCATION(userId,coinType,amount,txType,`from`,`to`,`hash`,txStatus,capital,createTime,remark)
+        VALUES(
+            #{userId},#{coinType},-#{amount},#{txType},#{from},#{to},#{hash},#{txStatus},#{capital},now(),#{remark}
+        )
+
+    </insert>
+
+    <!-- 修改钱包资产 转入订单记录 -->
+    <insert id="insertWalletToChangeInto" parameterType="pro.bechat.wallet.domain.model.model.Transcation" useGeneratedKeys="true"
+            keyProperty="id">
+
+        INSERT INTO VAH_T_TRANSCATION(userId,coinType,amount,txType,`from`,`to`,`hash`,txStatus,capital,createTime,remark)
+        VALUES(
+            #{userId},#{coinType},#{amount},#{txType},#{from},#{to},#{hash},#{txStatus},#{capital},now(),#{remark}
+        )
+
+    </insert>
+
+    <!-- 查看币种交易记录总额,条件查询 转入 -->
+    <select id="selectUserCoinTurnToTotal" resultType="Double">
+
+        SELECT SUM(amount) FROM VAH_T_TRANSCATION
+
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+            <if test="userId != null and userId != 0">
+                AND userId = #{userId}
+            </if>
+
+            AND amount &lt; 0
+
+            <if test="startTime != null and startTime.length() > 0">
+                AND createTime BETWEEN  #{startTime} AND #{endTime}
+            </if>
+
+        </trim>
+
+    </select>
+
+
+    <!-- 查看币种交易记录总额,条件查询 转入 -->
+    <select id="selectUserCoinToChargeInfoTotal" resultType="Double">
+
+        SELECT SUM(amount) FROM VAH_T_TRANSCATION
+
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+            <if test="userId != null and userId != 0">
+                AND userId = #{userId}
+            </if>
+
+            AND amount &gt; 0
+
+            <if test="startTime != null and startTime.length() > 0">
+                AND createTime BETWEEN  #{startTime} AND #{endTime}
+            </if>
+
+        </trim>
+
+    </select>
+
+
+    <!-- 查看币种交易记录总额,条件查询 转入 -->
+    <select id="selectUserCoinTrunToChargeTotal" resultType="Map">
+
+        SELECT DISTINCT (
+            SELECT  SUM(amount)
+            FROM VAH_T_TRANSCATION
+
+            <trim prefix="WHERE" prefixOverrides="AND | OR">
+                <if test="userId != null and userId != 0">
+                    AND userId = #{userId}
+                </if>
+
+                AND amount &gt; 0
+
+                <if test="startTime != null and startTime.length() > 0">
+                    AND createTime BETWEEN  #{startTime} AND #{endTime}
+                </if>
+
+            </trim>
+            ) AS toChangeInto
+        ,(
+            SELECT SUM(amount)
+            FROM VAH_T_TRANSCATION
+
+            <trim prefix="WHERE" prefixOverrides="AND | OR">
+                <if test="userId != null and userId != 0">
+                    AND userId = #{userId}
+                </if>
+
+                AND amount &lt; 0
+
+                <if test="startTime != null and startTime.length() > 0">
+                    AND createTime BETWEEN  #{startTime} AND #{endTime}
+                </if>
+
+            </trim>
+            ) AS turnTo
+        FROM VAH_T_TRANSCATION
+    </select>
+
+
+    <!-- 查询钱包管理币种的 直推 和 生息的总额 -->
+    <select id="selectUserWalletCoinStraightOrInterest" resultType="Map">
+        SELECT DISTINCT (
+        SELECT  SUM(amount)
+        FROM VAH_T_TRANSCATION
+
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+            <if test="userId != null and userId != 0">
+                AND userId = #{userId}
+            </if>
+
+            AND txType = 3
+
+            <if test="coinType != null and coinType.length() > 0">
+                AND coinType = #{coinType}
+            </if>
+
+        </trim>
+
+        ) AS straightPush
+        ,(
+        SELECT SUM(amount)
+        FROM VAH_T_TRANSCATION
+
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+            <if test="userId != null and userId != 0">
+                AND userId = #{userId}
+            </if>
+
+            AND txType = 4
+
+            <if test="coinType != null and coinType.length() > 0">
+                AND coinType = #{coinType}
+            </if>
+
+        </trim>
+        ) AS  interest
+        FROM VAH_T_TRANSCATION
+
+    </select>
+
+
+    <!-- 钱包管理用户币种的交易记录 -->
+    <select id="selectWalletUserCoinTransactionList" resultMap="BaseResultMap">
+        SELECT  id,txType,`hash`,amount,createTime FROM VAH_T_TRANSCATION
+
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+            <if test="userId != null and userId != 0">
+                AND userId = #{userId}
+            </if>
+            <if test="coinType != null and coinType.length() > 0">
+                AND coinType = #{coinType}
+            </if>
+
+        </trim>
+
+    </select>
+
+
+
+
+</mapper>
