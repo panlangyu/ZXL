@@ -1,13 +1,11 @@
 package pro.bechat.wallet.domain.model.model;
 
-import lombok.Data;
 
 import java.util.Date;
 
 /**
  * 币种实体类(Model)
  */
-//@Data
 public class Coin {
 
     private Integer id;                 //币种编号

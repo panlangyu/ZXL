@@ -2,7 +2,6 @@ package pro.bechat.wallet.domain.service;
 
 import pro.bechat.wallet.domain.model.model.Wallet;
 import pro.bechat.wallet.domain.model.response.ApiResponseResult;
-import java.util.Map;
 
 /**
  * 钱包业务Service
@@ -22,53 +21,45 @@ public interface WalletService {
 
     /**
      * 查询用户钱包数据
+     * @param currentPage 当前页码
+     * @param currentSize 页面容量
      * @param userId  用户编号
      * @param coinName 币种名称
      * @return
      * @throws Exception
      */
-    public ApiResponseResult selectUserWalletCoinList(Integer userId,String coinName)throws Exception;
+    public ApiResponseResult selectUserWalletCoinList(Integer currentPage,Integer currentSize,
+                                                      Integer userId,String coinName)throws Exception;
 
     /**
      * 钱包转账(交易所对接)
-     * @param wallet
+     * @param wallet 钱包对象
      * @return
      * @throws Exception
      */
     public ApiResponseResult modifyWalletTurnOut(Wallet wallet)throws Exception;
 
-
     /**
      * 查询钱包管理币种的 直推 和 生息的总额
-     * @param userId
+     * @param currentPage 当前页码
+     * @param currentSize 页面容量
+     * @param userId 用户编号
      * @return
      * @throws Exception
      */
-    public ApiResponseResult selectUserWalletCoinStraightOrInterest(Integer userId)throws Exception;
-
-
-    /**
-     * 用户钱包币种列表 分页
-     * @param userId
-     * @param currentPage
-     * @param currentSize
-     * @return
-     */
-    public ApiResponseResult selectUserWalletCoinStraig(Integer currentPage,
-                                                        Integer currentSize,
-                                                        Integer userId)throws Exception;
+    public ApiResponseResult selectUserWalletCoinStraightOrInterest(Integer currentPage,
+                                                                    Integer currentSize,
+                                                                    Integer userId)throws Exception;
 
 
     /**
      * 管理钱包用户币种昨日收益 +(冻结数量)
-     * @param userId
-     * @param coinId
+     * @param userId 用户编号
+     * @param coinId 币种编号
      * @return
      * @throws Exception
      */
-    public ApiResponseResult selectYesterdayProfit(Integer userId,
-                                                    Integer coinId)throws Exception;
-
+    public ApiResponseResult selectYesterdayProfit(Integer userId,Integer coinId)throws Exception;
 
 
 

@@ -2,7 +2,6 @@ package pro.bechat.wallet.domain.service.impl;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import org.omg.CORBA.ObjectHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -10,13 +9,11 @@ import pro.bechat.wallet.domain.dao.TranscationMapper;
 import pro.bechat.wallet.domain.dao.WalletMapper;
 import pro.bechat.wallet.domain.model.model.Transcation;
 import pro.bechat.wallet.domain.model.model.Wallet;
-import pro.bechat.wallet.domain.model.response.ApiResponse;
 import pro.bechat.wallet.domain.model.response.ApiResponseResult;
 import pro.bechat.wallet.domain.model.vo.WalletCoinVo;
 import pro.bechat.wallet.domain.model.vo.WalletVo;
 import pro.bechat.wallet.domain.service.WalletService;
 import pro.bechat.wallet.publics.PageBean;
-
 import java.math.BigDecimal;
 import java.util.*;
 
@@ -41,16 +38,32 @@ public class WalletServiceImpl implements WalletService {
 
         Double total =  walletMapper.selectUserWalletTotal(userId);
 
-        return ApiResponseResult.build(200,"钱包币种列表数据","查询钱包币种列表数据",total);
+        return ApiResponseResult.build(200,"success","查询钱包币种列表数据",total);
     }
 
     @Override
-    public ApiResponseResult selectUserWalletCoinList(Integer userId,String coinName) throws Exception {
+    public ApiResponseResult selectUserWalletCoinList(Integer currentPage,Integer currentSize,
+                                                      Integer userId,String coinName) throws Exception {
 
-        List<WalletVo> list =  walletMapper.selectUserWalletCoinList(userId,coinName);
+        PageHelper.startPage(currentPage,currentSize);
 
-        return ApiResponseResult.build(200,"钱包币种列表数据","查询钱包币种列表数据",list);
+        //List<WalletVo> list =  walletMapper.selectUserWalletCoinList(userId,coinName);
 
+        List<WalletVo> voList =  walletMapper.selectUserWalletCoinList(currentPage,currentSize,userId,coinName);
+
+        if(null == voList){
+
+            return ApiResponseResult.build(2011,"error","未查询用户钱包币种列表数据","");
+        }
+
+        PageInfo<WalletVo> pageInfo = new PageInfo<>(voList);
+        PageBean<WalletVo> pageBean = new PageBean<>();
+        pageBean.setCurrentPage(currentPage);
+        pageBean.setCurrentSize(currentSize);
+        pageBean.setTotalNum(pageInfo.getTotal());
+        pageBean.setItems(voList);
+
+        return ApiResponseResult.build(200,"success","查询用户钱包币种列表数据",pageBean);
     }
 
     @Transactional
@@ -64,13 +77,13 @@ public class WalletServiceImpl implements WalletService {
         Wallet userWalletCoin = walletMapper.selectUserWalletCoinById(wallet);      //按id查询查询转出币种信息
         if(userWalletCoin == null){
 
-            return ApiResponseResult.build(500,"钱包币种单条信息","未查询到用户钱包下的币种","");
+            return ApiResponseResult.build(500,"error","未查询到用户钱包下的币种","");
         }
 
         Wallet walletCoin = walletMapper.selectUserWalletCoinByAddress(wallet);     //按address查询转入币种信息
         if(walletCoin == null){
 
-            return ApiResponseResult.build(500,"转入地址","未查询到该地址信息","");
+            return ApiResponseResult.build(500,"error","未查询到该地址信息","");
         }
 
         // 3、判断钱包币种的 本金价格 与传入的价格比较 可用余额与 传入价格比较
@@ -79,14 +92,14 @@ public class WalletServiceImpl implements WalletService {
 
         if(compare == 0 || compare == -1 ){
 
-            return ApiResponseResult.build(2011,"币种数量","币种数量不足","");
+            return ApiResponseResult.build(2011,"error","币种数量不足","");
         }
 
         // 4、修改用户钱包币种数量(转出) (本金-转出金额) 和 (可用余额-转出金额)
         Integer num = walletMapper.modifyWalletTurnOut(wallet);
         if(num == 0){
 
-            return ApiResponseResult.build(2012,"转出","转出失败","");
+            return ApiResponseResult.build(2012,"error","转出失败","");
         }
 
         // 5、修改用户钱包币种数量(转入) (本金+转出金额) 和 (可用余额+转出金额)  walletCoin转入对象
@@ -94,32 +107,42 @@ public class WalletServiceImpl implements WalletService {
         num = walletMapper.modifyWalletToChangeInto(wallet);
         if(num == 0){
 
-            return ApiResponseResult.build(2012,"转入","转入失败","");
+            return ApiResponseResult.build(2012,"error","转入失败","");
         }
 
         // 6、增加1条用户转出记录
         num = insertTransactionTurnTo(wallet,userWalletCoin);
         if(num == 0){
 
-            return ApiResponseResult.build(2012,"新增转出","新增转出失败","");
+            return ApiResponseResult.build(2012,"error","新增转出失败","");
         }
 
         // 7、增加1条用户转入记录
         num = insertWalletToChangeInto(wallet,walletCoin,userWalletCoin);
         if(num == 0){
 
-            return ApiResponseResult.build(2012,"新增转入","新增转入失败","");
+            return ApiResponseResult.build(2012,"error","新增转入失败","");
         }
 
-        return ApiResponseResult.build(200,"提币","提币成功",num);
+        return ApiResponseResult.build(200,"success","提币成功",num);
     }
 
     @Override
-    public ApiResponseResult selectUserWalletCoinStraightOrInterest(Integer userId) throws Exception {
+    public ApiResponseResult selectUserWalletCoinStraightOrInterest(Integer currentPage,Integer currentSize,
+                                                                    Integer userId) throws Exception {
+
+        PageHelper.startPage(currentPage,currentSize);
 
         Map<String,Object> map = new HashMap<>();
 
-        List<WalletVo> voList = walletMapper.selectUserWalletCoinList(userId,null);
+        List<WalletVo> voList = walletMapper.selectUserWalletCoinList(currentPage,currentSize,userId,null);
+
+        if(null == voList){
+
+            return ApiResponseResult.build(2013,"error","未钱包管理币种列表信息直推和利息","");
+        }
+
+        PageInfo<WalletVo> pageInfo = new PageInfo<>(voList);
 
         List<WalletCoinVo>  walletCoinVoList = new ArrayList<>();
 
@@ -158,7 +181,13 @@ public class WalletServiceImpl implements WalletService {
             walletCoinVoList.add(walletCoinVo);
         }
 
-        return ApiResponseResult.build(200,"钱包管理","钱包管理币种列表信息直推和利息",walletCoinVoList);
+        PageBean<WalletCoinVo> pageBean = new PageBean<>();
+        pageBean.setCurrentPage(currentPage);
+        pageBean.setCurrentSize(currentSize);
+        pageBean.setTotalNum(pageInfo.getTotal());
+        pageBean.setItems(walletCoinVoList);
+
+        return ApiResponseResult.build(200,"success","钱包管理币种列表信息直推和利息",pageBean);
     }
 
 
@@ -210,83 +239,6 @@ public class WalletServiceImpl implements WalletService {
         return num;
     }
 
-
-
-    @Override
-    public ApiResponseResult selectUserWalletCoinStraig(Integer currentPage,Integer currentSize,Integer userId) throws Exception {
-
-        PageHelper.startPage(currentPage,currentSize);
-
-        Map<String,Object> map = new HashMap<>();
-
-        List<WalletCoinVo>  walletCoinVoList = new ArrayList<>();
-
-        WalletCoinVo walletCoinVo = null;
-
-        //Integer total = walletMapper.selectUserWalletCoinTotal(userId);                 //查询总个数
-
-        //PageBean<WalletVo> pageBean = new PageBean<>();
-        //PageBean<WalletCoinVo> pageBean = new PageBean<>();
-        //pageBean.setCurrentPage(currentPage);
-        //pageBean.setCurrentSize(currentSize);
-        //pageBean.setTotalNum(total);
-
-        //currentPage = (currentPage-1)*currentSize;
-
-        List<WalletVo> voList = walletMapper.selectUserWalletCoinList(currentPage,currentSize,userId,null);
-
-        if(voList == null){
-
-            return ApiResponseResult.build(2006,"钱包管理","未查询到钱包管理币种列表信息直推和利息","");
-        }
-
-        PageInfo<WalletVo> pageInfo = new PageInfo<>(voList);
-
-        //遍历  拿出 币种名称(coinType) 去查询  直推  和  利息
-        for(WalletVo walletVo : voList){
-
-            walletCoinVo = new WalletCoinVo();
-
-            map = transcationMapper.selectUserWalletCoinStraightOrInterest(userId,walletVo.getCoinName());
-
-            walletCoinVo.setAddress(walletVo.getAddress());
-            walletCoinVo.setId(walletVo.getId());
-            walletCoinVo.setCoinId(walletVo.getCoinId());
-            walletCoinVo.setCoinImg(walletVo.getCoinImg());
-            walletCoinVo.setCoinName(walletVo.getCoinName());
-            walletCoinVo.setAmount(walletVo.getAmount());
-            walletCoinVo.setFreeAmount(walletVo.getFreeAmount());
-
-            if(map == null){
-
-                walletCoinVo.setStraightPush(BigDecimal.valueOf(0));
-                walletCoinVo.setInterest(BigDecimal.valueOf(0));
-            }else{
-                if(map.get("straightPush") != null){
-
-                    walletCoinVo.setStraightPush(new BigDecimal(map.get("straightPush").toString()));
-                }
-                if(map.get("interest") != null){
-
-                    walletCoinVo.setInterest(new BigDecimal(map.get("interest").toString()));
-                }
-            }
-
-            walletCoinVoList.add(walletCoinVo);
-        }
-
-        PageBean<WalletCoinVo> pageBean = new PageBean<>();
-        //PageBean<WalletVo> pageBean = new PageBean<>();
-        pageBean.setCurrentPage(currentPage);
-        pageBean.setCurrentSize(currentSize);
-        pageBean.setTotalNum(pageInfo.getTotal());
-        //pageBean.setItems(pageInfo.getList());
-        pageBean.setItems(walletCoinVoList);
-
-        return ApiResponseResult.build(200,"钱包管理","钱包管理币种列表信息直推总额和利息总额",pageBean);
-
-    }
-
     @Override
     public ApiResponseResult selectYesterdayProfit(Integer userId, Integer coinId) throws Exception {
 
@@ -297,7 +249,7 @@ public class WalletServiceImpl implements WalletService {
         List<Map<String,Object>>  list = new ArrayList<>();
         list.add(map);
 
-        return ApiResponseResult.build(200,"昨日收益","管理钱包用户币种昨日收益",list);
+        return ApiResponseResult.build(200,"success","管理钱包用户币种昨日收益",list);
     }
 
 

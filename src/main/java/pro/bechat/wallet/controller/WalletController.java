@@ -4,12 +4,9 @@ import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import pro.bechat.wallet.domain.model.model.Wallet;
-import pro.bechat.wallet.domain.model.response.ApiResponse;
 import pro.bechat.wallet.domain.model.response.ApiResponseResult;
 import pro.bechat.wallet.domain.service.WalletService;
-
 import javax.servlet.http.HttpServletRequest;
-import java.math.BigDecimal;
 import java.util.logging.Logger;
 
 /**
@@ -44,7 +41,7 @@ public class WalletController {
         }catch (Exception e){
             e.printStackTrace();
 
-            return ApiResponseResult.build(2001,"出现异常","出现异常","");
+            return ApiResponseResult.build(2001,"error","出现异常","");
         }
 
         return apiResponse;
@@ -58,19 +55,21 @@ public class WalletController {
      * @return
      */
     @RequestMapping(value = "/queryUserWalletCoinList",method = RequestMethod.POST)
-    public ApiResponseResult queryUserWalletCoinList(@RequestParam("userId")Integer userId
-                                               ,@RequestParam(value="coinName",required = false)String coinName){
+    public ApiResponseResult queryUserWalletCoinList(@RequestParam("currentPage")Integer currentPage,
+                                                     @RequestParam("currentSize")Integer currentSize,
+                                                     @RequestParam("userId")Integer userId,
+                                                     @RequestParam(value="coinName",required = false)String coinName){
 
         ApiResponseResult apiResponse = new ApiResponseResult();
 
         try{
 
-            apiResponse = walletService.selectUserWalletCoinList(userId,coinName);
+             apiResponse = walletService.selectUserWalletCoinList(currentPage,currentSize,userId,coinName);
 
         }catch (Exception e){
             e.printStackTrace();
 
-            return ApiResponseResult.build(2002,"出现异常","出现异常","");
+            return ApiResponseResult.build(2002,"error","出现异常","");
         }
         return apiResponse;
     }
@@ -94,7 +93,7 @@ public class WalletController {
         }catch (Exception e){
             e.printStackTrace();
 
-            return ApiResponseResult.build(2003,"出现异常","出现异常","");
+            return ApiResponseResult.build(2003,"error","出现异常","");
         }
 
         return apiResponse;
@@ -117,13 +116,12 @@ public class WalletController {
 
         try{
 
-            //apiResponse = walletService.selectUserWalletCoinStraightOrInterest(userId);
+            apiResponse = walletService.selectUserWalletCoinStraightOrInterest(currentPage,currentSize,userId);
 
-            apiResponse = walletService.selectUserWalletCoinStraig(currentPage,currentSize,userId);
         }catch (Exception e){
             e.printStackTrace();
 
-            return ApiResponseResult.build(2004,"出现异常","出现异常","");
+            return ApiResponseResult.build(2004,"error","出现异常","");
         }
 
         return apiResponse;
@@ -151,7 +149,7 @@ public class WalletController {
         }catch (Exception e){
             e.printStackTrace();
 
-            return ApiResponseResult.build(2007,"出现异常","出现异常","");
+            return ApiResponseResult.build(2007,"error","出现异常","");
         }
 
         return apiResponse;

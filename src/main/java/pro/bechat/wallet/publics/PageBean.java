@@ -6,7 +6,6 @@ public class PageBean<T> {
 
     private Integer currentPage=1;                      //当前页数
     private Integer currentSize=10;                     //每页显示条数
-    private Integer currentNum=1;                       //计算后的起始值
     private long totalNum;                              //总条数
     private List<T> items;                              //泛型集合
 
@@ -33,14 +32,6 @@ public class PageBean<T> {
 
     public void setCurrentSize(Integer currentSize) {
         this.currentSize = currentSize;
-    }
-
-    public Integer getCurrentNum() {
-        return currentNum;
-    }
-
-    public void setCurrentNum(Integer currentPage,Integer currentSize) {
-        this.currentNum = (currentPage-1)*currentSize;
     }
 
     public long getTotalNum() {

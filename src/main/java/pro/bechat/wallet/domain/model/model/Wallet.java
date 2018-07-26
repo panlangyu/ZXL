@@ -1,14 +1,12 @@
 package pro.bechat.wallet.domain.model.model;
 
 
-import lombok.Data;
 import java.math.BigDecimal;
 import java.util.Date;
 
 /**
  * 钱包实体类(Model)
  */
-//@Data
 public class Wallet {
 
     private Integer id;                     //币种编号

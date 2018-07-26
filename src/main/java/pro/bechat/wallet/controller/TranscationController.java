@@ -1,13 +1,11 @@
 package pro.bechat.wallet.controller;
 
-
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import pro.bechat.wallet.domain.model.response.ApiResponse;
 import pro.bechat.wallet.domain.model.response.ApiResponseResult;
 import pro.bechat.wallet.domain.service.TranscationService;
 
@@ -27,24 +25,28 @@ public class TranscationController {
 
     /**
      * 查询用户钱包下币种详情订单记录
+     * @param currentPage
+     * @param currentSize
      * @param userId
      * @param coinType
      * @return
      */
     @RequestMapping(value="/queryUserCoinTransactionList",method=RequestMethod.POST)
-    public ApiResponseResult queryUserCoinTransactionList(@RequestParam("userId")Integer userId
-                                                        ,@RequestParam("coinType")String coinType){
+    public ApiResponseResult queryUserCoinTransactionList(@RequestParam("currentPage")Integer currentPage,
+                                                          @RequestParam("currentSize")Integer currentSize,
+                                                          @RequestParam("userId")Integer userId,
+                                                          @RequestParam("coinType")String coinType){
 
         ApiResponseResult apiResponse = new ApiResponseResult();
 
         try{
 
-            apiResponse = transcationService.selectUserCoinTransactionList(userId,coinType);
+            apiResponse = transcationService.selectUserCoinTransactionList(currentPage,currentSize,userId,coinType);
 
         }catch (Exception e){
             e.printStackTrace();
 
-            return ApiResponseResult.build(2004,"出现异常","出现异常","");
+            return ApiResponseResult.build(2004,"error","出现异常","");
         }
 
         return apiResponse;
@@ -53,24 +55,28 @@ public class TranscationController {
 
     /**
      * 查询用户钱包下币种详情订单记录,按条件查询
+     * @param currentPage
+     * @param currentSize
      * @param userId
      * @param startTime
      * @return
      */
     @RequestMapping(value="/queryUserCoinTransactionListInfo",method=RequestMethod.POST)
-    public ApiResponseResult queryUserCoinTransactionListInfo(@RequestParam("userId")Integer userId
-                                                            ,@RequestParam(value="startTime",required = false)String startTime){
+    public ApiResponseResult queryUserCoinTransactionListInfo(@RequestParam("currentPage")Integer currentPage,
+                                                              @RequestParam("currentSize")Integer currentSize,
+                                                              @RequestParam("userId")Integer userId,
+                                                              @RequestParam(value="startTime",required = false)String startTime){
 
         ApiResponseResult apiResponse = new ApiResponseResult();
 
         try{
 
-            apiResponse = transcationService.selectUserCoinTransactionListInfo(userId,startTime);
+            apiResponse = transcationService.selectUserCoinTransactionListInfo(currentPage,currentSize,userId,startTime);
 
         }catch (Exception e){
             e.printStackTrace();
 
-            return ApiResponseResult.build(2004,"出现异常","出现异常","");
+            return ApiResponseResult.build(2004,"error","出现异常","");
         }
 
         return apiResponse;
@@ -98,7 +104,7 @@ public class TranscationController {
         }catch (Exception e){
             e.printStackTrace();
 
-            return ApiResponseResult.build(2004,"出现异常","出现异常","");
+            return ApiResponseResult.build(2004,"error","出现异常","");
         }
 
         return apiResponse;
@@ -112,19 +118,23 @@ public class TranscationController {
      * @return
      */
     @RequestMapping(value="/queryWalletUserCoinTransactionList",method=RequestMethod.POST)
-    public ApiResponseResult queryWalletUserCoinTransactionList(@RequestParam("userId")Integer userId,
+    public ApiResponseResult queryWalletUserCoinTransactionList(@RequestParam("currentPage")Integer currentPage,
+                                                                @RequestParam("currentSize")Integer currentSize,
+                                                                @RequestParam("userId")Integer userId,
                                                                 @RequestParam("coinType")String coinType){
 
         ApiResponseResult apiResponse = new ApiResponseResult();
 
         try{
 
-            apiResponse = transcationService.selectWalletUserCoinTransactionList(userId,coinType);
+            //apiResponse = transcationService.selectWalletUserCoinTransactionList(userId,coinType);
+
+            apiResponse = transcationService.selectWalletUserCoinTransactionList(currentPage,currentSize,userId,coinType,null);
 
         }catch (Exception e){
             e.printStackTrace();
 
-            return ApiResponseResult.build(2004,"出现异常","出现异常","");
+            return ApiResponseResult.build(2004,"error","出现异常","");
         }
 
         return apiResponse;

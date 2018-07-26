@@ -4,7 +4,6 @@ import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 import pro.bechat.wallet.domain.model.model.Transcation;
 import pro.bechat.wallet.domain.model.vo.TranscationVo;
-
 import java.util.List;
 import java.util.Map;
 
@@ -16,17 +15,20 @@ public interface TranscationMapper {
 
     /**
      * 查询用户钱包下币种详情订单记录
+     * @param currentPage 当前页码
+     * @param currentSize 页面容量
      * @param userId 用户编号
      * @param coinType 币种类型
-     * @param startTime 开始日期
-     * @param endTime 结束日期
+     * @Param("startTime")String startTime,
+     * @Param("endTime")String endTime
      * @return
      * @throws Exception
      */
-    public List<TranscationVo> selectUserCoinTransactionList(@Param("userId")Integer userId
-                                                            ,@Param("coinType")String coinType
-                                                            ,@Param("startTime")String startTime
-                                                            ,@Param("endTime")String endTime)throws Exception;
+    public List<TranscationVo> selectUserCoinTransactionList(@Param("currentPage")Integer currentPage,
+                                                             @Param("currentSize")Integer currentSize,
+                                                             @Param("userId")Integer userId,
+                                                             @Param("coinType")String coinType
+                                                             )throws Exception;
 
     /**
      * 修改钱包资产 转出订单记录
@@ -52,9 +54,9 @@ public interface TranscationMapper {
      * @return
      * @throws Exception
      */
-    public Double selectUserCoinTurnToTotal(@Param("userId")Integer userId
-            ,@Param("startTime")String startTime
-            ,@Param("endTime")String endTime)throws Exception;
+    public Double selectUserCoinTurnToTotal(@Param("userId")Integer userId,
+                                            @Param("startTime")String startTime,
+                                            @Param("endTime")String endTime)throws Exception;
 
     /**
      * 查看币种交易记录总额,条件查询
@@ -64,9 +66,9 @@ public interface TranscationMapper {
      * @return
      * @throws Exception
      */
-    public Double selectUserCoinToChargeInfoTotal(@Param("userId")Integer userId
-                                                ,@Param("startTime")String startTime
-                                                ,@Param("endTime")String endTime)throws Exception;
+    public Double selectUserCoinToChargeInfoTotal(@Param("userId")Integer userId,
+                                                  @Param("startTime")String startTime,
+                                                  @Param("endTime")String endTime)throws Exception;
 
     /**
      *  查看币种交易记录总额,条件查询
@@ -90,14 +92,24 @@ public interface TranscationMapper {
     public Map<String,Object> selectUserWalletCoinStraightOrInterest(@Param("userId")Integer userId,
                                                                      @Param("coinType")String coinType)throws Exception;
 
+
     /**
      * 查询钱包管理币种的交易记录
+     * @param currentPage
+     * @param currentSize
      * @param userId
      * @param coinType
+     * @param startTime
+     * @param endTime
      * @return
      * @throws Exception
      */
-    public List<TranscationVo> selectWalletUserCoinTransactionList(@Param("userId")Integer userId,
-                                                                 @Param("coinType")String coinType)throws Exception;
+    public List<TranscationVo> selectWalletUserCoinTransactionList(@Param("currentPage")Integer currentPage,
+                                                                   @Param("currentSize")Integer currentSize,
+                                                                   @Param("userId")Integer userId,
+                                                                   @Param("coinType")String coinType,
+                                                                   @Param("startTime")String startTime,
+                                                                   @Param("endTime")String endTime)throws Exception;
+
 
 }

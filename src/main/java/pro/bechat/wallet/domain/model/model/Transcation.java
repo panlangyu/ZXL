@@ -1,6 +1,5 @@
 package pro.bechat.wallet.domain.model.model;
 
-import lombok.Data;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -8,7 +7,6 @@ import java.util.Date;
 /**
  * 币种交易订单记录
  */
-//@Data
 public class Transcation {
 
     private Integer id;                     //订单编号

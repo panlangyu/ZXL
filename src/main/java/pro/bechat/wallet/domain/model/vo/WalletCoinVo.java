@@ -5,7 +5,6 @@ import java.math.BigDecimal;
 /**
  * 封装钱包和币种数据对象VO
  */
-//@Data
 public class WalletCoinVo {
 
     private Integer id;                     //币种编号

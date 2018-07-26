@@ -25,23 +25,6 @@ public interface WalletMapper extends BasicMapper<User>{
     public Double selectUserWalletTotal(@Param("userId")Integer userId)throws Exception;
 
     /**
-     * 查询用户钱包币种总个数
-     * @param userId
-     * @return
-     * @throws Exception
-     */
-    public Integer selectUserWalletCoinTotal(@Param("userId")Integer userId)throws Exception;
-
-    /**
-     * 查询用户钱包币种列表数据
-     * @param userId
-     * @return
-     * @throws Exception
-     */
-    public List<WalletVo> selectUserWalletCoinList(@Param("userId")Integer userId
-                                                , @Param("coinName")String coinName)throws Exception;
-
-    /**
      * 查询用户钱包币种列表数据
      * @param userId
      * @return

@@ -38,17 +38,6 @@
 
     </select>
 
-    <!-- 查询用户钱包币种总数 -->
-    <select id="selectUserWalletCoinTotal" resultType="Integer" parameterType="String">
-        SELECT COUNT(*) FROM VAH_Y_WALLET
-
-        <trim prefix="WHERE" prefixOverrides="AND | OR">
-            <if test="userId != null and userId != 0">
-                AND userid = #{userId}
-            </if>
-        </trim>
-
-    </select>
 
     <!-- 查询用户钱包数据列表 -->
     <select id="selectUserWalletCoinList" resultMap="BaseResultMap">

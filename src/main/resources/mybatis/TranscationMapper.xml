@@ -23,9 +23,9 @@
                 AND coinType = #{coinType}
             </if>
 
-            <if test="startTime != null and startTime.length() > 0">
+           <!-- <if test="startTime != null and startTime.length() > 0">
                 AND createTime BETWEEN  #{startTime} AND #{endTime}
-            </if>
+            </if>-->
 
             AND txType &lt; 3
 
@@ -190,6 +190,10 @@
             </if>
             <if test="coinType != null and coinType.length() > 0">
                 AND coinType = #{coinType}
+            </if>
+
+            <if test="startTime != null and startTime.length() > 0">
+                AND createTime BETWEEN  #{startTime} AND #{endTime}
             </if>
 
         </trim>
