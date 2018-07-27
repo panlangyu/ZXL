@@ -13,6 +13,8 @@ public class Transcation {
 
     private Integer userId;                 //用户ID
 
+    private Integer coinId;                  //币种编号
+
     private String coinType;                //币种
 
     private BigDecimal amount;              //交易金额
@@ -50,6 +52,14 @@ public class Transcation {
 
     public void setUserId(Integer userId) {
         this.userId = userId;
+    }
+
+    public Integer getCoinId() {
+        return coinId;
+    }
+
+    public void setCoinId(Integer coinId) {
+        this.coinId = coinId;
     }
 
     public String getCoinType() {

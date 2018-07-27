@@ -6,6 +6,7 @@
     <resultMap id="BaseResultMap" type="pro.bechat.wallet.domain.model.vo.TranscationVo">
         <id column="id" jdbcType="INTEGER" property="id"/>
         <result column="txType" jdbcType="INTEGER" property="txType"/>
+        <result column="to" jdbcType="VARCHAR" property="to"/>
         <result column="hash" jdbcType="VARCHAR" property="hash"/>
         <result column="amount" jdbcType="DECIMAL" property="amount"/>
         <result column="createTime" jdbcType="TIMESTAMP" property="createTime"/>
@@ -13,7 +14,7 @@
 
     <!-- 查询用户钱包下币种详情订单记录 -->
     <select id="selectUserCoinTransactionList" resultMap="BaseResultMap">
-        SELECT  id,txType,`hash`,amount,createTime FROM VAH_T_TRANSCATION
+        SELECT  id,txType,`to`,`hash`,amount,createTime FROM VAH_T_TRANSCATION
 
         <trim prefix="WHERE" prefixOverrides="AND | OR">
             <if test="userId != null and userId != 0">
@@ -37,9 +38,9 @@
     <insert id="insertWalletTurnOut" parameterType="pro.bechat.wallet.domain.model.model.Transcation" useGeneratedKeys="true"
             keyProperty="id">
 
-        INSERT INTO VAH_T_TRANSCATION(userId,coinType,amount,txType,`from`,`to`,`hash`,txStatus,capital,createTime,remark)
+        INSERT INTO VAH_T_TRANSCATION(userId,coinId,coinType,amount,txType,`from`,`to`,`hash`,txStatus,capital,createTime,remark)
         VALUES(
-            #{userId},#{coinType},-#{amount},#{txType},#{from},#{to},#{hash},#{txStatus},#{capital},now(),#{remark}
+            #{userId},#{coinId},#{coinType},-#{amount},#{txType},#{from},#{to},#{hash},#{txStatus},#{capital},now(),#{remark}
         )
 
     </insert>
@@ -48,9 +49,9 @@
     <insert id="insertWalletToChangeInto" parameterType="pro.bechat.wallet.domain.model.model.Transcation" useGeneratedKeys="true"
             keyProperty="id">
 
-        INSERT INTO VAH_T_TRANSCATION(userId,coinType,amount,txType,`from`,`to`,`hash`,txStatus,capital,createTime,remark)
+        INSERT INTO VAH_T_TRANSCATION(userId,coinId,coinType,amount,txType,`from`,`to`,`hash`,txStatus,capital,createTime,remark)
         VALUES(
-            #{userId},#{coinType},#{amount},#{txType},#{from},#{to},#{hash},#{txStatus},#{capital},now(),#{remark}
+            #{userId},#{coinId},#{coinType},#{amount},#{txType},#{from},#{to},#{hash},#{txStatus},#{capital},now(),#{remark}
         )
 
     </insert>
@@ -182,7 +183,7 @@
 
     <!-- 钱包管理用户币种的交易记录 -->
     <select id="selectWalletUserCoinTransactionList" resultMap="BaseResultMap">
-        SELECT  id,txType,`hash`,amount,createTime FROM VAH_T_TRANSCATION
+        SELECT  id,txType,`to`,`hash`,amount,createTime FROM VAH_T_TRANSCATION
 
         <trim prefix="WHERE" prefixOverrides="AND | OR">
             <if test="userId != null and userId != 0">

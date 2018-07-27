@@ -1,6 +1,9 @@
 package pro.bechat.wallet.controller;
 
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -23,15 +26,15 @@ public class TranscationController {
     @Autowired
     private TranscationService transcationService;            //币种订单交易Service
 
-    /**
-     * 查询用户钱包下币种详情订单记录
-     * @param currentPage
-     * @param currentSize
-     * @param userId
-     * @param coinType
-     * @return
-     */
-    @RequestMapping(value="/queryUserCoinTransactionList",method=RequestMethod.POST)
+
+    @ApiOperation(value="查询用户钱包下币种详情订单记录", notes="根据userId和coinType查询订单记录")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name="currentPage",value="用户名",dataType="Integer", paramType = "query",required = true),
+            @ApiImplicitParam(name="currentSize",value="用户id",dataType="Integer", paramType = "query",required = true),
+            @ApiImplicitParam(name="userId",value="用户编号",dataType="Integer", paramType = "query",required = true),
+            @ApiImplicitParam(name="coinType",value="币种名称",dataType="String", paramType = "query",required = true)
+    })
+    @RequestMapping(value="/queryUserCoinTransactionList",method=RequestMethod.GET)
     public ApiResponseResult queryUserCoinTransactionList(@RequestParam("currentPage")Integer currentPage,
                                                           @RequestParam("currentSize")Integer currentSize,
                                                           @RequestParam("userId")Integer userId,
@@ -53,15 +56,14 @@ public class TranscationController {
     }
 
 
-    /**
-     * 查询用户钱包下币种详情订单记录,按条件查询
-     * @param currentPage
-     * @param currentSize
-     * @param userId
-     * @param startTime
-     * @return
-     */
-    @RequestMapping(value="/queryUserCoinTransactionListInfo",method=RequestMethod.POST)
+    @ApiOperation(value="查询用户钱包下币种详情订单记录,按条件查询", notes="根据userId或 加startTime查询订单记录")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name="currentPage",value="用户名",dataType="Integer", paramType = "query",required = true),
+            @ApiImplicitParam(name="currentSize",value="用户id",dataType="Integer", paramType = "query",required = true),
+            @ApiImplicitParam(name="userId",value="用户编号",dataType="Integer", paramType = "query",required = true),
+            @ApiImplicitParam(name="startTime",value="月份",dataType="String", paramType = "query",required = false)
+    })
+    @RequestMapping(value="/queryUserCoinTransactionListInfo",method=RequestMethod.GET)
     public ApiResponseResult queryUserCoinTransactionListInfo(@RequestParam("currentPage")Integer currentPage,
                                                               @RequestParam("currentSize")Integer currentSize,
                                                               @RequestParam("userId")Integer userId,
@@ -83,21 +85,18 @@ public class TranscationController {
     }
 
 
-    /**
-     * 查询用户币种交易记录 收入 和 支出
-     * @param userId
-     * @param startTime
-     * @return
-     */
-    @RequestMapping(value="/queryUserCoinTransactionTotal",method=RequestMethod.POST)
-    public ApiResponseResult queryUserCoinTransactionTotal(@RequestParam("userId")Integer userId
-                                                        ,@RequestParam(value="startTime",required = false)String startTime){
+    @ApiOperation(value="查询用户币种交易记录 收入 和 支出", notes="根据userId或 加startTime查询收入和支出")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name="userId",value="用户编号",dataType="Integer", paramType = "query",required = true),
+            @ApiImplicitParam(name="startTime",value="月份",dataType="String", paramType = "query",required = false)
+    })
+    @RequestMapping(value="/queryUserCoinTransactionTotal",method=RequestMethod.GET)
+    public ApiResponseResult queryUserCoinTransactionTotal(@RequestParam("userId")Integer userId ,
+                                                           @RequestParam(value="startTime",required = false)String startTime){
 
         ApiResponseResult apiResponse = new ApiResponseResult();
 
         try{
-
-            //apiResponse = transcationService.selectUserCoinTransactionTotal(userId,startTime);
 
             apiResponse = transcationService.selectUserCoinTrunToChargeTotal(userId,startTime);
 
@@ -111,13 +110,14 @@ public class TranscationController {
     }
 
 
-    /**
-     * 查询(钱包管理)用户币种交易记录
-     * @param userId
-     * @param coinType
-     * @return
-     */
-    @RequestMapping(value="/queryWalletUserCoinTransactionList",method=RequestMethod.POST)
+    @ApiOperation(value="查询(钱包管理)用户币种交易记录", notes="根据userId和coinType查询钱包管理币种交易记录")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name="currentPage",value="用户名",dataType="Integer", paramType = "query",required = true),
+            @ApiImplicitParam(name="currentSize",value="用户id",dataType="Integer", paramType = "query",required = true),
+            @ApiImplicitParam(name="userId",value="用户编号",dataType="Integer", paramType = "query",required = true),
+            @ApiImplicitParam(name="coinType",value="币种名称",dataType="String", paramType = "query",required = true)
+    })
+    @RequestMapping(value="/queryWalletUserCoinTransactionList",method=RequestMethod.GET)
     public ApiResponseResult queryWalletUserCoinTransactionList(@RequestParam("currentPage")Integer currentPage,
                                                                 @RequestParam("currentSize")Integer currentSize,
                                                                 @RequestParam("userId")Integer userId,
@@ -127,9 +127,8 @@ public class TranscationController {
 
         try{
 
-            //apiResponse = transcationService.selectWalletUserCoinTransactionList(userId,coinType);
-
-            apiResponse = transcationService.selectWalletUserCoinTransactionList(currentPage,currentSize,userId,coinType,null);
+            apiResponse = transcationService.selectWalletUserCoinTransactionList(currentPage,currentSize,
+                    userId,coinType,null);
 
         }catch (Exception e){
             e.printStackTrace();

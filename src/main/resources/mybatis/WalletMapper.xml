@@ -27,7 +27,7 @@
 
 
     <!-- 查询个人钱包总资产 -->
-    <select id="selectUserWalletTotal" resultType="Double" >
+    <select id="selectUserWalletTotal" resultType="BigDecimal" >
       SELECT SUM(amount) FROM VAH_Y_WALLET
 
         <trim prefix="WHERE" prefixOverrides="AND | OR">
@@ -143,16 +143,13 @@
 
     </update>
 
+    <!-- 查询用户钱包下是否有该币种 -->
+    <select id="selectUserWalletByCoinId" resultType="Integer">
 
-    <!-- 钱包管理币种 的 交易记录 (昨日收益)+(冻结数量) -->
-    <select id="selectYesterdayProfit" resultType="Map">
-        SELECT
-        SUM(amount) AS yesterdayProfit,
-        (
-
-        SELECT freeAmount FROM VAH_Y_WALLET
+        SELECT COUNT(*) FROM VAH_Y_WALLET
 
         <trim prefix="WHERE" prefixOverrides="AND | OR">
+
             <if test="userId != null and userId != 0">
                 AND userId = #{userId}
             </if>
@@ -163,9 +160,42 @@
 
         </trim>
 
+    </select>
+
+
+    <!-- 钱包管理币种 的 交易记录 (昨日收益)+(冻结数量) -->
+    <select id="selectYesterdayProfit" resultType="Map">
+        SELECT
+        SUM(amount) AS yesterdayProfit,
+        (
+            SELECT freeAmount FROM VAH_Y_WALLET
+
+            <trim prefix="WHERE" prefixOverrides="AND | OR">
+
+                <if test="userId != null and userId != 0">
+                    AND userId = #{userId}
+                </if>
+
+                <if test="coinId != null and coinId != 0">
+                    AND coinId = #{coinId}
+                </if>
+
+            </trim>
+
         ) AS freeAmount
         FROM VAH_T_TRANSCATION
         WHERE TO_DAYS( NOW( ) ) - TO_DAYS(createTime) = 1
+
+        <if test="userId != null and userId != 0">
+            AND userId = #{userId}
+        </if>
+
+        <if test="coinId != null and coinId != 0">
+            AND coinId = #{coinId}
+        </if>
+        <!--<if test="coinType != null and coinType.length() > 0">
+            AND coinType = #{coinType}
+        </if>-->
 
     </select>
 

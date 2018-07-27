@@ -6,8 +6,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pro.bechat.wallet.domain.dao.TranscationMapper;
+import pro.bechat.wallet.domain.dao.UserMapper;
 import pro.bechat.wallet.domain.dao.WalletMapper;
 import pro.bechat.wallet.domain.model.model.Transcation;
+import pro.bechat.wallet.domain.model.model.User;
 import pro.bechat.wallet.domain.model.model.Wallet;
 import pro.bechat.wallet.domain.model.response.ApiResponseResult;
 import pro.bechat.wallet.domain.model.vo.WalletCoinVo;
@@ -33,12 +35,28 @@ public class WalletServiceImpl implements WalletService {
     @Autowired
     private TranscationMapper transcationMapper;            //交易订单Mapper
 
+    @Autowired
+    private UserMapper userMapper;                          //用户信息Mapper
+
     @Override
     public ApiResponseResult selectUserWalletTotal(Integer userId) throws Exception {
 
-        Double total =  walletMapper.selectUserWalletTotal(userId);
 
-        return ApiResponseResult.build(200,"success","查询钱包币种列表数据",total);
+        User user = userMapper.findUserById(userId);
+
+        if(null == user){
+
+            return ApiResponseResult.build(2015,"error","该用户不存在","");
+        }
+
+        BigDecimal total =  walletMapper.selectUserWalletTotal(userId);
+
+        if(null == total){
+
+            total = new BigDecimal(0);              //如果用户不存在 或者 没有交易记录就为 0
+        }
+
+        return ApiResponseResult.build(200,"success","查询用户钱包币种总额",total);
     }
 
     @Override
@@ -46,8 +64,6 @@ public class WalletServiceImpl implements WalletService {
                                                       Integer userId,String coinName) throws Exception {
 
         PageHelper.startPage(currentPage,currentSize);
-
-        //List<WalletVo> list =  walletMapper.selectUserWalletCoinList(userId,coinName);
 
         List<WalletVo> voList =  walletMapper.selectUserWalletCoinList(currentPage,currentSize,userId,coinName);
 
@@ -77,13 +93,17 @@ public class WalletServiceImpl implements WalletService {
         Wallet userWalletCoin = walletMapper.selectUserWalletCoinById(wallet);      //按id查询查询转出币种信息
         if(userWalletCoin == null){
 
-            return ApiResponseResult.build(500,"error","未查询到用户钱包下的币种","");
+            return ApiResponseResult.build(2010,"error","未查询到用户钱包下的币种","");
         }
 
         Wallet walletCoin = walletMapper.selectUserWalletCoinByAddress(wallet);     //按address查询转入币种信息
         if(walletCoin == null){
 
-            return ApiResponseResult.build(500,"error","未查询到该地址信息","");
+            return ApiResponseResult.build(2010,"error","未查询到该地址信息","");
+        }
+        if(userWalletCoin.getCoinId() != walletCoin.getCoinId()){
+
+            return ApiResponseResult.build(2010,"error","不能跨币转账,只能同币交易","");
         }
 
         // 3、判断钱包币种的 本金价格 与传入的价格比较 可用余额与 传入价格比较
@@ -199,6 +219,7 @@ public class WalletServiceImpl implements WalletService {
 
         Transcation transcation = new Transcation();
         transcation.setUserId(userWalletCoin.getUserId());      //用户编号
+        transcation.setCoinId(userWalletCoin.getCoinId());      //币种编号
         transcation.setCoinType(wallet.getCoinName());          //币种名称
         transcation.setAmount(wallet.getAmount());              //交易金额
         transcation.setTxType(2);                               //交易类型（1：转入，2：转出，3：直推，4：利息，5:团队奖）
@@ -208,6 +229,10 @@ public class WalletServiceImpl implements WalletService {
         transcation.setHash(uuid);                              //交易ID
         transcation.setTxStatus(1);                             //交易状态（1：已提交，2：已完成）
         transcation.setCapital(userWalletCoin.getAmount().subtract(wallet.getAmount()));     //本金
+        if( wallet.getRemark() == null || wallet.getRemark().equals("")){
+
+            wallet.setRemark("转出");
+        }
         transcation.setRemark(wallet.getRemark());              //备注
 
         Integer num = transcationMapper.insertWalletTurnOut(transcation);
@@ -223,6 +248,7 @@ public class WalletServiceImpl implements WalletService {
 
         Transcation transcation = new Transcation();
         transcation.setUserId(walletCoin.getUserId());          //用户编号
+        transcation.setCoinId(userWalletCoin.getCoinId());      //币种编号
         transcation.setCoinType(wallet.getCoinName());          //币种名称
         transcation.setAmount(wallet.getAmount());              //交易金额
         transcation.setTxType(1);                               //交易类型（1：转入，2：转出，3：直推，4：利息，5:团队奖）
@@ -232,7 +258,7 @@ public class WalletServiceImpl implements WalletService {
         transcation.setHash(uuid);                              //交易ID
         transcation.setTxStatus(1);                             //交易状态（1：已提交，2：已完成）
         transcation.setCapital(walletCoin.getAmount().add(wallet.getAmount()));         //本金
-        transcation.setRemark(wallet.getRemark());              //备注
+        transcation.setRemark("转入");              //备注
 
         Integer num = transcationMapper.insertWalletToChangeInto(transcation);
 
@@ -243,6 +269,13 @@ public class WalletServiceImpl implements WalletService {
     public ApiResponseResult selectYesterdayProfit(Integer userId, Integer coinId) throws Exception {
 
         Map<String,Object> map = new HashMap<>();
+
+        Integer num = walletMapper.selectUserWalletByCoinId(userId,coinId);
+
+        if(num == 0){
+
+            return ApiResponseResult.build(2013,"error","未查询到有该币种","");
+        }
 
         map = walletMapper.selectYesterdayProfit(userId,coinId);
 

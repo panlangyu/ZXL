@@ -5,6 +5,8 @@ import org.springframework.stereotype.Repository;
 import pro.bechat.wallet.domain.model.model.User;
 import pro.bechat.wallet.domain.model.model.Wallet;
 import pro.bechat.wallet.domain.model.vo.WalletVo;
+
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
@@ -22,7 +24,9 @@ public interface WalletMapper extends BasicMapper<User>{
      * @return
      * @throws Exception
      */
-    public Double selectUserWalletTotal(@Param("userId")Integer userId)throws Exception;
+    public BigDecimal selectUserWalletTotal(@Param("userId")Integer userId)throws Exception;
+
+
 
     /**
      * 查询用户钱包币种列表数据
@@ -73,6 +77,15 @@ public interface WalletMapper extends BasicMapper<User>{
      */
     public Integer modifyWalletToChangeInto(Wallet wallet)throws Exception;
 
+    /**
+     * 查询用户钱包下是否有该币种
+     * @param userId
+     * @param coinId
+     * @return
+     * @throws Exception
+     */
+    public Integer selectUserWalletByCoinId(@Param("userId")Integer userId,
+                                            @Param("coinId")Integer coinId)throws Exception;
 
     /**
      * 管理钱包用户币种昨日收益 +(冻结数量)

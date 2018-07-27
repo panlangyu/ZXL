@@ -16,6 +16,8 @@ public class TranscationVo {
 
     private BigDecimal amount;              //交易金额
 
+    private String to;                      //对方地址
+
     private String hash;                    //交易ID
 
     private Date createTime;                //订单创建时间
@@ -43,6 +45,14 @@ public class TranscationVo {
 
     public void setAmount(BigDecimal amount) {
         this.amount = amount;
+    }
+
+    public String getTo() {
+        return to;
+    }
+
+    public void setTo(String to) {
+        this.to = to;
     }
 
     public String getHash() {
