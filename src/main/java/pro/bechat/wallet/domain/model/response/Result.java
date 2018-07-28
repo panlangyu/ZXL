@@ -69,7 +69,7 @@ public class Result {
     }
 
     public static Result getSuccess(Object data){
-        return new Result(0,"error","获取",data);
+        return new Result(200,"error","suscc",data);
     }
 
 }

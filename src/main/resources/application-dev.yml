@@ -43,5 +43,6 @@ logging:
 
 #配置servert.host暴露IP
 server:
-  address:192.168.10.117
+      context-path: /bechatwallet
+      port: 8080
 

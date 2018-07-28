@@ -93,7 +93,8 @@ public class WalletServiceImpl implements WalletService {
     public ApiResponseResult modifyWalletTurnOut(Wallet wallet) throws Exception {
 
         // 1、锁钱包表
-        walletMapper.lockWalletTable();
+        //锁表出错，建议使用事务，不建议锁表。
+//        walletMapper.lockWalletTable();
 
         // 2、查询该币种信息,拿出金额做判断
         Wallet userWalletCoin = walletMapper.selectUserWalletCoinById(wallet);      //按id查询查询转出币种信息
@@ -104,7 +105,6 @@ public class WalletServiceImpl implements WalletService {
 
         Wallet walletCoin = walletMapper.selectUserWalletCoinByAddress(wallet);     //按address查询转入币种信息
         if(walletCoin == null){
-
             return ApiResponseResult.build(2010,"error","未查询到该地址信息","");
         }
         if(userWalletCoin.getCoinId() != walletCoin.getCoinId()){

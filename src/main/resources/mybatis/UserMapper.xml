@@ -31,7 +31,7 @@
   </sql>
     <insert id="insert"
             parameterType="pro.bechat.wallet.domain.model.model.User"
-    keyProperty="id" keyColumn="id" useGeneratedKeys="true"
+            keyProperty="id" keyColumn="id" useGeneratedKeys="true"
     >
        INSERT INTO VAH_T_USER (
 	        phoneNum,
@@ -78,7 +78,7 @@
         from VAH_T_USER
         where phoneNum = #{tel} AND status = #{status}
     </select>
-    
+
     <update id="updateInvitaionCode">
         update VAH_T_USER set invitationCode = #{invitationCode} where  id = #{id}
     </update>
@@ -94,7 +94,11 @@
     </update>
 
 
-    <update id="updateUserNameAndSexAndPic" parameterType="java.lang.Integer">
+    <update id="updateUserNameAndSexAndPic">
         update VAH_T_USER set sex = #{sex} , nickName = #{name} ,  headImg = #{pic} where  id = #{id}
     </update>
+
+    <select id="isExit" parameterType="java.lang.Integer">
+        SELECT COUNT(1) FROM VAH_T_USER WHERE id = #{id} AND `status` = 1;
+    </select>
 </mapper>

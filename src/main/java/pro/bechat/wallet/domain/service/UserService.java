@@ -24,6 +24,9 @@ public class UserService extends BasicService<User> {
     @Autowired
     UserMapper userMapper;
 
+    @Autowired
+    WalletService walletService;
+
     @Override
     protected BasicMapper basicMapper() {
         return userMapper;
@@ -92,6 +95,12 @@ public class UserService extends BasicService<User> {
             userMapper.updateInvitaionCode(user.getId(), InvitationCodeUtils.getInvitaionCode(user.getId()));
         } catch (Exception e) {
             logger.warning("生成用户邀请码错误");
+        }
+
+        //生成钱包
+        int numbers = walletService.insertUserWalletInfo(user.getId());
+        if(numbers == 0){
+            logger.warning("创建用户钱包错误");
         }
     }
 
@@ -166,4 +175,11 @@ public class UserService extends BasicService<User> {
         }
     }
 
+    /**
+     * 获得用户推荐人
+     * @param id
+     */
+    public void getRefereeUser(int id){
+
+    }
 }

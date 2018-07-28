@@ -54,4 +54,6 @@ public interface UserMapper extends BasicMapper<User>{
      * @return
      */
     int updateUserHeadPic(@Param("picUrl")String picUrl,@Param("id")int id);
+
+
 }

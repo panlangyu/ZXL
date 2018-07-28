@@ -28,7 +28,8 @@ public class TokenInterceptor implements HandlerInterceptor {
         String requestURI = httpServletRequest.getRequestURI();
         //便利用户cookie
         String tokenStr = httpServletRequest.getHeader("token");
-        if (requestURI.contains("/user/")) {
+        if (!requestURI.contains("/common")
+                && !requestURI.contains("/code")) {
             if (tokenStr == null && tokenStr == null) {
                 String str = JSON.toJSONString(Result.getErro(10083,"token失效"));
                 dealErrorReturn(httpServletRequest, httpServletResponse, str);
