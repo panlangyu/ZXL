@@ -1,11 +1,11 @@
 package pro.bechat.wallet.domain.dao;
 
+import jnr.ffi.annotations.In;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 import pro.bechat.wallet.domain.model.model.User;
 import pro.bechat.wallet.domain.model.model.Wallet;
 import pro.bechat.wallet.domain.model.vo.WalletVo;
-
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
@@ -96,5 +96,31 @@ public interface WalletMapper extends BasicMapper<User>{
      */
     public Map<String,Object> selectYesterdayProfit(@Param("userId")Integer userId,
                                                     @Param("coinId")Integer coinId)throws Exception;
+
+
+    /**
+     * 转入钱包管理(从 钱包 转出到 钱包管理 同一币种做处理)
+     * @param wallet
+     * @return
+     * @throws Exception
+     */
+    public Integer modifyWalletDepositToChangeInto(Wallet wallet)throws Exception;
+
+
+    /**
+     * 钱包管理转出(从 钱包管理 转出到 钱包 同一币种做处理)
+     * @param wallet
+     * @return
+     * @throws Exception
+     */
+    public Integer modifyWalletDepositTurnOut(Wallet wallet)throws Exception;
+
+    /**
+     * 新增用户钱包币种信息
+     * @param list
+     * @return
+     * @throws Exception
+     */
+    public Integer insertUserWalletInfo(List<Wallet> list)throws Exception;
 
 }

@@ -199,8 +199,71 @@
 
     </select>
 
+    <!-- 转入钱包管理(从 钱包 转出到 钱包管理 同一币种做处理) -->
+    <update id="modifyWalletDepositToChangeInto" parameterType="pro.bechat.wallet.domain.model.model.Wallet">
+
+        UPDATE VAH_Y_WALLET
+
+        <trim prefix="SET" suffixOverrides="," suffix="WHERE id=#{id}">
+
+            <if test="amount != null and amount != 0">
+                freeAmount = freeAmount + #{amount},
+                availableAmount = availableAmount - #{amount},
+            </if>
+            updateTime=NOW(),
+        </trim>
+
+    </update>
+
+    <!-- 钱包管理转出(从 钱包管理 转出到 钱包 同一币种做处理) -->
+    <update id="modifyWalletDepositTurnOut" parameterType="pro.bechat.wallet.domain.model.model.Wallet">
+
+        UPDATE VAH_Y_WALLET
+
+        <trim prefix="SET" suffixOverrides="," suffix="WHERE id=#{id}">
+
+            <if test="amount != null and amount != 0">
+                freeAmount = freeAmount - #{amount},
+                availableAmount = availableAmount + #{amount},
+            </if>
+            updateTime=NOW(),
+        </trim>
+
+    </update>
 
 
+    <!-- 新增钱包币种信息 -->
+    <insert id="insertUserWalletInfo" parameterType="pro.bechat.wallet.domain.model.model.Wallet">
+
+        INSERT INTO VAH_Y_WALLET(
+            coinId,
+            address,
+            privateKey,
+            passwd,
+            createTime,
+            keystore,
+            userId,
+            freeAmount,
+            amount,
+            availableAmount
+        )
+        VALUES
+        <foreach collection="list" index="index" item="item" separator=",">
+            (
+            #{item.coinId},
+            #{item.address},
+            #{item.privateKey},
+            #{item.passwd},
+            now(),
+            #{item.keystore},
+            #{item.userId},
+            DEFAULT ,
+            DEFAULT ,
+            DEFAULT
+            )
+        </foreach>
+
+    </insert>
 
 
 </mapper>

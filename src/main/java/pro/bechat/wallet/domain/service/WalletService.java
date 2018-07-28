@@ -61,6 +61,29 @@ public interface WalletService {
      */
     public ApiResponseResult selectYesterdayProfit(Integer userId,Integer coinId)throws Exception;
 
+    /**
+     * 钱包管理转入(钱包数量 转入 钱包管理)
+     * @param wallet 钱包对象
+     * @return
+     * @throws Exception
+     */
+    public ApiResponseResult modifyWalletDepositToChangeInto(Wallet wallet)throws Exception;
 
+    /**
+     * 钱包管理转出(从 钱包管理 转出到 钱包 同一币种做处理)
+     * @param wallet 钱包对象
+     * @return
+     * @throws Exception
+     */
+    public ApiResponseResult modifyWalletDepositTurnOut(Wallet wallet)throws Exception;
+
+
+    /**
+     * 新增用户钱包币种信息
+     * @param userId 用户编号
+     * @return
+     * @throws Exception
+     */
+    public Integer insertUserWalletInfo(Integer userId)throws Exception;
 
 }
