@@ -101,4 +101,11 @@
     <select id="isExit" parameterType="java.lang.Integer">
         SELECT COUNT(1) FROM VAH_T_USER WHERE id = #{id} AND `status` = 1;
     </select>
+    
+    <select id="findUserByShip" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from VAH_T_USER
+        where relationship = #{relationship} AND status = 1
+    </select>
 </mapper>

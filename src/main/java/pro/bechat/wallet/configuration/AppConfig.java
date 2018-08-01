@@ -14,5 +14,4 @@ import org.springframework.core.annotation.Order;
 @Order(5)
 public class AppConfig {
 
-
 }

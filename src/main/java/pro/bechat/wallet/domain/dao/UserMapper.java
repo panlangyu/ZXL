@@ -4,6 +4,8 @@ import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 import pro.bechat.wallet.domain.model.model.User;
 
+import java.util.List;
+
 /**
  * create UserMapper by huc
  * 2018/4/20  下午2:23
@@ -56,4 +58,10 @@ public interface UserMapper extends BasicMapper<User>{
     int updateUserHeadPic(@Param("picUrl")String picUrl,@Param("id")int id);
 
 
+    /**
+     * 根据用户关系查找
+     * @param relationship
+     * @return
+     */
+    List<User> findUserByShip(@Param("relationship") String relationship);
 }

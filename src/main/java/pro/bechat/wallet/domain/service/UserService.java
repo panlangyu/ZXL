@@ -11,6 +11,7 @@ import pro.bechat.wallet.publics.MnemonitUtitls;
 import pro.bechat.wallet.publics.PhoneUtils;
 
 import java.util.Date;
+import java.util.List;
 import java.util.logging.Logger;
 
 /**
@@ -179,7 +180,30 @@ public class UserService extends BasicService<User> {
      * 获得用户推荐人
      * @param id
      */
-    public void getRefereeUser(int id){
+    public User getRefereeUser(int id){
+        //获取当前用户信息
+        User user = userMapper.findUserById(id);
+        if(user == null){
+            return null;
+        }
+        if(user.getRelationship().equals("0")){
+            return null;
+        }
+        String[] parentIds = user.getRelationship().split(",");
+        String parentId = parentIds[parentIds.length-1];
+        User parentUser = userMapper.findUserById(Integer.parseInt(parentId));
+        return parentUser;
+    }
 
+
+    public List<User> getAllChirdenUser(int id){
+        //获取当前用户底下爱用户
+        User user = userMapper.findUserById(id);
+        if(user == null){
+            return null;
+        }
+        //拼接
+        String userShip = user.getRelationship() + ","+user.getId();
+        return userMapper.findUserByShip(userShip);
     }
 }
