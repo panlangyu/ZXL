@@ -86,4 +86,14 @@ public interface WalletService {
      */
     public Integer insertUserWalletInfo(Integer userId)throws Exception;
 
+
+    /**
+     * 用户充币操作
+     * @param wallet
+     * @return
+     * @throws Exception
+     */
+    public ApiResponseResult modifyChargeMoneyInfo(Wallet wallet)throws Exception;
+
+
 }

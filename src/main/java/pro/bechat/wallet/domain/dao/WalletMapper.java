@@ -1,9 +1,7 @@
 package pro.bechat.wallet.domain.dao;
 
-import jnr.ffi.annotations.In;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
-import pro.bechat.wallet.domain.model.model.User;
 import pro.bechat.wallet.domain.model.model.Wallet;
 import pro.bechat.wallet.domain.model.vo.WalletVo;
 import java.math.BigDecimal;
@@ -16,7 +14,9 @@ import java.util.Map;
  * 2018/7/23  上午12:03
  */
 @Repository
-public interface WalletMapper extends BasicMapper<User>{
+public interface WalletMapper {
+
+    //extends BasicMapper<Wallet>
 
     /**
      * 查询个人钱包总资产
@@ -84,7 +84,7 @@ public interface WalletMapper extends BasicMapper<User>{
      * @return
      * @throws Exception
      */
-    public Integer selectUserWalletByCoinId(@Param("userId")Integer userId,
+    public Wallet selectUserWalletByCoinId(@Param("userId")Integer userId,
                                             @Param("coinId")Integer coinId)throws Exception;
 
     /**
@@ -122,5 +122,21 @@ public interface WalletMapper extends BasicMapper<User>{
      * @throws Exception
      */
     public Integer insertUserWalletInfo(List<Wallet> list)throws Exception;
+
+    /**
+     * 查询钱包信息,冻结金额不为 0 的  冻结金额就是用来生息的,  如果3天未提取利息的不再生息
+     * @return
+     * @throws Exception
+     */
+    public List<Wallet> selectUserWalletInterest()throws Exception;
+
+    /**
+     * 修改用户钱包币种 利息生息
+     * @param wallet
+     * @return
+     * @throws Exception
+     */
+    public Integer modifyUserWalletInterest(Wallet wallet)throws Exception;
+
 
 }

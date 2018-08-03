@@ -4,6 +4,8 @@ import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 import pro.bechat.wallet.domain.model.model.Transcation;
 import pro.bechat.wallet.domain.model.vo.TranscationVo;
+
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
@@ -79,8 +81,8 @@ public interface TranscationMapper {
      * @throws Exception
      */
     public Map<String,Object> selectUserCoinTrunToChargeTotal(@Param("userId")Integer userId,
-                                                             @Param("startTime")String startTime,
-                                                             @Param("endTime")String endTime)throws Exception;
+                                                              @Param("startTime")String startTime,
+                                                              @Param("endTime")String endTime)throws Exception;
 
     /**
      * 查询钱包管理币种的 直推 和 生息的总额
@@ -110,6 +112,17 @@ public interface TranscationMapper {
                                                                    @Param("coinType")String coinType,
                                                                    @Param("startTime")String startTime,
                                                                    @Param("endTime")String endTime)throws Exception;
+
+    /**
+     * 查看充值记录 和 提取记录 总额 是否超过 10000
+     * @param userId
+     * @param coinId
+     * @return
+     * @throws Exception
+     */
+    public BigDecimal selectTranscationRechargeRecord(@Param("userId")Integer userId,
+                                                      @Param("coinId")Integer coinId)throws Exception;
+
 
 
 }

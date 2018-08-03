@@ -200,26 +200,49 @@ public class WalletController {
     }
 
 
-    /*@ApiOperation(value="钱包管理(转出) 本金不发生改变,冻结减少和可用发生增加", notes="钱包管理(转出)")
-    @ApiImplicitParam(name = "userId", value = "钱包对象wallet",dataType="Wallet")
-    @RequestMapping(value = "/modifyWalletDepositTurnTosss",method = RequestMethod.POST)
-    public ApiResponseResult modifyWalletDepositTurnTosss(@RequestParam("userId")Integer userId, HttpServletRequest request){
+
+    @ApiOperation(value="用户充币信息", notes="用户充币")
+    @ApiImplicitParam(name = "wallet", value = "钱包对象wallet",dataType="Wallet")
+    @RequestMapping(value = "/modifyChargeMoneyInfo",method = RequestMethod.POST)
+    public ApiResponseResult modifyChargeMoneyInfo(@RequestBody Wallet wallet, HttpServletRequest request){
 
         ApiResponseResult apiResponse = new ApiResponseResult();
 
         try{
 
-            Integer num  = walletService.insertUserWalletInfo(userId);
+            apiResponse = walletService.modifyChargeMoneyInfo(wallet);
 
         }catch (Exception e){
             e.printStackTrace();
 
-            return ApiResponseResult.build(2016,"error","出现异常","");
+            return ApiResponseResult.build(2017,"error","出现异常","");
         }
 
         return apiResponse;
     }
-*/
+
+
+    @ApiOperation(value="用户充币信息", notes="用户充币")
+    @RequestMapping(value = "/modifyChargeMoneyInfos",method = RequestMethod.POST)
+    public ApiResponseResult modifyChargeMoneyInfos( HttpServletRequest request){
+
+        ApiResponseResult apiResponse = new ApiResponseResult();
+
+        Integer num = null;
+        try{
+
+            num = walletService.insertUserWalletInfo(17);
+
+        }catch (Exception e){
+            e.printStackTrace();
+
+            return ApiResponseResult.build(2017,"error","出现异常","");
+        }
+
+        return ApiResponseResult.build(200,"success","成功",num);
+    }
+
+
 
 
 }

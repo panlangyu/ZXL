@@ -106,7 +106,7 @@ public class RewardConfigureUtils {
     /**
      * 出局制度推荐人数
      */
-    private BigDecimal outRecommendNumbers;
+    private Integer outRecommendNumbers;
 
     /**
      * 出局制本金限制
@@ -212,11 +212,11 @@ public class RewardConfigureUtils {
         this.dayLimit = dayLimit;
     }
 
-    public BigDecimal getOutRecommendNumbers() {
+    public Integer getOutRecommendNumbers() {
         return outRecommendNumbers;
     }
 
-    public void setOutRecommendNumbers(BigDecimal outRecommendNumbers) {
+    public void setOutRecommendNumbers(Integer outRecommendNumbers) {
         this.outRecommendNumbers = outRecommendNumbers;
     }
 

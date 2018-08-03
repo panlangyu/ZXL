@@ -1,6 +1,6 @@
 package pro.bechat.wallet.publics;
 
-import jetbrick.util.StringUtils;
+import pro.bechat.wallet.domain.model.model.Dictionary;
 
 import java.util.UUID;
 
@@ -27,8 +27,11 @@ public class ObjectUtils {
                 case 2:
                     remark = "转出";
                     break;
+                case 6:
+                    remark = "扣取手续费";
+                    break;
                 default:
-                    remark = "只有以上两种类型";
+                    remark = "只有以上三种类型";
                     break;
             }
         }
@@ -75,10 +78,14 @@ public class ObjectUtils {
                 case 5:
                     remark = "团队奖";
                     break;
+                case 6:
+                    remark = "扣取手续费";
+                    break;
                 default:
-                    remark = "只有以上五种类型";
+                    remark = "只有以上六种类型";
                     break;
             }
+
         }
 
         return remark;

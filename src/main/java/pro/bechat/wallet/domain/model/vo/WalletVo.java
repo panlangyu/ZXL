@@ -16,7 +16,7 @@ public class WalletVo {
 
     private BigDecimal freeAmount;          //冻结金额
 
-    private BigDecimal amount;              //钱包总额
+    private BigDecimal amount;              //钱包可用余额(如果没冻结数量,可用余额与本金一致)
 
     private String coinName;                //币种名称
 

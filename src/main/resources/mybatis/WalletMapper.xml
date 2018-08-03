@@ -10,7 +10,7 @@
         <result column="coinImg" jdbcType="VARCHAR" property="coinImg"/>
         <result column="address" jdbcType="VARCHAR" property="address"/>
         <result column="freeAmount" jdbcType="DECIMAL" property="freeAmount"/>
-        <result column="amount" jdbcType="DECIMAL" property="amount"/>
+        <result column="availableAmount" jdbcType="DECIMAL" property="amount"/>
     </resultMap>
 
     <!-- 封装用户钱包单个币种数据 -->
@@ -28,7 +28,7 @@
 
     <!-- 查询个人钱包总资产 -->
     <select id="selectUserWalletTotal" resultType="BigDecimal" >
-      SELECT SUM(amount) FROM VAH_Y_WALLET
+      SELECT SUM(availableAmount) FROM VAH_Y_WALLET
 
         <trim prefix="WHERE" prefixOverrides="AND | OR">
           <if test="userId != null and userId != 0">
@@ -41,7 +41,7 @@
 
     <!-- 查询用户钱包数据列表 -->
     <select id="selectUserWalletCoinList" resultMap="BaseResultMap">
-        SELECT w.id,coinId,coinName,coinImg,w.address,freeAmount,amount FROM VAH_Y_WALLET w
+        SELECT w.id,coinId,coinName,coinImg,w.address,freeAmount,availableAmount FROM VAH_Y_WALLET w
         INNER JOIN VAH_T_COIN c ON w.`coinId`=c.`id`
 
         <trim prefix="WHERE" prefixOverrides="AND | OR">
@@ -62,10 +62,12 @@
     </select>
 
 
-    <!-- 钱包转账，锁住钱包表 -->
+    <!-- 钱包转账，锁住钱包表,共享锁 -->
     <select id="lockWalletTable" resultType="pro.bechat.wallet.domain.model.model.Wallet">
 
-        SELECT * FROM VAH_Y_WALLET FOR UPDATE
+        /*SELECT * FROM VAH_Y_WALLET FOR UPDATE*/
+
+        SELECT * FROM VAH_Y_WALLET LOCK IN SHARE MODE;
 
     </select>
 
@@ -98,10 +100,10 @@
             <if test="address != null and address.length() > 0">
                 AND address = #{address}
             </if>
-            <!--<<if test="userId != null and userId != 0">
+            <!--<if test="userId != null and userId != 0">
                 AND userId = #{userId}
             </if>
-            if test="coinId != null and coinId != 0">
+            <if test="coinId != null and coinId != 0">
                 AND coinId = #{coinId}
             </if>-->
 
@@ -138,20 +140,28 @@
                 amount = amount + #{amount},
                 availableAmount = availableAmount + #{amount},
             </if>
+
             updateTime=NOW(),
         </trim>
 
+       <!-- <if test="coinId != null and coinId != 0">
+          AND coinId = #{coinId}
+        </if>-->
+
     </update>
 
-    <!-- 查询用户钱包下是否有该币种 -->
-    <select id="selectUserWalletByCoinId" resultType="Integer">
 
-        SELECT COUNT(*) FROM VAH_Y_WALLET
+    <!-- 查询用户钱包下是否有该币种 -->
+    <select id="selectUserWalletByCoinId" resultType="pro.bechat.wallet.domain.model.model.Wallet">
+
+        /*SELECT COUNT(*) FROM VAH_Y_WALLET*/
+        SELECT w.id,coinId,w.address,w.createTime,userId,freeAmount,amount,availableAmount,coinName FROM VAH_Y_WALLET w
+        INNER JOIN VAH_T_COIN c ON w.`coinId`=c.`id`
 
         <trim prefix="WHERE" prefixOverrides="AND | OR">
 
             <if test="userId != null and userId != 0">
-                AND userId = #{userId}
+                AND w.userId = #{userId}
             </if>
 
             <if test="coinId != null and coinId != 0">
@@ -233,7 +243,13 @@
 
 
     <!-- 新增钱包币种信息 -->
-    <insert id="insertUserWalletInfo" parameterType="pro.bechat.wallet.domain.model.model.Wallet">
+    <insert id="insertUserWalletInfo" parameterType="java.util.List">
+
+       <!--<selectKey resultType ="java.lang.Integer" keyProperty= "id" order= "AFTER">
+
+            SELECT LAST_INSERT_ID()
+
+        </selectKey>-->
 
         INSERT INTO VAH_Y_WALLET(
             coinId,
@@ -241,6 +257,7 @@
             privateKey,
             passwd,
             createTime,
+            updateTime,
             keystore,
             userId,
             freeAmount,
@@ -248,12 +265,13 @@
             availableAmount
         )
         VALUES
-        <foreach collection="list" index="index" item="item" separator=",">
+        <foreach collection="list"  item="item" separator=",">
             (
             #{item.coinId},
             #{item.address},
             #{item.privateKey},
             #{item.passwd},
+            now(),
             now(),
             #{item.keystore},
             #{item.userId},
@@ -264,6 +282,36 @@
         </foreach>
 
     </insert>
+
+
+    <!-- 查询钱包信息,冻结金额不为 0 的  冻结金额就是用来生息的,  如果3天未提取利息的不再生息 -->
+    <select id="selectUserWalletInterest" resultType="pro.bechat.wallet.domain.model.model.Wallet">
+        SELECT w.id,coinId,coinName,w.address,w.createTime,w.updateTime,userId,freeAmount,amount,availableAmount FROM VAH_Y_WALLET w
+        INNER JOIN VAH_T_COIN c ON w.`coinId`=c.`id`
+        WHERE freeAmount != 0
+        AND TO_DAYS( NOW() ) - TO_DAYS(w.updateTime) &lt;= 3
+    </select>
+
+
+    <!-- 修改用户钱包币种 利息生息 -->
+    <update id="modifyUserWalletInterest" parameterType="pro.bechat.wallet.domain.model.model.Wallet">
+        UPDATE VAH_Y_WALLET
+
+        <trim prefix="SET" suffixOverrides="," suffix="WHERE id=#{id}">
+
+            <if test="amount != null and amount != 0">
+                freeAmount = freeAmount + #{amount},
+                amount = amount + #{amount},
+                interest = interest + #{amount},
+            </if>
+            updateTime = NOW(),
+        </trim>
+
+    </update>
+
+
+
+
 
 
 </mapper>
