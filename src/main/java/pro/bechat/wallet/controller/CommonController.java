@@ -1,6 +1,9 @@
 package pro.bechat.wallet.controller;
 
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import pro.bechat.wallet.domain.model.model.User;
@@ -36,7 +39,7 @@ public class CommonController {
         return "index ok.";
     }
 
-
+    @ApiOperation(value="获取助记词", notes="无参数",httpMethod = "GET")
     @GetMapping(value = "/mnemonit")
     public Result productMnemonit() {
         try {
@@ -46,12 +49,18 @@ public class CommonController {
         }
     }
 
-
+    @ApiOperation(value="用户注册", notes="用户注册",httpMethod = "POST")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name="phone",value="手机号码",dataType="String", paramType = "query",required = true),
+            @ApiImplicitParam(name="pass",value="密码",dataType="String", paramType = "query",required = true),
+            @ApiImplicitParam(name="invitationCode",value="邀请码",dataType="String", paramType = "query",required = true),
+            @ApiImplicitParam(name="keyWords",value="助记词",dataType="String", paramType = "query",required = true)
+    })
     @PostMapping("/register")
-    public Result register(@RequestParam(name = "phone", defaultValue = "") String phone,
-                           @RequestParam(name = "pass", defaultValue = "") String pass,
-                           @RequestParam(name = "invitationCode", defaultValue = "") String invitationCode,
-                           @RequestParam(name = "keyWords", defaultValue = "") String keyWords
+    public Result register(String phone,
+                          String pass,
+                         String invitationCode,
+                         String keyWords
     ) {
         try {
             userService.register(phone, pass, keyWords, invitationCode);
@@ -65,7 +74,13 @@ public class CommonController {
     @Autowired
     private HttpServletResponse response;
 
-    @RequestMapping("/login")
+
+    @ApiOperation(value="用户登陆", notes="用户登陆",httpMethod = "GET")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name="tel",value="手机号码",dataType="String", paramType = "query",required = true),
+            @ApiImplicitParam(name="password",value="密码",dataType="String", paramType = "query",required = true),
+    })
+    @GetMapping("/login")
     public Result login(String tel, String password) {
         try {
             User user = userService.login(tel, password);

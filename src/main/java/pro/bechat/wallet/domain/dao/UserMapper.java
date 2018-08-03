@@ -59,9 +59,40 @@ public interface UserMapper extends BasicMapper<User>{
 
 
     /**
-     * 根据用户关系查找
+     * 查询自己的直推用户
      * @param relationship
      * @return
      */
     List<User> findUserByShip(@Param("relationship") String relationship);
+
+    /**
+     * 查询所有用户
+     * @return
+     */
+    List<User> findAllUsers(@Param("currentPage")Integer currentPage,
+                            @Param("currentSize")Integer currentSize,@Param("search")String search);
+
+
+    /**
+     * 根据名字或者手机号码查询
+     * @param search
+     * @return
+     */
+    User findUserByNameOrPhenoe(@Param("search")String search);
+
+
+    /**
+     * 根据id查询
+     * @param ids
+     * @return
+     */
+    List<User> findUsersByIds(@Param("ids")List<String> ids);
+
+
+    /**
+     * 根据用户关系查询子类关系图
+     * @param
+     * @return
+     */
+    List<User> findLineUsersByShip(@Param("relationship")String relationship,@Param("relationship2")String relationship2);
 }

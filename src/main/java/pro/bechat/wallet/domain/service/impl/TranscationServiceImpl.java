@@ -34,7 +34,6 @@ public class TranscationServiceImpl implements TranscationService {
         List<TranscationVo> voList = transcationMapper.selectUserCoinTransactionList(currentPage,currentSize,userId,coinType);
 
         if(null == voList){
-
             return ApiResponseResult.build(2010,"error","未查询用户钱包币种交易记录转入和转出","");
         }
 

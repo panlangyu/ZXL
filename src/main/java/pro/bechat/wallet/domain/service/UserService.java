@@ -1,15 +1,22 @@
 package pro.bechat.wallet.domain.service;
 
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import jetbrick.util.codec.MD5Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pro.bechat.wallet.domain.dao.BasicMapper;
 import pro.bechat.wallet.domain.dao.UserMapper;
 import pro.bechat.wallet.domain.model.model.User;
+import pro.bechat.wallet.domain.model.response.ApiResponseResult;
+import pro.bechat.wallet.domain.model.vo.TranscationVo;
 import pro.bechat.wallet.publics.InvitationCodeUtils;
 import pro.bechat.wallet.publics.MnemonitUtitls;
+import pro.bechat.wallet.publics.PageBean;
 import pro.bechat.wallet.publics.PhoneUtils;
 
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
@@ -195,7 +202,11 @@ public class UserService extends BasicService<User> {
         return parentUser;
     }
 
-
+    /**
+     * 查询当前用户底下所有用户
+     * @param id
+     * @return
+     */
     public List<User> getAllChirdenUser(int id){
         //获取当前用户底下爱用户
         User user = userMapper.findUserById(id);
@@ -205,5 +216,59 @@ public class UserService extends BasicService<User> {
         //拼接
         String userShip = user.getRelationship() + ","+user.getId();
         return userMapper.findUserByShip(userShip);
+    }
+
+
+    public PageBean<User> findAllUser(int currentSize,int currentPage,String search){
+        PageHelper.startPage(currentPage,currentSize);
+        List<User> voList = userMapper.findAllUsers(currentPage,currentSize,search);
+        PageInfo<User> pageInfo = new PageInfo(voList);
+        PageBean<User> pageBean = new PageBean<>();
+        pageBean.setCurrentPage(currentPage);
+        pageBean.setCurrentSize(currentSize);
+        pageBean.setTotalNum(pageInfo.getTotal());
+        pageBean.setItems(voList);
+        return pageBean;
+    }
+
+
+    /**
+     * 获取我的直推用户
+     * @param phone
+     * @return
+     * @throws Exception
+     */
+    public List<User> adminGetChildren(String phone) throws Exception {
+        User user = userMapper.findUserByNameOrPhenoe(phone);
+        if(user == null){
+            throw new Exception("该用户不存在或者是已经出局");
+        }
+        //拼接
+        String userShip = user.getRelationship() + ","+user.getId();
+        return userMapper.findUserByShip(userShip);
+    }
+
+    /**
+     * 获取我的直推用户
+     * @param content
+     * @return
+     * @throws Exception
+     */
+    public PageBean<User> adminGetLineUsers(int page, int size, String content) throws Exception {
+        User user = userMapper.findUserByNameOrPhenoe(content);
+        String userShip = user.getRelationship() + ","+user.getId();
+        String userShip2 =user.getRelationship() + ","+user.getId()+",%";
+        if(user == null){
+            throw new Exception("该用户不存在或者是已经出局");
+        }
+        PageHelper.startPage(page,size);
+        List<User> voList = userMapper.findLineUsersByShip(userShip,userShip2);
+        PageInfo<User> pageInfo = new PageInfo(voList);
+        PageBean<User> pageBean = new PageBean<>();
+        pageBean.setCurrentPage(page);
+        pageBean.setCurrentSize(size);
+        pageBean.setTotalNum(pageInfo.getTotal());
+        pageBean.setItems(voList);
+        return pageBean;
     }
 }

@@ -108,4 +108,41 @@
         from VAH_T_USER
         where relationship = #{relationship} AND status = 1
     </select>
+
+
+
+    <select id="findAllUsers" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from VAH_T_USER
+        <if test="search!=null and search != ''">
+            where phoneNum = #{search} or nickName = #{search}
+        </if>
+    </select>
+    <select id="findUserByNameOrPhenoe" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from VAH_T_USER
+        where phoneNum = #{search} or nickName = #{search}
+        and status = 1
+    </select>
+
+    <select id="findUsersByIds" resultMap="BaseResultMap" parameterType="java.util.List">
+        select <include refid="Base_Column_List"/>
+        from VAH_T_USER
+        where id in <foreach collection="ids" index="index" item="item" open="(" separator="," close=")">
+            #{item}
+         </foreach>
+        order by id desc
+    </select>
+
+
+
+    <select id="findLineUsersByShip" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from VAH_T_USER
+        where relationship = #{relationship}
+        or relationship like  #{relationship2}
+    </select>
 </mapper>

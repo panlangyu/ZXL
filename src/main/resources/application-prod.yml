@@ -2,6 +2,10 @@ spring:
   application:
     name: bechatwallet
   cloud:
+  devtools:
+    restart:
+      enabled: true
+      exclude: WEB-INF/**
   datasource:
         name: VAHWallet
 #        url: jdbc:mysql://39.105.26.249:3306/PMBC
@@ -25,7 +29,13 @@ spring:
         testOnReturn: false
         poolPreparedStatements: true
         maxOpenPreparedStatements: 20
-
+  thymeleaf:
+        cache: false
+        prefix: classpath:/templates/
+        suffix: .html
+        encoding: UTF-8
+        content-type: text/html
+        mode: HTML5
 mybatis:
   mapper-locations: classpath:mybatis/*.xml
   type-aliases-package: pro.bechat.wallet

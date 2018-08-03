@@ -8,6 +8,10 @@ public class PageBean<T> {
     private Integer currentSize=10;                     //每页显示条数
     private long totalNum;                              //总条数
     private List<T> items;                              //泛型集合
+    /**
+     * 总页数
+     */
+    private int totalPage;
 
     public PageBean(){}
 
@@ -48,5 +52,16 @@ public class PageBean<T> {
 
     public void setItems(List<T> items) {
         this.items = items;
+    }
+
+    public int getTotalPage() {
+        if(totalNum%currentSize == 0){
+            return (int) (totalNum/currentSize);
+        }
+        return (int) (totalNum/currentSize)+1;
+    }
+
+    public void setTotalPage(int totalPage) {
+        this.totalPage = totalPage;
     }
 }

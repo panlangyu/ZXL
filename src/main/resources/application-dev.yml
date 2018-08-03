@@ -6,13 +6,15 @@ spring:
     restart:
       enabled: true
       exclude: WEB-INF/**
+  resources:
+    static-locations: classpath:/static,classpath:/public,classpath:/resources,classpath:/META-INF/resources
   datasource:
         name: VAHWallet
 #        url: jdbc:mysql://39.105.26.249:3306/PMBC
 #        url: jdbc:mysql://172.17.0.1:3306/wallet
-        url: jdbc:mysql://192.168.10.108:3306/VAHWallet
+        url: jdbc:mysql://103.65.180.165:3306/VAHWallet
         username: VAHWallet
-        password: 4faP4RmnNb6drfZ4
+        password: WxfTaZTFe7h6ZhCy
         # 使用druid数据源
         type: com.alibaba.druid.pool.DruidDataSource
         driver-class-name: com.mysql.jdbc.Driver
@@ -35,7 +37,7 @@ spring:
         suffix: .html
         encoding: UTF-8
         content-type: text/html
-        mode: HTML5
+        mode: LEGACYHTML5
 mybatis:
   mapper-locations: classpath:mybatis/*.xml
   type-aliases-package: pro.bechat.wallet

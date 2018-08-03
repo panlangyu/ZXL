@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import pro.bechat.wallet.domain.service.UserService;
+import pro.bechat.wallet.publics.RewardConfigureUtils;
 
 /**
  * @Author ch
@@ -19,6 +20,7 @@ public class Test {
 
     @org.junit.Test
     public void test(){
-        System.out.println(userService.getAllChirdenUser(40));
+        RewardConfigureUtils configureUtils = RewardConfigureUtils.getInstance();
+        System.out.println(configureUtils);
     }
 }

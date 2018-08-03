@@ -1,5 +1,7 @@
 package pro.bechat.wallet.domain.model.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.util.Date;
 
 /**
@@ -61,7 +63,7 @@ public class User {
     public void setPhoneNum(String phoneNum) {
         this.phoneNum = phoneNum;
     }
-
+    @JsonIgnore
     public String getPasswd() {
         return passwd;
     }
