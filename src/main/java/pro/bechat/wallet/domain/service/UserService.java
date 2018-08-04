@@ -275,11 +275,11 @@ public class UserService extends BasicService<User> {
 
     public List<User> getLineUSers(int id) throws Exception {
         User user = userMapper.findUserById(id);
-        String userShip = user.getRelationship() + ","+user.getId();
-        String userShip2 =user.getRelationship() + ","+user.getId()+",%";
         if(user == null){
             throw new Exception("该用户不存在或者是已经出局");
         }
+        String userShip = user.getRelationship() + ","+user.getId();
+        String userShip2 =user.getRelationship() + ","+user.getId()+",%";
         List<User> voList = userMapper.findLineUsersByShip(userShip,userShip2);
         return voList;
     }
