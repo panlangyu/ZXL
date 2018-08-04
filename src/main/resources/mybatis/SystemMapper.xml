@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="pro.bechat.wallet.domain.dao.SystemMapper">
+    <select id="selectStatistics" resultType="pro.bechat.wallet.domain.model.model.SystemStatistics">
+      SELECT
+	*
+FROM
+	(
+		SELECT
+			COUNT(1) AS userNumber
+		FROM
+			VAH_T_USER
+	) t,
+	(
+		SELECT
+			SUM(amount) as recharge
+		FROM
+			VAH_T_TRANSCATION
+		WHERE
+			txType = 7
+	) a,(
+		SELECT
+			SUM(amount) as forward
+		FROM
+			VAH_T_TRANSCATION
+		WHERE
+			txType = 8
+	) b,(
+		SELECT
+			SUM(amount) as recommend
+		FROM
+			VAH_T_TRANSCATION
+		WHERE
+			txType = 3
+	) c,(
+		SELECT
+			SUM(amount) as interest
+		FROM
+			VAH_T_TRANSCATION
+		WHERE
+			txType = 4
+	) d,(
+		SELECT
+			SUM(amount) as active
+		FROM
+			VAH_T_TRANSCATION
+		WHERE
+			txType = 5
+	) e
+    </select>
+</mapper>

@@ -58,6 +58,8 @@
     </select>
 
 
-
+    <update id="updateDictionaryValueById">
+        update VAH_D_DICTIONARY set `value` = #{value} where  id = #{id}
+    </update>
 
 </mapper>

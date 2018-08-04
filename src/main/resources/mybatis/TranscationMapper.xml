@@ -221,4 +221,44 @@
     </select>
 
 
+    <select id="selectTranscationByParams" resultType="pro.bechat.wallet.domain.model.model.AdminTranscationBean">
+        SELECT
+          	t.id,
+	        t.userId,
+	        t.coinId,
+	        t.coinType,
+	        t.amount,
+	        t.txType,
+	        t.`from`,
+	        t.`to`,
+	        t.`hash`,
+	        t.remark,
+	        t.txStatus,
+	        t.capital,
+	        t.createTime,
+	        t.updateTime,
+            u.phoneNum,
+            u.nickName
+        FROM
+        	VAH_T_TRANSCATION t
+            LEFT JOIN VAH_T_USER u
+            ON t.userId = u.id
+        <if test="params.tel!=null">
+            AND u.phoneNum = #{params.tel}
+        </if>
+        WHERE 1=1
+        <if test="params.type != null">
+            AND txType = #{params.type}
+        </if>
+        <if test="params.coinId != null">
+          AND coinId = #{params.coinId}
+        </if>
+        <if test="params.startTime!=null">
+            AND t.createTime > #{params.startTime}
+        </if>
+        <if test="params.endTime">
+            AND t.createTime &lt; #{params.startTime}
+        </if>
+    </select>
+
 </mapper>

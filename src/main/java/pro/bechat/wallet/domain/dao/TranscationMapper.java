@@ -2,6 +2,7 @@ package pro.bechat.wallet.domain.dao;
 
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
+import pro.bechat.wallet.domain.model.model.AdminTranscationBean;
 import pro.bechat.wallet.domain.model.model.Transcation;
 import pro.bechat.wallet.domain.model.vo.TranscationVo;
 
@@ -124,5 +125,13 @@ public interface TranscationMapper {
                                                       @Param("coinId")Integer coinId)throws Exception;
 
 
+
+    /**
+     * 根据条件查询数据
+     * @param params
+     * @return
+     */
+    List<AdminTranscationBean> selectTranscationByParams(@Param("currentPage")Integer currentPage,
+                                                         @Param("currentSize")Integer currentSize, @Param("params")Map<String,String> params);
 
 }

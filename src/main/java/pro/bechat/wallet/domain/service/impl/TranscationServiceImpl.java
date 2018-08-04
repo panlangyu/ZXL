@@ -5,7 +5,9 @@ import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pro.bechat.wallet.domain.dao.TranscationMapper;
+import pro.bechat.wallet.domain.model.model.AdminTranscationBean;
 import pro.bechat.wallet.domain.model.response.ApiResponseResult;
+import pro.bechat.wallet.domain.model.vo.AdminTranscationVo;
 import pro.bechat.wallet.domain.model.vo.TranscationVo;
 import pro.bechat.wallet.domain.service.TranscationService;
 import pro.bechat.wallet.publics.CalendarUtil;
@@ -165,5 +167,24 @@ public class TranscationServiceImpl implements TranscationService {
         return ApiResponseResult.build(200,"success","钱包管理用户币种交易记录",pageBean);
     }
 
+
+
+    public PageBean<AdminTranscationBean> adminSearchByParams(AdminTranscationVo adminTranscationVo){
+        PageHelper.startPage(adminTranscationVo.getPage(),adminTranscationVo.getSize());
+        Map<String,String> params = new HashMap<>();
+        params.put("tel",adminTranscationVo.getPhone().equals("") ?null:adminTranscationVo.getPhone());
+        params.put("type",adminTranscationVo.getType());
+        params.put("coinId",adminTranscationVo.getCoinId().equals("0")?null:adminTranscationVo.getCoinId());
+        params.put("startTime",adminTranscationVo.getStart().equals("")?null:adminTranscationVo.getStart());
+        params.put("endTime",adminTranscationVo.getEnd().equals("")?null:adminTranscationVo.getEnd());
+        List<AdminTranscationBean> voList = transcationMapper.selectTranscationByParams(adminTranscationVo.getPage(),adminTranscationVo.getSize(),params);
+        PageInfo<AdminTranscationBean> voPageInfo = new PageInfo<>(voList);
+        PageBean<AdminTranscationBean> pageBean = new PageBean<>();
+        pageBean.setCurrentPage(adminTranscationVo.getPage());
+        pageBean.setCurrentSize(adminTranscationVo.getSize());
+        pageBean.setTotalNum(voPageInfo.getTotal());
+        pageBean.setItems(voList);
+        return pageBean;
+    }
 
 }

@@ -35,6 +35,8 @@ public interface DictionaryMapper {
 
 
 
+    int updateDictionaryValueById(@Param("id")int id,@Param("value")String value);
+
 
 
 }

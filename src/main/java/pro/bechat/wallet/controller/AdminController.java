@@ -6,7 +6,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import pro.bechat.wallet.domain.model.response.Result;
+import pro.bechat.wallet.domain.model.vo.AdminTranscationVo;
+import pro.bechat.wallet.domain.service.SystemStatisticsService;
 import pro.bechat.wallet.domain.service.UserService;
+import pro.bechat.wallet.domain.service.impl.TranscationServiceImpl;
 import pro.bechat.wallet.publics.RewardConfigureUtils;
 
 /**
@@ -21,10 +24,16 @@ public class AdminController {
     @Autowired
     UserService userService;
 
+    @Autowired
+    TranscationServiceImpl transcationService;
+
+    @Autowired
+    SystemStatisticsService systemStatisticsService;
 
     @GetMapping("/login")
     public Result login(String username, String password) {
         if(username.equals("admin") &&password.equals("123456")){
+            systemStatisticsService.addSession(username);
             return Result.getSuccess("登陆成功");
         }
         return Result.getErro("登陆失败");
@@ -75,4 +84,32 @@ public class AdminController {
         return Result.getSuccess("修改成功");
     }
 
+    @GetMapping("/transcationList")
+    public Result getTransactionList(AdminTranscationVo adminVo){
+        return Result.getSuccess(transcationService.adminSearchByParams(adminVo));
+    }
+
+
+    @GetMapping("/statics")
+    public Result getStatics(){
+        return Result.getSuccess(systemStatisticsService.getStatices());
+    }
+
+
+    @GetMapping("/chargeList")
+    public Result chargetList(){
+        try {
+            return Result.getSuccess(systemStatisticsService.selectCharge());
+        } catch (Exception e) {
+            return Result.getErro(e.getMessage());
+        }
+    }
+
+    @PostMapping("/updateCharge")
+    public Result updateCharge(int id,String value){
+        if(value == null || value.equals("")){
+            return Result.getErro("请输入正确的费率");
+        }
+        return Result.getSuccess(systemStatisticsService.updateCharge(id,value));
+    }
 }
