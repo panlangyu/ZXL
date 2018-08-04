@@ -256,11 +256,11 @@ public class UserService extends BasicService<User> {
      */
     public PageBean<User> adminGetLineUsers(int page, int size, String content) throws Exception {
         User user = userMapper.findUserByNameOrPhenoe(content);
-        String userShip = user.getRelationship() + ","+user.getId();
-        String userShip2 =user.getRelationship() + ","+user.getId()+",%";
         if(user == null){
             throw new Exception("该用户不存在或者是已经出局");
         }
+        String userShip = user.getRelationship() + ","+user.getId();
+        String userShip2 =user.getRelationship() + ","+user.getId()+",%";
         PageHelper.startPage(page,size);
         List<User> voList = userMapper.findLineUsersByShip(userShip,userShip2);
         PageInfo<User> pageInfo = new PageInfo(voList);
@@ -270,5 +270,17 @@ public class UserService extends BasicService<User> {
         pageBean.setTotalNum(pageInfo.getTotal());
         pageBean.setItems(voList);
         return pageBean;
+    }
+
+
+    public List<User> getLineUSers(int id) throws Exception {
+        User user = userMapper.findUserById(id);
+        String userShip = user.getRelationship() + ","+user.getId();
+        String userShip2 =user.getRelationship() + ","+user.getId()+",%";
+        if(user == null){
+            throw new Exception("该用户不存在或者是已经出局");
+        }
+        List<User> voList = userMapper.findLineUsersByShip(userShip,userShip2);
+        return voList;
     }
 }
