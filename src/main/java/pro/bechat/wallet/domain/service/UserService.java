@@ -248,6 +248,17 @@ public class UserService extends BasicService<User> {
         return userMapper.findUserByShip(userShip);
     }
 
+
+    public List<User> adminGetChildren(int id) throws Exception {
+        User user = userMapper.findUserById(id);
+        if(user == null){
+            throw new Exception("该用户不存在或者是已经出局");
+        }
+        //拼接
+        String userShip = user.getRelationship() + ","+user.getId();
+        return userMapper.findUserByShip(userShip);
+    }
+
     /**
      * 获取我的直推用户
      * @param content
