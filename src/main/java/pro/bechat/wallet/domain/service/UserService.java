@@ -294,4 +294,9 @@ public class UserService extends BasicService<User> {
         List<User> voList = userMapper.findLineUsersByShip(userShip,userShip2);
         return voList;
     }
+
+
+    public int updateUserStatusById(int userId,int status){
+        return userMapper.updateUserStatusById(userId,status);
+    }
 }

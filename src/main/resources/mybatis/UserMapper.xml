@@ -145,4 +145,8 @@
         where relationship = #{relationship}
         or relationship like  #{relationship2}
     </select>
+    
+    <update id="updateUserStatusById">
+         update VAH_T_USER set STATUS = #{status} where  id = #{id}
+    </update>
 </mapper>

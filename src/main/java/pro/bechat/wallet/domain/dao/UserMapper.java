@@ -35,6 +35,17 @@ public interface UserMapper extends BasicMapper<User>{
      */
     int updateInvitaionCode(@Param("id") int id,@Param("invitationCode") String invitationCode);
 
+
+
+    /**
+     * 修改用户用户状态
+     * @param id
+     * @param status
+     * @return
+     */
+    int updateUserStatusById(@Param("id") int id,@Param("status") int status);
+
+
     /**
      * 根据用户id查询信息
      * @param id
