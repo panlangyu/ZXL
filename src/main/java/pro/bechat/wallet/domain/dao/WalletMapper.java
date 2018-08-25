@@ -159,6 +159,14 @@ public interface WalletMapper {
      */
     public List<Wallet> findWalletListInfo(@Param("userId") Integer userId)throws Exception;
 
+    /**
+     * 删除合约币信息
+     * @param wallet
+     * @return
+     * @throws Exception
+     */
+    public Integer deleteContractAddrInfo(Wallet wallet)throws Exception;
+
 
 
 }

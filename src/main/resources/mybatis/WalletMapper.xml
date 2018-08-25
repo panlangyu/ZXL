@@ -454,8 +454,24 @@
 
     </select>
 
+    <!-- 删除用户已选合约币信息 -->
+    <delete id="deleteContractAddrInfo" parameterType="pro.bechat.wallet.domain.model.model.Wallet">
+
+        DELETE FROM vah_y_wallet
+
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+
+            <if test="userId != null and userId != 0">
+                AND userId = #{userId}
+            </if>
+            <if test="contractAddr != null and contractAddr.length() > 0">
+                AND contractAddr = #{contractAddr}
+            </if>
+        </trim>
 
 
+
+    </delete>
 
     <!-- 封装参数 -->
     <sql id="Base_Column_List">

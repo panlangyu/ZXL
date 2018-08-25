@@ -149,6 +149,14 @@ public interface WalletService {
      */
     public ApiResponseResult findUserWalletListStatus(Integer userId,String list)throws Exception;
 
+    /**
+     * 删除合约币信息
+     * @param wallet
+     * @return
+     * @throws Exception
+     */
+    public ApiResponseResult deleteContractAddrInfo(Wallet wallet)throws Exception;
+
 
     //public ApiResponseResult queryUserWalletInfo(String paramString1, String paramString2)
             //throws Exception;

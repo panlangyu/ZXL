@@ -721,6 +721,15 @@ public class WalletServiceImpl implements WalletService {
             return ApiResponseResult.build(2011, "error", "未查询到用户下的币种信息", "");
         }
 
+        //验证密码输入是否正确
+        if(userWalletCoin.getPasswd() != null && !userWalletCoin.getPasswd().equals("")){
+
+            if( !userWalletCoin.getPasswd().equals(wallet.getPasswd())){
+
+                return ApiResponseResult.build(2011, "error", "密码输入不正确", "");
+            }
+        }
+
         //当前用户转账锁钱包表
         walletMapper.lockWalletTable();
 
@@ -1017,6 +1026,25 @@ public class WalletServiceImpl implements WalletService {
         }
 
         return ApiResponseResult.build(200, "success", "查询用户已拥有币种信息", walletStatusVoList);
+    }
+
+    @Override
+    public ApiResponseResult deleteContractAddrInfo(Wallet wallet) throws Exception {
+
+        // 1、查询用户是否存在
+        User userInfo = userMapper.findUserById(wallet.getUserId());
+        if (null == userInfo) {
+
+            return ApiResponseResult.build(2013, "error", "用户不存在", "");
+        }
+
+        Integer num = walletMapper.deleteContractAddrInfo(wallet);
+        if(num == 0){
+
+            return ApiResponseResult.build(2013, "error", "删除失败", "");
+        }
+
+        return ApiResponseResult.build(200, "success", "删除成功", num);
     }
 
 

@@ -327,7 +327,7 @@ public class WalletController {
 
 
     @ApiOperation(value="新增合约币信息", notes="增加合约币")
-    @ApiImplicitParam(name="walletContractVo", value="合约币对象walletContractVo", dataType="walletContractVo")
+    @ApiImplicitParam(name="walletContractVo", value="合约币对象walletContractVo", dataType="WalletContractVo")
     @RequestMapping(value="/createContractWalletInfo", method=RequestMethod.POST)
     public ApiResponseResult createContractWalletInfo(@RequestBody WalletContractVo walletContractVo) {
 
@@ -367,6 +367,26 @@ public class WalletController {
         }
         return apiResponseResult;
     }
+
+    @ApiOperation(value="删除用户合约币信息", notes="合约币")
+    @ApiImplicitParam(name="wallet", value="钱包对象wallet", dataType="Wallet")
+    @RequestMapping(value="/deleteUserContractAddr", method= RequestMethod.POST)
+    public ApiResponseResult deleteUserContractAddr(@RequestBody Wallet wallet) {
+
+        ApiResponseResult apiResponseResult = new ApiResponseResult();
+        try {
+
+            apiResponseResult = walletService.deleteContractAddrInfo(wallet);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+
+            return ApiResponseResult.build(2016, "error", "出现异常", "");
+        }
+
+        return apiResponseResult;
+    }
+
 
 
     @ApiOperation(value="查询所有账户", notes="所有账户")
