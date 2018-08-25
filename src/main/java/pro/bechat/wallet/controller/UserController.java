@@ -2,11 +2,11 @@ package pro.bechat.wallet.controller;
 
 import io.jsonwebtoken.Claims;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import pro.bechat.wallet.domain.model.response.ApiResponseResult;
 import pro.bechat.wallet.domain.model.response.Result;
 import pro.bechat.wallet.domain.service.UserService;
 import pro.bechat.wallet.publics.TokenUtil;
@@ -66,6 +66,26 @@ public class UserController {
         } catch (Exception e) {
             return Result.getErro(e.getMessage());
         }
+    }
+
+
+    @ApiOperation(value="用户信息以及ETH地址", notes="用户信息")
+    @ApiImplicitParam(name="userId", value="用户编号", dataType="Integer")
+    @RequestMapping(value="/queryUserAddressInfo", method= RequestMethod.GET)
+    public ApiResponseResult queryUserAddressInfo(@RequestParam("userId")Integer userId){
+
+        ApiResponseResult apiResponseResult = new ApiResponseResult();
+
+        try{
+
+            apiResponseResult = userService.findUserAddressInfo(userId);
+
+        }catch (Exception e){
+
+            return ApiResponseResult.build(2012,"error","出现异常","");
+        }
+
+        return apiResponseResult;
     }
 
 }

@@ -16,7 +16,7 @@
 
     <!-- 查询数据字典,按分类查询,parentId不为0 -->
     <select id="selectDictionaryList" parameterType="String" resultType="pro.bechat.wallet.domain.model.model.Dictionary">
-        SELECT * FROM VAH_D_DICTIONARY
+        SELECT * FROM vah_d_dictionary
 
         <trim prefix="WHERE" prefixOverrides="AND | OR">
             AND parent_id != 0
@@ -32,7 +32,7 @@
 
     <!-- 查询数据字典,按分类查询,parentId不为0,也可以查询单条信息 -->
     <select id="selectDictionaryListById" resultMap="BaseResultMap">
-        SELECT id,parent_id,`name`,`value`/100 AS `value`,`code`,sort_sign,`status` FROM VAH_D_DICTIONARY
+        SELECT id,parent_id,`name`,`value`/100 AS `value`,`code`,sort_sign,`status` FROM vah_d_dictionary
 
         <trim prefix="WHERE" prefixOverrides="AND | OR">
             AND parent_id != 0
@@ -59,7 +59,7 @@
 
 
     <update id="updateDictionaryValueById">
-        update VAH_D_DICTIONARY set `value` = #{value} where  id = #{id}
+        update vah_d_dictionary set `value` = #{value} where  id = #{id}
     </update>
 
 </mapper>

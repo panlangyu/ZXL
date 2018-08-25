@@ -1,8 +1,11 @@
 package pro.bechat.wallet.domain.service.impl;
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pro.bechat.wallet.domain.dao.*;
@@ -10,6 +13,7 @@ import pro.bechat.wallet.domain.model.model.*;
 import pro.bechat.wallet.domain.model.response.ApiResponseResult;
 import pro.bechat.wallet.domain.model.vo.*;
 import pro.bechat.wallet.domain.service.WalletService;
+import pro.bechat.wallet.publics.HttpUtils;
 import pro.bechat.wallet.publics.ObjectUtils;
 import pro.bechat.wallet.publics.PageBean;
 import java.math.BigDecimal;
@@ -46,6 +50,9 @@ public class WalletServiceImpl implements WalletService {
     @Autowired
     private InvestmentMapper investmentMapper;              //投资(福利)Mapper
 
+    @Value("${yellowduck.url}")
+    private String url ;                                    //第三方服务器端口
+
 
     @Override
     public ApiResponseResult selectUserWalletTotal(Integer userId) throws Exception {
@@ -54,7 +61,7 @@ public class WalletServiceImpl implements WalletService {
 
         if(null == user){
 
-            return ApiResponseResult.build(2015,"error","该用户不存在","");
+            return ApiResponseResult.build(2015,"error","用户不存在","");
         }
 
         BigDecimal total =  walletMapper.selectUserWalletTotal(userId);
@@ -73,7 +80,8 @@ public class WalletServiceImpl implements WalletService {
 
         PageHelper.startPage(currentPage,currentSize);
 
-        List<WalletVo> voList =  walletMapper.selectUserWalletCoinList(currentPage,currentSize,userId,coinName);
+        //List<WalletVo> voList =  walletMapper.selectUserWalletCoinList(currentPage,currentSize,userId,coinName);
+        List<WalletVo> voList =  new ArrayList<>();
 
         if(null == voList){
 
@@ -107,10 +115,11 @@ public class WalletServiceImpl implements WalletService {
 
         Wallet walletCoin = walletMapper.selectUserWalletCoinByAddress(wallet);     //按address查询转入币种信息
         if(walletCoin == null){
+
             return ApiResponseResult.build(2010,"error","未查询到该地址信息","");
         }
 
-        if(userWalletCoin.getAddress().equals(walletCoin.getAddress())){
+/*        if(userWalletCoin.getAddress().equals(walletCoin.getAddress())){
 
             return ApiResponseResult.build(2010,"error","不允许同一个地址发生交易","");
         }
@@ -118,7 +127,7 @@ public class WalletServiceImpl implements WalletService {
         if(userWalletCoin.getCoinId() != walletCoin.getCoinId()){
 
             return ApiResponseResult.build(2010,"error","不能跨币种转账,只能同币交易","");
-        }
+        }*/
 
         //查询数据字典表,查询出相对于的手续费用 id 为 5,为 提现
         List<DictionaryVo> voList = dictionaryMapper.selectDictionaryListById(5,"DEDUCT_FORMALITIES");
@@ -159,28 +168,28 @@ public class WalletServiceImpl implements WalletService {
         }
 
         // 6、增加1条用户转出记录
-        num = insertWalletTurnTo(wallet,userWalletCoin);
-        if(num == 0){
+        //num = insertWalletTurnTo(wallet,userWalletCoin);
+        //if(num == 0){
 
-            return ApiResponseResult.build(2012,"error","新增转出失败","");
-        }
+        //    return ApiResponseResult.build(2012,"error","新增转出失败","");
+        //}
 
         // 7、增加1条用户转入记录
-        num = insertWalletToChangeInto(wallet,walletCoin,userWalletCoin);
-        if(num == 0){
+       // num = insertWalletToChangeInto(wallet,walletCoin,userWalletCoin);
+       // if(num == 0){
 
-            return ApiResponseResult.build(2012,"error","新增转入失败","");
-        }
+       //     return ApiResponseResult.build(2012,"error","新增转入失败","");
+       // }
 
         //计算出可用余额
-        deductionPrice = wallet.getAmount().multiply(new BigDecimal(dictionaryVo.getValue()));      //手续费用=(可用余额*扣费率)
+       // deductionPrice = wallet.getAmount().multiply(new BigDecimal(dictionaryVo.getValue()));      //手续费用=(可用余额*扣费率)
 
         // 8、增加一条扣除手续费用的记录
-        num = insertWalletDeductionTurnTo(wallet,userWalletCoin,deductionPrice);
-        if(num == 0){
+       // num = insertWalletDeductionTurnTo(wallet,userWalletCoin,deductionPrice);
+       // if(num == 0){
 
-            return ApiResponseResult.build(2012,"error","扣除费用记录失败","");
-        }
+       //     return ApiResponseResult.build(2012,"error","扣除费用记录失败","");
+       // }
 
         // 9、扣除可用余额
         wallet.setId(userWalletCoin.getId());
@@ -202,7 +211,8 @@ public class WalletServiceImpl implements WalletService {
 
         Map<String,Object> map = new HashMap<>();
 
-        List<WalletVo> voList = walletMapper.selectUserWalletCoinList(currentPage,currentSize,userId,null);
+        //List<WalletVo> voList = walletMapper.selectUserWalletCoinList(currentPage,currentSize,userId,null);
+        List<WalletVo> voList =  new ArrayList<>();
 
         if(null == voList){
 
@@ -224,11 +234,11 @@ public class WalletServiceImpl implements WalletService {
 
             walletCoinVo.setAddress(walletVo.getAddress());
             walletCoinVo.setId(walletVo.getId());
-            walletCoinVo.setCoinId(walletVo.getCoinId());
+            //walletCoinVo.setCoinId(walletVo.getCoinId());
             walletCoinVo.setCoinImg(walletVo.getCoinImg());
             walletCoinVo.setCoinName(walletVo.getCoinName());
-            walletCoinVo.setAmount(walletVo.getAmount());
-            walletCoinVo.setFreeAmount(walletVo.getFreeAmount());
+            //walletCoinVo.setAmount(walletVo.getAmount());
+           // walletCoinVo.setFreeAmount(walletVo.getFreeAmount());
 
             // straightPush 直推奖总额  interest 利息生息总额
             if(map == null){
@@ -267,7 +277,7 @@ public class WalletServiceImpl implements WalletService {
 
         Map<String,Object> map = new HashMap<>();
 
-        Wallet wallet = walletMapper.selectUserWalletByCoinId(userId,coinId);
+        Wallet wallet = walletMapper.selectUserWalletByCoinId(userId,"");
 
         if(null == wallet){
 
@@ -327,28 +337,28 @@ public class WalletServiceImpl implements WalletService {
         }
 
         // 5、增加订单记录 ( 钱包 转出 到 钱包管理 冻结金额(freeAmount)增加 可用金额(availableAmount)减少 )
-        num = insertWalletDepositTurnTo(userWalletCoin,wallet);
-        if(num == 0){
+        //num = insertWalletDepositTurnTo(userWalletCoin,wallet);
+        //if(num == 0){
 
-            return ApiResponseResult.build(2012,"error","增加失败","");
-        }
+        //    return ApiResponseResult.build(2012,"error","增加失败","");
+       // }
 
         // 6、增加订单记录 ( 钱包 转出 到 钱包管理 冻结金额(freeAmount)减少 可用金额(availableAmount)增加 )
-        num = insertWalletDepositToChangeInfo(userWalletCoin,wallet);
-        if(num == 0){
+       // num = insertWalletDepositToChangeInfo(userWalletCoin,wallet);
+     //   if(num == 0){
 
-            return ApiResponseResult.build(2012,"error","增加失败","");
-        }
+       //     return ApiResponseResult.build(2012,"error","增加失败","");
+       // }
 
         //计算出可用余额
-        deductionPrice = wallet.getAmount().multiply(new BigDecimal(dictionaryVo.getValue()));      //手续费用=(可用余额*扣费率)
+        //deductionPrice = wallet.getAmount().multiply(new BigDecimal(dictionaryVo.getValue()));      //手续费用=(可用余额*扣费率)
 
         // 7、增加一条扣除手续费用的记录
-        num = insertWalletDepositToChangeInfoOrTurnTo(userWalletCoin,wallet,deductionPrice);
-        if(num == 0){
+        //num = insertWalletDepositToChangeInfoOrTurnTo(userWalletCoin,wallet,deductionPrice);
+        //if(num == 0){
 
-            return ApiResponseResult.build(2012,"error","扣除费用记录失败","");
-        }
+       //     return ApiResponseResult.build(2012,"error","扣除费用记录失败","");
+       // }
 
         // 8、扣除可用余额
         wallet.setId(userWalletCoin.getId());
@@ -406,14 +416,14 @@ public class WalletServiceImpl implements WalletService {
         }
 
         // 5、增加订单记录 ( 钱包 转出 到 钱包管理 冻结金额(freeAmount)减少 可用金额(availableAmount)增加 )
-        num = insertWalletDepositTurnTo(userWalletCoin,wallet);
+        //num = insertWalletDepositTurnTo(userWalletCoin,wallet);
         if(num == 0){
 
             return ApiResponseResult.build(2013,"error","增加失败","");
         }
 
         // 6、增加订单记录 ( 钱包 转出 到 钱包管理 冻结金额(freeAmount)增加 可用金额(availableAmount)减少 )
-        num = insertWalletDepositToChangeInfo(userWalletCoin,wallet);
+       // num = insertWalletDepositToChangeInfo(userWalletCoin,wallet);
         if(num == 0){
 
             return ApiResponseResult.build(2014,"error","增加失败","");
@@ -423,7 +433,7 @@ public class WalletServiceImpl implements WalletService {
         deductionPrice = wallet.getAmount().multiply(new BigDecimal(dictionaryVo.getValue()));      //手续费用=(可用余额*扣费率)
 
         // 7、增加一条扣除手续费用的记录
-        num = insertWalletDepositToChangeInfoOrTurnTo(userWalletCoin,wallet,deductionPrice);
+       // num = insertWalletDepositToChangeInfoOrTurnTo(userWalletCoin,wallet,deductionPrice);
         if(num == 0){
 
             return ApiResponseResult.build(2012,"error","扣除费用记录失败","");
@@ -460,7 +470,7 @@ public class WalletServiceImpl implements WalletService {
 
             wallet = new Wallet();
 
-            wallet.setCoinId(coinVo.getId());
+            //wallet.setCoinId(coinVo.getId());
             wallet.setAddress(ObjectUtils.getUUID());
             wallet.setPrivateKey(ObjectUtils.getUUID());
             wallet.setPasswd(ObjectUtils.getUUID());
@@ -529,7 +539,7 @@ public class WalletServiceImpl implements WalletService {
                 DirectPrize directPrize = new DirectPrize();
                 directPrize.setRefereeId(Integer.parseInt(referee));            //推荐人
                 directPrize.setCoverRefereeId(userWalletCoin.getUserId());      //被推荐人
-                directPrize.setCoinId(userWalletCoin.getCoinId());              //币种编号
+                //directPrize.setCoinId(userWalletCoin.getCoinId());              //币种编号
                 String proportion = String.valueOf(30f/100f);                   //拿到百分之30的推荐奖的比例
                 directPrize.setAmount(wallet.getAmount().multiply(new BigDecimal(proportion)));  //推荐奖30%
                 directPrize.setAmountAvailable(directPrize.getAmount());        //可用余额
@@ -581,7 +591,7 @@ public class WalletServiceImpl implements WalletService {
         }
 
         // 5、增加充值的订单记录
-         num = insertWalletToChangeInto(wallet,userWalletCoin,userWalletCoin);
+        // num = insertWalletToChangeInto(wallet,userWalletCoin,userWalletCoin);
         if(num == 0){
 
             return ApiResponseResult.build(2012,"error","新增充值记录失败","");
@@ -591,7 +601,7 @@ public class WalletServiceImpl implements WalletService {
         deductionPrice = wallet.getAmount().multiply(new BigDecimal(dictionaryVo.getValue()));      //手续费用=(可用余额*扣费率)
 
         // 6、增加一条扣除手续费用的记录
-        num = insertWalletRechargeTurnTo(wallet,userWalletCoin,deductionPrice);
+        //num = insertWalletRechargeTurnTo(wallet,userWalletCoin,deductionPrice);
         if(num == 0){
 
             return ApiResponseResult.build(2012,"error","扣除费用记录失败","");
@@ -610,188 +620,502 @@ public class WalletServiceImpl implements WalletService {
     }
 
 
+    @Override
+    public ApiResponseResult createWalletInfo(UserWalletVo user) throws Exception {
 
-    /**
-     * 用户充值扣除手续费用
-     * @param wallet
-     * @param userWalletCoin
-     * @param deductionPrice
-     * @return
-     * @throws Exception
-     */
-    public Integer insertWalletRechargeTurnTo(Wallet wallet,Wallet userWalletCoin,BigDecimal deductionPrice)throws Exception{
+        User userInfo = userMapper.findUserExist(user.getPhone());
+        if (null == userInfo) {
 
-        Transcation transcation = new Transcation();
-        transcation.setUserId(userWalletCoin.getUserId());      //用户编号
-        transcation.setCoinId(userWalletCoin.getCoinId());      //币种编号
-        transcation.setCoinType(wallet.getCoinName());          //币种名称
-        transcation.setAmount(deductionPrice);                  //交易金额
-        transcation.setTxType(6);                               //交易类型（1：转入，2：转出，3：直推，4：利息，5:团队奖，6:扣除手续费）
-        transcation.setFrom(userWalletCoin.getAddress());       //转出地址
-        transcation.setTo(wallet.getAddress());                 //转入地址
-        transcation.setHash(ObjectUtils.getUUID());             //交易ID
-        transcation.setTxStatus(1);                             //交易状态（1：已提交，2：已完成）
-        transcation.setCapital(userWalletCoin.getAmount().add(wallet.getAmount()).subtract(deductionPrice));     //本金
-        transcation.setRemark(ObjectUtils.getWalletRemark(wallet.getRemark(),transcation.getTxType())); //备注
+            return ApiResponseResult.build(2010, "error", "用户不存在", "");
+        }
 
-        Integer num = transcationMapper.insertWalletTurnOut(transcation);
+        String addressExits = walletMapper.findWalletAddressByUserId(userInfo.getId(), "ETH");
+        if (addressExits != null && !addressExits.equals("")) {
 
-        return num;
+            return ApiResponseResult.build(2013, "error", "您已添加过该币种", "");
+        }
+
+        String uri = "";                //第三方API接口路径
+        uri = url + "/register";
+
+        Wallet wallet = new Wallet();
+        wallet.setPasswd(user.getPasswd());
+        wallet.setUserId(userInfo.getId());
+
+        Map<String, String> map = new HashMap();
+        map.put("phone", user.getPhone());
+        map.put("txpw", wallet.getPasswd());
+
+        String json = JSONArray.toJSONString(map);
+
+        String str = HttpUtils.sendPost(uri, json);
+        if (str == null || str.equals("") || str.equals("null")) {
+
+            return ApiResponseResult.build(2010, "error", "系统异常", "");
+        }
+
+        String address = ObjectUtils.getAddress(str);
+
+        if(address == null || address.equals("")){
+
+            return ApiResponseResult.build(2010, "error", "系统异常", "");
+        }
+
+        wallet.setAddress(address);                 //ETH地址
+        wallet.setName("ETH");                      //币种全称
+        wallet.setCoinName("ETH");                  //币种名称
+        wallet.setPrivateKey(ObjectUtils.getUUID());
+        wallet.setKeystore(ObjectUtils.getUUID());
+        wallet.setCoinImg("https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1535186178127&di=99253031ea26fe3f96df0f091f0dfd09&imgtype=jpg&src=http%3A%2F%2Fimg2.imgtn.bdimg.com%2Fit%2Fu%3D764621767%2C3821218275%26fm%3D214%26gp%3D0.jpg");
+
+        //新增钱包信息
+        Integer num = walletMapper.insertWalletInfo(wallet);
+        if (num == 0) {
+
+            return ApiResponseResult.build(2010, "error", "开通钱包失败", "");
+        }
+        return ApiResponseResult.build(200, "success", "开通钱包成功", str);
+    }
+
+    @Override
+    public ApiResponseResult findUserWalletList(Integer userId, String coinName) throws Exception {
+
+        User userInfo = userMapper.findUserById(userId);
+        if (null == userInfo) {
+
+            return ApiResponseResult.build(2010, "error", "用户不存在", "");
+        }
+
+        //PageHelper.startPage(currentPage, currentSize);
+
+        List<WalletVo> voList = walletMapper.selectUserWalletCoinList(userInfo.getId(), coinName);
+        if (null == voList) {
+
+            return ApiResponseResult.build(2011, "error", "未查询到用户钱包币种信息", "");
+        }
+
+        //PageInfo<WalletVo> pageInfo = new PageInfo(voList);
+        //PageBean<WalletVo> pageBean = new PageBean();
+        //pageBean.setCurrentPage(currentPage);
+        //pageBean.setCurrentSize(currentSize);
+        //pageBean.setTotalNum(pageInfo.getTotal());
+        //pageBean.setItems(voList);
+
+        return ApiResponseResult.build(200, "success", "查询用户钱包币种列表数据", voList);
+    }
+
+    @Transactional
+    @Override
+    public ApiResponseResult modifyWithdrawMoney(WalletUtilsVo wallet) throws Exception {
+
+        //查看当前用户是否存在
+        User userInfo = userMapper.findUserById(wallet.getUserId());
+        if (null == userInfo) {
+
+            return ApiResponseResult.build(2011, "error", "用户不存在", "");
+        }
+
+        Wallet userWalletCoin = walletMapper.selectUserWalletByCoinId(userInfo.getId(), wallet.getCoinName());
+        if (userWalletCoin == null) {
+
+            return ApiResponseResult.build(2011, "error", "未查询到用户下的币种信息", "");
+        }
+
+        //当前用户转账锁钱包表
+        walletMapper.lockWalletTable();
+
+        int trun = new BigDecimal(wallet.getValue()).compareTo(BigDecimal.ZERO);
+        if (trun == 0 || trun == -1) {
+
+            return ApiResponseResult.build(2011, "error", "请输入大于 0 的正数", "");
+        }
+
+        String uri = "";                //第三方API接口路径
+
+        Map<String, String> amountMap = new HashMap();
+        Map<String, String> txMap = new HashMap();
+
+        if (userWalletCoin.getContractAddr() != null && !userWalletCoin.getContractAddr().equals("")) {
+
+            uri = url+ "/token/balance";
+            amountMap.put("contractAddr", userWalletCoin.getContractAddr());
+            amountMap.put("from", userWalletCoin.getAddress());
+        } else {
+
+            uri = url + "/address";
+            amountMap.put("address", userWalletCoin.getAddress());
+        }
+
+        String str = "";
+        BigDecimal price = new BigDecimal("0");
+
+        str = HttpUtils.sendGet(uri, amountMap, (2));
+
+        if(str == null || str.equals("") || str.equals("null")){
+
+            return ApiResponseResult.build(2011, "error", "余额不足", "");
+        }
+
+        price = ObjectUtils.getPrice(str);
+
+        //看是否出异常
+        Integer compareZero = price.compareTo(BigDecimal.ZERO);
+        if(compareZero == -1){
+
+            return ApiResponseResult.build(2011, "error", "系统异常", "");
+        }
+
+        //拿出币种数量和转账数量比较
+        int compare = price.compareTo(new BigDecimal(wallet.getValue()));
+        if (compare == 0 || compare == -1) {
+            return ApiResponseResult.build(2011, "error", "币种数量不足", "");
+        }
+
+        txMap.put("sign", userWalletCoin.getPasswd());
+        txMap.put("to", wallet.getAddress());
+        txMap.put("value", wallet.getValue());
+        //txMap.put("gas", "6050");
+        //txMap.put("gasPrice", "7810");
+        if (userWalletCoin.getContractAddr() != null && !userWalletCoin.getContractAddr().equals("")) {
+
+            uri = url + "/token/sendTx";
+
+            txMap.put("contractAddr", userWalletCoin.getContractAddr());
+            txMap.put("from", userWalletCoin.getAddress());
+        }else {
+
+            uri = url + "/sendTx";
+            txMap.put("from", userWalletCoin.getAddress());
+        }
+
+        String json = JSONArray.toJSONString(txMap);
+        str = HttpUtils.sendPost(uri, json);
+
+        if (str == null || str.equals("") || str.equals("null")) {
+
+            return ApiResponseResult.build(2011, "error", "提币失败", "");
+        }
+
+        String hash = ObjectUtils.getHash(str);         //拿出成功的hash
+
+        if(hash != null && hash.equals("-1")){
+
+            return ApiResponseResult.build(2011, "error", "旷工费不足", "");
+        }
+        if(hash == null || hash.equals("")){
+
+            return ApiResponseResult.build(2011, "error", "系统异常", "");
+        }
+
+        //wallet.setHash(hash);                           //转账成功的hash值
+
+        //新增转账记录
+        //Integer num = insertWalletTurnTo(wallet, userWalletCoin);
+        //if (num == 0) {
+         //   return ApiResponseResult.build(2011, "error", "新增交易记录失败", "");
+        //}
+        return ApiResponseResult.build(200, "success", "提币成功","OK");
+    }
+
+    @Override
+    public ApiResponseResult queryContractAddr(Integer userId, String contractAddr) throws Exception {
+
+        User userInfo = userMapper.findUserById(userId);
+        if (null == userInfo) {
+
+            return ApiResponseResult.build(2013, "error", "用户不存在", "");
+        }
+
+        Wallet walletByAddress = walletMapper.findWalletByUserIdAndAddress(userInfo.getId(), contractAddr);
+        if (walletByAddress != null) {
+
+            return ApiResponseResult.build(2013, "error", "您已添加过该币种", "");
+        }
+
+        List<Wallet> walletList = walletMapper.findUserWalletInfo(userInfo.getId());
+        if (null == walletList || walletList.size() == 0) {
+
+            return ApiResponseResult.build(2013, "error", "该用户还未添加过钱包", "");
+        }
+
+        Wallet walletVo = walletList.get(0);
+
+        String uri = "";                //第三方API接口路径
+
+        uri = url + "/token";
+
+        Map<String, String> map = new HashMap();
+        map.put("contractAddr", contractAddr);
+
+        String str = HttpUtils.sendGet(uri, map, 2);
+        if (str == null || str.equals("") || str.equals("null")) {
+
+            return ApiResponseResult.build(2012, "error", "系统异常", "");
+        }
+
+        String coinName = ObjectUtils.getNum(str);
+
+        if(coinName.equals("-1")){
+
+            return ApiResponseResult.build(2012, "error", "币种不存在", "");
+        }
+        if(coinName.equals("-2")){
+
+            return ApiResponseResult.build(2012, "error", "系统异常", "");
+        }
+
+        Wallet wallet = new Wallet();
+
+        wallet.setCoinName(coinName);
+        wallet.setUserId(userInfo.getId());
+        wallet.setPrivateKey(ObjectUtils.getUUID());
+        wallet.setKeystore(ObjectUtils.getUUID());
+        wallet.setCoinImg("https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1535186178127&di=99253031ea26fe3f96df0f091f0dfd09&imgtype=jpg&src=http%3A%2F%2Fimg2.imgtn.bdimg.com%2Fit%2Fu%3D764621767%2C3821218275%26fm%3D214%26gp%3D0.jpg");
+        wallet.setPasswd(walletVo.getPasswd());
+        wallet.setAddress(walletVo.getAddress());
+        wallet.setContractAddr(contractAddr);
+
+        //新增合约币信息
+        Integer num = walletMapper.insertWalletInfo(wallet);
+        if (num == 0) {
+
+            return ApiResponseResult.build(2012, "error", "添加合约币信息失败", "");
+        }
+
+        return ApiResponseResult.build(200, "success", "添加合约币信息成功", wallet);
+    }
+
+    @Override
+    public ApiResponseResult queryAccountList() throws Exception {
+
+        String uri = "";                //第三方API接口路径
+        uri = url + "/accounts";
+
+        Map<String, String> map = new HashMap();
+        String str = HttpUtils.sendGet(uri, map, 2);
+        if ((str == null) || (str.equals(""))) {
+
+            return ApiResponseResult.build(2011, "error", "未查询到账户数据", "");
+        }
+        return ApiResponseResult.build(200, "success", "查询所有钱包账户", str);
+    }
+
+    @Override
+    public ApiResponseResult blockNumber() {
+
+        String uri = "";                //第三方API接口路径
+        uri = url + "/blockNumber";
+
+        Map<String, String> map = new HashMap();
+
+        String str = HttpUtils.sendGet(uri, map, (2));
+        if (str == null || str.equals("")) {
+
+            return ApiResponseResult.build(2011, "error", "未查询到阻塞数信息", "");
+        }
+        return ApiResponseResult.build(200, "success", "查询阻塞数信息", JSONArray.parseObject(str));
+    }
+
+    @Override
+    public ApiResponseResult createContractWalletInfo(WalletContractVo walletContractVo) throws Exception {
+
+        // 1、查询用户是否存在
+        User userInfo = userMapper.findUserById(walletContractVo.getUserId());
+        if (null == userInfo) {
+
+            return ApiResponseResult.build(2013, "error", "用户不存在", "");
+        }
+
+        // 2、查询币种是否被该用户已添加
+        Wallet userWallet = walletMapper.findWalletByUserIdAndAddress(walletContractVo.getUserId(), walletContractVo.getContractAddr());
+        if (userWallet != null) {
+
+            return ApiResponseResult.build(2013, "error", "已添加过该币种", "");
+        }
+
+        // 3、拿到第一个钱包，ETH(以太坊)
+        List<Wallet> walletList = walletMapper.findUserWalletInfo(userInfo.getId());
+        if (null == walletList || walletList.size() == 0) {
+
+            return ApiResponseResult.build(2013, "error", "用户还未添加过钱包", "");
+        }
+
+        Wallet walletVo = walletList.get(0);
+
+        Wallet wallet = new Wallet();
+
+        wallet.setName(walletContractVo.getName());                         //币种全称
+        wallet.setCoinName(walletContractVo.getCoinName());                 //币种名称
+        wallet.setUserId(walletContractVo.getUserId());                     //用户编号
+        wallet.setPrivateKey(ObjectUtils.getUUID());
+        wallet.setKeystore(ObjectUtils.getUUID());
+        wallet.setCoinImg("https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1535107678063&di=3edb7ba93dad1f79bac072909cedc46d&imgtype=0&src=http%3A%2F%2Fcimg.pcstore.com.tw%2Fcprd%2FC1124031499_big.png%3Fpimg%3Dstatic%26P%3D1506092677");
+        wallet.setPasswd(walletVo.getPasswd());                             //交易密码
+        wallet.setAddress(walletVo.getAddress());                           //ETH地址
+        wallet.setContractAddr(walletContractVo.getContractAddr());         //合约币地址
+
+        //新增合约币信息
+        Integer num = walletMapper.insertWalletInfo(wallet);
+        if (num == 0) {
+
+            return ApiResponseResult.build(2015, "error", "添加合约币信息失败", "");
+        }
+
+        return ApiResponseResult.build(200, "success", "添加合约币信息成功", num);
+    }
+
+    @Override
+    public ApiResponseResult findUserWalletListStatus(Integer userId, String list) throws Exception {
+
+        // 1、查询用户是否存在
+        User userInfo = userMapper.findUserById(userId);
+        if (null == userInfo) {
+
+            return ApiResponseResult.build(2013, "error", "用户不存在", "");
+        }
+
+        // 2、查询用户已拥有币种
+        List<Wallet> statusVoList =  walletMapper.findWalletListInfo(userId);
+        if (null == statusVoList || statusVoList.size() == 0) {
+
+            return ApiResponseResult.build(2013, "error", "该用户未拥有币种", "");
+        }
+
+        // 3、拿出参数值
+        List<String> strList = (List<String>)JSONObject.parse(list);
+        if(null == strList || strList.size() == 0){
+
+            return ApiResponseResult.build(2013, "error", "该用户未拥有币种", "");
+        }
+
+        WalletStatusVo statusVo = null;
+
+        List<WalletStatusVo> walletStatusVoList = new ArrayList<>();
+
+
+        //拿出币种名称比较
+        for(String string : strList){
+
+            statusVo = new WalletStatusVo();
+
+            statusVo.setContractAddr(string);
+            statusVo.setStatus(false);
+
+            for (Wallet wallet : statusVoList) {
+
+                if(wallet.getContractAddr() != null && !wallet.getContractAddr().equals("")){
+
+                    if(string.equals(wallet.getContractAddr())){
+
+                        statusVo.setStatus(true);
+                        break;
+                    }
+                }
+            }
+
+            walletStatusVoList.add(statusVo);
+        }
+
+        return ApiResponseResult.build(200, "success", "查询用户已拥有币种信息", walletStatusVoList);
     }
 
 
-    /**
-     * 扣除提币手续费用的订单记录
-     * @return
-     */
-    public Integer insertWalletDeductionTurnTo(Wallet wallet,Wallet userWalletCoin,BigDecimal deductionPrice)throws Exception{
 
-        Transcation transcation = new Transcation();
-        transcation.setUserId(userWalletCoin.getUserId());      //用户编号
-        transcation.setCoinId(userWalletCoin.getCoinId());      //币种编号
-        transcation.setCoinType(wallet.getCoinName());          //币种名称
-        transcation.setAmount(deductionPrice);                  //交易金额
-        transcation.setTxType(6);                               //交易类型（1：转入，2：转出，3：直推，4：利息，5:团队奖，6:扣除手续费）
-        transcation.setFrom(userWalletCoin.getAddress());       //转出地址
-        transcation.setTo(wallet.getAddress());                 //转入地址
-        transcation.setHash(ObjectUtils.getUUID());             //交易ID
-        transcation.setTxStatus(1);                             //交易状态（1：已提交，2：已完成）
-        transcation.setCapital(userWalletCoin.getAmount().subtract(wallet.getAmount()).subtract(deductionPrice));     //本金
-        transcation.setRemark(ObjectUtils.getWalletRemark(wallet.getRemark(),transcation.getTxType())); //备注
+    /*@Override
+    public ApiResponseResult queryUserWalletInfo(String phone, String earnerPhone) throws Exception {
 
-        Integer num = transcationMapper.insertWalletTurnOut(transcation);
+        UserVo user = userMapper.findUserExist(phone);
+        if (null == user) {
 
-        return num;
-    }
+            return ApiResponseResult.build(2013, "error", "当前用户不存在", "");
+        }
+        UserVo earnerUser = userMapper.findUserExist(earnerPhone);
+        if (null == earnerUser) {
 
+            return ApiResponseResult.build(2013, "error", "被转账用户不存在", "");
+        }
+        List<Wallet> walletList = walletMapper.findUserWalletInfo(user.getId());
+        if (walletList == null || walletList.size() == 0) {
 
-    /**
-     * 新增订单记录 (钱包提币到交易所)
-     * @return
-     */
-    public Integer insertWalletTurnTo(Wallet wallet,Wallet userWalletCoin)throws Exception{
+            return ApiResponseResult.build(2013, "error", "该用户没有钱包信息", "");
+        }
+        List<Wallet> earnerWalletList = walletMapper.findUserWalletInfo(earnerUser.getId());
+        if (earnerWalletList == null || earnerWalletList.size() == 0) {
 
-        Transcation transcation = new Transcation();
-        transcation.setUserId(userWalletCoin.getUserId());      //用户编号
-        transcation.setCoinId(userWalletCoin.getCoinId());      //币种编号
-        transcation.setCoinType(wallet.getCoinName());          //币种名称
-        transcation.setAmount(wallet.getAmount());              //交易金额
-        transcation.setTxType(8);                               //交易类型（1：转入，2：转出，3：直推，4：利息，5:团队奖(动态奖)，6:扣除手续费，7、充值 8、提现）
-        transcation.setFrom(userWalletCoin.getAddress());       //转出地址
-        transcation.setTo(wallet.getAddress());                 //转入地址
-        transcation.setHash(ObjectUtils.getUUID());             //交易ID
-        transcation.setTxStatus(1);                             //交易状态（1：已提交，2：已完成）
-        transcation.setCapital(userWalletCoin.getAmount().subtract(wallet.getAmount()));     //本金
-        transcation.setRemark(ObjectUtils.getWalletRemark(wallet.getRemark(),transcation.getTxType())); //备注
+            return ApiResponseResult.build(2013, "error", "被转账用户没有钱包信息", "");
+        }
 
-        Integer num = transcationMapper.insertWalletTurnOut(transcation);
+        List<WalletStatusVo> voList = new ArrayList();
+        WalletStatusVo walletStatusVo = null;
 
-        return num;
-    }
+        for (Wallet wallet : walletList) {
+            walletStatusVo = new WalletStatusVo();
+            for (Wallet wallet1 : earnerWalletList) {
 
-    /**
-     * 新增订单记录 (交易所转入到钱包) 充值
-     * @return
-     */
-    public Integer insertWalletToChangeInto(Wallet wallet,Wallet walletCoin,Wallet userWalletCoin)throws Exception{
+                walletStatusVo.setCoinName(wallet.getCoinName());
+                walletStatusVo.setStatus(false);
 
-        Transcation transcation = new Transcation();
-        transcation.setUserId(walletCoin.getUserId());          //用户编号
-        transcation.setCoinId(userWalletCoin.getCoinId());      //币种编号
-        transcation.setCoinType(wallet.getCoinName());          //币种名称
-        transcation.setAmount(wallet.getAmount());              //交易金额
-        transcation.setTxType(7);                               //交易类型（1：转入，2：转出，3：直推，4：利息，5:团队奖(动态奖)，6:扣除手续费，7、充值 8、提现）
-        transcation.setFrom(userWalletCoin.getAddress());       //转出地址
-        transcation.setTo(wallet.getAddress());                 //转入地址
-        transcation.setHash(ObjectUtils.getUUID());             //交易ID
-        transcation.setTxStatus(1);                             //交易状态（1：已提交，2：已完成）
-        transcation.setCapital(walletCoin.getAmount().add(wallet.getAmount()));         //本金
-        transcation.setRemark(ObjectUtils.getWalletRemark(wallet.getRemark(),transcation.getTxType())); //备注
+                if (wallet.getCoinName().equals(wallet1.getCoinName())) {
 
-        Integer num = transcationMapper.insertWalletToChangeInto(transcation);
+                    walletStatusVo.setStatus(true);
+                    break;
+                }
+            }
+            voList.add(walletStatusVo);
+        }
 
-        return num;
-    }
+        return ApiResponseResult.build(200, "success", "当前用户与转账用户的币种比较", voList);
+    }*/
+
+    /*@Override
+    public ApiResponseResult findWalletListInfo(String phone) throws Exception {
+
+        UserVo user = userMapper.findUserExist(phone);
+        if (null == user) {
+
+            return ApiResponseResult.build(2013, "error", "当前用户不存在", "");
+        }
+
+        List<WalletStatusVo> voList = walletMapper.findWalletListInfo(user.getId());
+        if (null == voList || voList.size() == 0) {
+
+            return ApiResponseResult.build(2013, "error", "该用户未拥有币种信息", "");
+        }
+
+        return ApiResponseResult.build(200, "success", "用户币种列表", voList);
+    }*/
 
 
-    /**
-     * 新增订单记录 (钱包管理 转出 钱包 为可用数量)
-     * @param wallet 钱包对象
-     * @return
-     * @throws Exception
-     */
-    public Integer insertWalletDepositTurnTo(Wallet wallet,Wallet walletBean)throws Exception{
+    public static void main(String[] args) {
 
-        Transcation transcation = new Transcation();
-        transcation.setUserId(wallet.getUserId());              //用户编号
-        transcation.setCoinId(wallet.getCoinId());              //币种编号
-        transcation.setCoinType(walletBean.getCoinName());      //币种名称
-        transcation.setAmount(walletBean.getAmount());          //交易金额
-        transcation.setTxType(2);                               //交易类型（1：转入，2：转出，3：直推，4：利息，5:团队奖(动态奖)，6:扣除手续费，7、充值 8、提现）
-        transcation.setFrom(wallet.getAddress());               //转出地址 from
-        transcation.setTo(wallet.getAddress());                 //转入地址 to
-        transcation.setHash(ObjectUtils.getUUID());             //交易ID
-        transcation.setTxStatus(1);                             //交易状态（1：已提交，2：已完成）
-        transcation.setCapital(wallet.getAmount());             //本金不变
-        transcation.setRemark(ObjectUtils.getRemark(walletBean.getRemark(),transcation.getTxType())); //备注
+        String str = "{\"body\":\"/eth/data/keystore/UTC--2018-08-25T05-11-38.246056000Z--56d2327cf864f8ba697b8c2c3e9306ba0771de06.json (No such file or directory)\",\"code\":1,\"type\":\"error\"}";
 
-        Integer num = transcationMapper.insertWalletTurnOut(transcation);
+        String hash = "";
 
-        return num;
+        JSONObject json = JSONObject.parseObject(str);
 
-    }
 
-    /**
-     * 新增订单记录 (钱包 转入 钱包管理 为冻结数量)
-     * @param wallet
-     * @return
-     * @throws Exception
-     */
-    public Integer insertWalletDepositToChangeInfo(Wallet wallet,Wallet walletBean)throws Exception{
 
-        Transcation transcation = new Transcation();
-        transcation.setUserId(wallet.getUserId());              //用户编号
-        transcation.setCoinId(wallet.getCoinId());              //币种编号
-        transcation.setCoinType(walletBean.getCoinName());      //币种名称
-        transcation.setAmount(walletBean.getAmount());          //交易金额
-        transcation.setTxType(1);                               //交易类型（1：转入，2：转出，3：直推，4：利息，5:团队奖(动态奖)，6:扣除手续费，7、充值 8、提现）
-        transcation.setFrom(wallet.getAddress());               //转出地址 from
-        transcation.setTo(wallet.getAddress());                 //转入地址 to
-        transcation.setHash(ObjectUtils.getUUID());             //交易ID
-        transcation.setTxStatus(1);                             //交易状态（1：已提交，2：已完成）
-        transcation.setCapital(wallet.getAmount());             //本金不变
-        transcation.setRemark(ObjectUtils.getRemark(walletBean.getRemark(),transcation.getTxType())); //备注
 
-        Integer num = transcationMapper.insertWalletToChangeInto(transcation);
+        if(json.getString("type").equals("error")){
 
-        return num;
-    }
+            hash = "";
+            System.out.println("123");
+        }
 
-    /**
-     * 新增订单记录 (钱包 转入 钱包管理 为冻结数量)
-     * @param wallet
-     * @return
-     * @throws Exception
-     */
-    public Integer insertWalletDepositToChangeInfoOrTurnTo(Wallet wallet,Wallet walletBean,
-                                                           BigDecimal deductionPrice)throws Exception{
+        JSONObject body = (JSONObject)json.get("body");
 
-        Transcation transcation = new Transcation();
-        transcation.setUserId(wallet.getUserId());              //用户编号
-        transcation.setCoinId(wallet.getCoinId());              //币种编号
-        transcation.setCoinType(walletBean.getCoinName());      //币种名称
-        transcation.setAmount(deductionPrice);                  //交易金额
-        transcation.setTxType(6);                               //交易类型（1：转入，2：转出，3：直推，4：利息，5:团队奖(动态奖)，6:扣除手续费，7、充值 8、提现）
-        transcation.setFrom(wallet.getAddress());               //转出地址 from
-        transcation.setTo(wallet.getAddress());                 //转入地址 to
-        transcation.setHash(ObjectUtils.getUUID());             //交易ID
-        transcation.setTxStatus(1);                             //交易状态（1：已提交，2：已完成）
-        transcation.setCapital(wallet.getAmount().subtract(deductionPrice));             //本金不变
-        transcation.setRemark(ObjectUtils.getRemark(walletBean.getRemark(),transcation.getTxType())); //备注
+        if(body.toString() != null && !body.toString().equals("") && !body.toString().equals("null")){
 
-        Integer num = transcationMapper.insertWalletTurnOut(transcation);
+            hash = body.getString("address");
+            System.out.println("123111");
+        }
 
-        return num;
+
+
+
+
+
     }
 
 

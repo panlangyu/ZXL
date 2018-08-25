@@ -16,7 +16,7 @@
 
     <insert id="insert" keyColumn="id" useGeneratedKeys="true" keyProperty="id"
             parameterType="pro.bechat.wallet.domain.model.model.Code">
-        INSERT INTO VAH_T_SMS (
+        INSERT INTO vah_t_sms (
 	            tel,
 	            content,
 	            sendid,
@@ -38,13 +38,13 @@
     >
         SELECT
         <include refid="base_sql"/>
-        from VAH_T_SMS
+        from vah_t_sms
         WHERE tel = #{phone}
         ORDER BY id DESC LIMIT 0,1;
     </select>
 
     <update id="update_status" parameterType="java.lang.Long">
-      UPDATE VAH_T_SMS
+      UPDATE vah_t_sms
       SET `status` = 2
       WHERE
 	        id = #{id};

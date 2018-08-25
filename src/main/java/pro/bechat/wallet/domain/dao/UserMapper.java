@@ -3,6 +3,7 @@ package pro.bechat.wallet.domain.dao;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 import pro.bechat.wallet.domain.model.model.User;
+import pro.bechat.wallet.domain.model.vo.UserVo;
 
 import java.util.List;
 
@@ -106,4 +107,24 @@ public interface UserMapper extends BasicMapper<User>{
      * @return
      */
     List<User> findLineUsersByShip(@Param("relationship")String relationship,@Param("relationship2")String relationship2);
+
+    /**
+     * 按照手机号查询用户信息
+     * @param phone
+     * @return
+     * @throws Exception
+     */
+    public User findUserExist(@Param("phone") String phone)throws Exception;
+
+    /**
+     * 查询用户信息及绑定ETH地址
+     * @param userId
+     * @param coinName
+     * @return
+     * @throws Exception
+     */
+    public UserVo findUserInfoAddress(@Param("userId") Integer userId,
+                                      @Param("coinName") String coinName)throws Exception;
+
+
 }

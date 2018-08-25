@@ -9,41 +9,41 @@ FROM
 		SELECT
 			COUNT(1) AS userNumber
 		FROM
-			VAH_T_USER
+			vah_t_user
 	) t,
 	(
 		SELECT
 			SUM(amount) as recharge
 		FROM
-			VAH_T_TRANSCATION
+			vah_t_transcation
 		WHERE
 			txType = 7
 	) a,(
 		SELECT
 			SUM(amount) as forward
 		FROM
-			VAH_T_TRANSCATION
+			vah_t_transcation
 		WHERE
 			txType = 8
 	) b,(
 		SELECT
 			SUM(amount) as recommend
 		FROM
-			VAH_T_TRANSCATION
+			vah_t_transcation
 		WHERE
 			txType = 3
 	) c,(
 		SELECT
 			SUM(amount) as interest
 		FROM
-			VAH_T_TRANSCATION
+			vah_t_transcation
 		WHERE
 			txType = 4
 	) d,(
 		SELECT
 			SUM(amount) as active
 		FROM
-			VAH_T_TRANSCATION
+			vah_t_transcation
 		WHERE
 			txType = 5
 	) e

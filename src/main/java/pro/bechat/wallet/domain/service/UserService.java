@@ -11,6 +11,7 @@ import pro.bechat.wallet.domain.dao.UserMapper;
 import pro.bechat.wallet.domain.model.model.User;
 import pro.bechat.wallet.domain.model.response.ApiResponseResult;
 import pro.bechat.wallet.domain.model.vo.TranscationVo;
+import pro.bechat.wallet.domain.model.vo.UserVo;
 import pro.bechat.wallet.publics.InvitationCodeUtils;
 import pro.bechat.wallet.publics.MnemonitUtitls;
 import pro.bechat.wallet.publics.PageBean;
@@ -299,4 +300,26 @@ public class UserService extends BasicService<User> {
     public int updateUserStatusById(int userId,int status){
         return userMapper.updateUserStatusById(userId,status);
     }
+
+
+    /**
+     * 查询用户信息以及绑定ETH地址
+     * @param userId
+     * @return
+     */
+    public ApiResponseResult findUserAddressInfo(Integer userId)throws Exception{
+
+        UserVo userVo = userMapper.findUserInfoAddress(userId,"ETH");
+
+        if(null == userVo){
+
+            return ApiResponseResult.build(2001, "error", "未查询到用户信息", "");
+        }
+
+        return ApiResponseResult.build(200, "success", "用户信息及ETH地址", userVo);
+    }
+
+
+
+
 }

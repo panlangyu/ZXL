@@ -9,11 +9,15 @@ import java.util.Date;
  */
 public class Wallet {
 
-    private Integer id;                     //币种编号
+    private Integer id;                     //编号
 
-    private Integer coinId;                 //币种ID
+    private String name;                    //币种全称
 
-    private String address;                 //钱包地址
+    private String coinName;                //币种名称
+
+    private String address;                 //ETH钱包地址
+
+    private String contractAddr;            //合约币地址
 
     private String privateKey;              //钱包私钥
 
@@ -31,11 +35,9 @@ public class Wallet {
 
     private BigDecimal amount;              //钱包总额
 
-    private BigDecimal availableAmount;     //可用余额
+    private BigDecimal availableAmount;     //可用金额(钱包总额-冻结金额)
 
-    private String coinName;                //币种名称
-
-    private String coinImg;                 //币种图片
+    private String coinImg;                 //币种图标
 
     private String remark;                  //备注
 
@@ -47,12 +49,21 @@ public class Wallet {
         this.id = id;
     }
 
-    public Integer getCoinId() {
-        return coinId;
+
+    public String getName() {
+        return name;
     }
 
-    public void setCoinId(Integer coinId) {
-        this.coinId = coinId;
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getContractAddr() {
+        return contractAddr;
+    }
+
+    public void setContractAddr(String contractAddr) {
+        this.contractAddr = contractAddr;
     }
 
     public String getAddress() {

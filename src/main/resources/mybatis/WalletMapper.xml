@@ -3,7 +3,7 @@
 <mapper namespace="pro.bechat.wallet.domain.dao.WalletMapper">
 
     <!-- 封装用户钱包币种列表数据 -->
-    <resultMap id="BaseResultMap" type="pro.bechat.wallet.domain.model.vo.WalletVo">
+    <!--<resultMap id="BaseResultMap" type="pro.bechat.wallet.domain.model.vo.WalletVo">
         <id column="id" jdbcType="INTEGER" property="id"/>
         <result column="coinId" jdbcType="INTEGER" property="coinId"/>
         <result column="coinName" jdbcType="VARCHAR" property="coinName"/>
@@ -11,10 +11,10 @@
         <result column="address" jdbcType="VARCHAR" property="address"/>
         <result column="freeAmount" jdbcType="DECIMAL" property="freeAmount"/>
         <result column="availableAmount" jdbcType="DECIMAL" property="amount"/>
-    </resultMap>
+    </resultMap>-->
 
     <!-- 封装用户钱包单个币种数据 -->
-    <resultMap id="BaseResultMapWallet" type="pro.bechat.wallet.domain.model.model.Wallet">
+   <!-- <resultMap id="BaseResultMapWallet" type="pro.bechat.wallet.domain.model.model.Wallet">
         <id column="id" jdbcType="INTEGER" property="id"/>
         <result column="coinId" jdbcType="INTEGER" property="coinId"/>
         <result column="address" jdbcType="VARCHAR" property="address"/>
@@ -23,12 +23,43 @@
         <result column="freeAmount" jdbcType="DECIMAL" property="freeAmount"/>
         <result column="amount" jdbcType="DECIMAL" property="amount"/>
         <result column="availableAmount" jdbcType="DECIMAL" property="availableAmount"/>
+    </resultMap>-->
+
+    <!-- 封装给客户端的Vo数据 -->
+    <resultMap id="BaseResultMap" type="pro.bechat.wallet.domain.model.vo.WalletVo">
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="coinName" jdbcType="VARCHAR" property="coinName"/>
+        <result column="coinImg" jdbcType="VARCHAR" property="coinImg"/>
+        <result column="address" jdbcType="VARCHAR" property="address"/>
+        <result column="contractAddr" jdbcType="VARCHAR" property="contractAddr"/>
+        <result column="userId" jdbcType="INTEGER" property="userId"/>
     </resultMap>
+
+    <!-- 封装条件 -->
+    <resultMap id="BaseResultMapWallet" type="pro.bechat.wallet.domain.model.model.Wallet">
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="coinName" jdbcType="VARCHAR" property="coinName"/>
+        <result column="address" jdbcType="VARCHAR" property="address"/>
+        <result column="contractAddr" jdbcType="VARCHAR" property="contractAddr"/>
+        <result column="privateKey" jdbcType="VARCHAR" property="privateKey"/>
+        <result column="passwd" jdbcType="VARCHAR" property="passwd"/>
+        <result column="keystore" jdbcType="VARCHAR" property="keystore"/>
+        <result column="createTime" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="userId" jdbcType="INTEGER" property="userId"/>
+    </resultMap>
+
+    <!-- 封装币种信息 -->
+    <resultMap id="BaseResultWallet" type="pro.bechat.wallet.domain.model.vo.WalletStatusVo">
+        <result column="contractAddr" jdbcType="VARCHAR" property="contractAddr"/>
+    </resultMap>
+
 
 
     <!-- 查询个人钱包总资产 -->
     <select id="selectUserWalletTotal" resultType="BigDecimal" >
-      SELECT SUM(availableAmount) FROM VAH_Y_WALLET
+      SELECT SUM(availableAmount) FROM vah_y_wallet
 
         <trim prefix="WHERE" prefixOverrides="AND | OR">
           <if test="userId != null and userId != 0">
@@ -41,23 +72,21 @@
 
     <!-- 查询用户钱包数据列表 -->
     <select id="selectUserWalletCoinList" resultMap="BaseResultMap">
-        SELECT w.id,coinId,coinName,coinImg,w.address,freeAmount,availableAmount FROM VAH_Y_WALLET w
-        INNER JOIN VAH_T_COIN c ON w.`coinId`=c.`id`
+
+        SELECT id,`name`,coinName,coinImg,address,contractAddr,userId FROM vah_y_wallet
 
         <trim prefix="WHERE" prefixOverrides="AND | OR">
+
             <if test="userId != null and userId != 0">
-                AND w.userid = #{userId}
+                AND userid = #{userId}
             </if>
             <if test="coinName != null and coinName.length() > 0">
                 AND coinName = #{coinName}
             </if>
-            <!--<if test="coinId != null and coinId != 0">
-                AND coinId = #{coinId}
-            </if>-->
 
         </trim>
 
-        <!--LIMIT #{currentPage},#{currentSize}-->
+        ORDER BY createTime
 
     </select>
 
@@ -65,16 +94,16 @@
     <!-- 钱包转账，锁住钱包表,共享锁 -->
     <select id="lockWalletTable" resultType="pro.bechat.wallet.domain.model.model.Wallet">
 
-        /*SELECT * FROM VAH_Y_WALLET FOR UPDATE*/
+        /*SELECT * FROM vah_y_wallet FOR UPDATE*/
 
-        SELECT * FROM VAH_Y_WALLET LOCK IN SHARE MODE;
+        SELECT * FROM vah_y_wallet LOCK IN SHARE MODE;
 
     </select>
 
     <!-- 查询用户单个钱包信息,按编号查询 -->
     <select id="selectUserWalletCoinById" resultMap="BaseResultMapWallet" parameterType="pro.bechat.wallet.domain.model.model.Wallet">
 
-        SELECT id,coinId,address,createTime,userId,freeAmount,amount,availableAmount FROM VAH_Y_WALLET
+        SELECT id,coinId,address,createTime,userId,freeAmount,amount,availableAmount FROM vah_y_wallet
 
         <trim prefix="WHERE" prefixOverrides="AND | OR">
             <if test="id != null and id != 0">
@@ -94,7 +123,7 @@
     <!-- 查询用户单个钱包信息,按地址查询 -->
     <select id="selectUserWalletCoinByAddress" resultMap="BaseResultMapWallet" parameterType="pro.bechat.wallet.domain.model.model.Wallet">
 
-        SELECT id,coinId,address,createTime,userId,freeAmount,amount,availableAmount FROM VAH_Y_WALLET
+        SELECT id,coinId,address,createTime,userId,freeAmount,amount,availableAmount FROM vah_y_wallet
 
         <trim prefix="WHERE" prefixOverrides="AND | OR">
             <if test="address != null and address.length() > 0">
@@ -116,7 +145,7 @@
     <!-- 修改钱包资产 转出 -->
     <update id="modifyWalletTurnOut" parameterType="pro.bechat.wallet.domain.model.model.Wallet">
 
-        UPDATE VAH_Y_WALLET
+        UPDATE vah_y_wallet
 
         <trim prefix="SET" suffixOverrides="," suffix="WHERE id=#{id}">
 
@@ -132,7 +161,7 @@
     <!-- 修改钱包资产 转入 -->
     <update id="modifyWalletToChangeInto" parameterType="pro.bechat.wallet.domain.model.model.Wallet">
 
-        UPDATE VAH_Y_WALLET
+        UPDATE vah_y_wallet
 
         <trim prefix="SET" suffixOverrides="," suffix="WHERE id=#{id}">
 
@@ -150,22 +179,23 @@
 
     </update>
 
-
-    <!-- 查询用户钱包下是否有该币种 -->
+    <!-- 查询用户钱包下单条 -->
     <select id="selectUserWalletByCoinId" resultType="pro.bechat.wallet.domain.model.model.Wallet">
 
-        /*SELECT COUNT(*) FROM VAH_Y_WALLET*/
-        SELECT w.id,coinId,w.address,w.createTime,userId,freeAmount,amount,availableAmount,coinName FROM VAH_Y_WALLET w
-        INNER JOIN VAH_T_COIN c ON w.`coinId`=c.`id`
+        SELECT
+
+        <include refid="Base_Column_List"/>
+
+        FROM vah_y_wallet
 
         <trim prefix="WHERE" prefixOverrides="AND | OR">
 
             <if test="userId != null and userId != 0">
-                AND w.userId = #{userId}
+                AND userId = #{userId}
             </if>
 
-            <if test="coinId != null and coinId != 0">
-                AND coinId = #{coinId}
+            <if test="coinName != null and coinName.length() > 0">
+                AND coinName = #{coinName}
             </if>
 
         </trim>
@@ -178,7 +208,7 @@
         SELECT
         SUM(amount) AS yesterdayProfit,
         (
-            SELECT freeAmount FROM VAH_Y_WALLET
+            SELECT freeAmount FROM vah_y_wallet
 
             <trim prefix="WHERE" prefixOverrides="AND | OR">
 
@@ -212,7 +242,7 @@
     <!-- 转入钱包管理(从 钱包 转出到 钱包管理 同一币种做处理) -->
     <update id="modifyWalletDepositToChangeInto" parameterType="pro.bechat.wallet.domain.model.model.Wallet">
 
-        UPDATE VAH_Y_WALLET
+        UPDATE vah_y_wallet
 
         <trim prefix="SET" suffixOverrides="," suffix="WHERE id=#{id}">
 
@@ -228,7 +258,7 @@
     <!-- 钱包管理转出(从 钱包管理 转出到 钱包 同一币种做处理) -->
     <update id="modifyWalletDepositTurnOut" parameterType="pro.bechat.wallet.domain.model.model.Wallet">
 
-        UPDATE VAH_Y_WALLET
+        UPDATE vah_y_wallet
 
         <trim prefix="SET" suffixOverrides="," suffix="WHERE id=#{id}">
 
@@ -251,7 +281,7 @@
 
         </selectKey>-->
 
-        INSERT INTO VAH_Y_WALLET(
+        INSERT INTO vah_y_wallet(
             coinId,
             address,
             privateKey,
@@ -286,7 +316,7 @@
 
     <!-- 查询钱包信息,冻结金额不为 0 的  冻结金额就是用来生息的,  如果3天未提取利息的不再生息 -->
     <select id="selectUserWalletInterest" resultType="pro.bechat.wallet.domain.model.model.Wallet">
-        SELECT w.id,coinId,coinName,w.address,w.createTime,w.updateTime,userId,freeAmount,amount,availableAmount FROM VAH_Y_WALLET w
+        SELECT w.id,coinId,coinName,w.address,w.createTime,w.updateTime,userId,freeAmount,amount,availableAmount FROM vah_y_wallet w
         INNER JOIN VAH_T_COIN c ON w.`coinId`=c.`id`
         WHERE freeAmount != 0
         AND TO_DAYS( NOW() ) - TO_DAYS(w.updateTime) &lt;= 3
@@ -295,7 +325,7 @@
 
     <!-- 修改用户钱包币种 利息生息 -->
     <update id="modifyUserWalletInterest" parameterType="pro.bechat.wallet.domain.model.model.Wallet">
-        UPDATE VAH_Y_WALLET
+        UPDATE vah_y_wallet
 
         <trim prefix="SET" suffixOverrides="," suffix="WHERE id=#{id}">
 
@@ -308,6 +338,139 @@
         </trim>
 
     </update>
+
+    <!-- 新增钱包信息 -->
+    <insert id="insertWalletInfo" parameterType="pro.bechat.wallet.domain.model.model.Wallet">
+
+        INSERT INTO vah_y_wallet(
+                `name`,
+                coinName,
+                coinImg,
+                address,
+                contractAddr,
+                privateKey,
+                passwd,
+                createTime,
+                updateTime,
+                keystore,
+                userId
+                )
+        VALUES(
+            #{name},
+            #{coinName},
+            #{coinImg},
+            #{address},
+            #{contractAddr},
+            #{privateKey},
+            #{passwd},
+            NOW(),
+            NOW(),
+            #{keystore},
+            #{userId}
+        )
+
+    </insert>
+
+
+    <!-- 查询用户下ETH币种地址 -->
+    <select id="findWalletAddressByUserId" resultType="java.lang.String">
+
+        SELECT address FROM vah_y_wallet
+
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+
+            <if test="userId != null and userId != 0">
+                AND userId = #{userId}
+            </if>
+
+            <if test="coinName != null and coinName.length() > 0">
+                AND coinName = #{coinName}
+            </if>
+
+        </trim>
+
+    </select>
+
+    <!-- 查询用户ETH下的合约币信息 -->
+    <select id="findWalletByUserIdAndAddress" resultMap="BaseResultMapWallet">
+
+        SELECT
+
+        <include refid="Base_Column_List"/>
+
+        FROM vah_y_wallet
+
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+
+            <if test="userId != null and userId != 0">
+                AND userId = #{userId}
+            </if>
+
+            <if test="contractAddr != null and contractAddr.length() > 0">
+                AND contractAddr = #{contractAddr}
+            </if>
+
+        </trim>
+
+    </select>
+
+
+    <!-- 查询用户下的币种信息 -->
+    <select id="findUserWalletInfo" resultMap="BaseResultMapWallet" parameterType="java.lang.Integer">
+        SELECT
+
+        <include refid="Base_Column_List"/>
+
+        FROM vah_y_wallet
+
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+
+            <if test="userId != null and userId != 0">
+                AND userId = #{userId}
+            </if>
+
+        </trim>
+
+        ORDER BY createTime
+
+    </select>
+
+    <!-- 查询用户下的币种信息,名称 -->
+    <select id="findWalletListInfo" parameterType="java.lang.Integer" resultMap="BaseResultMapWallet">
+
+        SELECT
+
+        <include refid="Base_Column_List"/>
+
+        FROM vah_y_wallet
+
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+
+            <if test="userId != null and userId != 0">
+                AND userId = #{userId}
+            </if>
+
+        </trim>
+
+    </select>
+
+
+
+
+    <!-- 封装参数 -->
+    <sql id="Base_Column_List">
+        id,
+        `name`,
+        coinName,
+        address,
+        contractAddr,
+        privateKey,
+        passwd,
+        keystore,
+        createTime,
+        userId
+    </sql>
+
 
 
 

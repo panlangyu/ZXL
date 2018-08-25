@@ -16,7 +16,7 @@
     <!-- 查询是否用户直推信息记录是否为3 -->
     <select id="selectDirectPrizeCount" parameterType="Integer" resultType="Integer">
 
-        SELECT  COUNT(*)  FROM VAH_D_DIRECTTPRIZE
+        SELECT  COUNT(*)  FROM vah_d_directtprize
 
         <trim prefix="WHERE" prefixOverrides="AND | OR">
 
@@ -32,7 +32,7 @@
     <select id="selectDirectPrizeList" resultMap="BaseResultMap">
 
         SELECT  id,referee_id,coverReferee_id,coinId,
-        amountUsed,amount,amountAvailable  FROM VAH_D_DIRECTTPRIZE
+        amountUsed,amount,amountAvailable  FROM vah_d_directtprize
 
         WHERE amountUsed != amount
 
@@ -43,7 +43,7 @@
     <insert id="insertDirectPrizeInfo" parameterType="pro.bechat.wallet.domain.model.model.DirectPrize" useGeneratedKeys="true"
             keyProperty="id">
 
-      INSERT INTO VAH_D_DIRECTTPRIZE(
+      INSERT INTO vah_d_directtprize(
                     referee_id,
                     coverReferee_id,
                     coinId,
@@ -70,7 +70,7 @@
     <!-- 修改直推奖返还数据 -->
     <update id="modifyDirectPrizeInfo" parameterType="pro.bechat.wallet.domain.model.model.DirectPrize">
 
-        UPDATE VAH_D_DIRECTTPRIZE
+        UPDATE vah_d_directtprize
 
         <trim prefix="SET" suffixOverrides="," suffix="WHERE id=#{id}">
 

@@ -22,7 +22,7 @@
 
         </selectKey>-->
 
-        INSERT INTO VAH_T_INVESTMENT(
+        INSERT INTO vah_t_investment(
             walletId,
             interests,
             recommend,
@@ -48,7 +48,7 @@
     <!-- 查询投资信息单条信息,按钱包币种编号 -->
     <select id="selectInvestmentByWalletId" resultType="pro.bechat.wallet.domain.model.model.Investment" parameterType="Integer">
 
-        SELECT id,walletId,interests,recommend,dynamicAward FROM VAH_T_INVESTMENT
+        SELECT id,walletId,interests,recommend,dynamicAward FROM vah_t_investment
 
         <trim prefix="WHERE" prefixOverrides="AND | OR">
 
@@ -64,7 +64,7 @@
     <!-- 更新  利息奖、直推奖、动态奖 -->
     <update id="modifyInvestmentInfo" parameterType="pro.bechat.wallet.domain.model.model.Investment">
 
-        UPDATE VAH_T_INVESTMENT
+        UPDATE vah_t_investment
 
         <trim prefix="SET" suffixOverrides="," suffix="WHERE id=#{id}">
 

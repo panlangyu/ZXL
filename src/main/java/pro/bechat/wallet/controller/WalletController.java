@@ -7,8 +7,12 @@ import io.swagger.annotations.ApiOperation;
 import jetbrick.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import pro.bechat.wallet.domain.model.model.User;
 import pro.bechat.wallet.domain.model.model.Wallet;
 import pro.bechat.wallet.domain.model.response.ApiResponseResult;
+import pro.bechat.wallet.domain.model.vo.UserWalletVo;
+import pro.bechat.wallet.domain.model.vo.WalletContractVo;
+import pro.bechat.wallet.domain.model.vo.WalletUtilsVo;
 import pro.bechat.wallet.domain.service.WalletService;
 import javax.servlet.http.HttpServletRequest;
 import java.util.logging.Logger;
@@ -86,11 +90,6 @@ public class WalletController {
         ApiResponseResult apiResponse = new ApiResponseResult();
 
         try{
-
-            /*if(StringUtils.isBlank(wallet.getRemark())){
-
-                wallet.setRemark("");
-            }*/
 
             apiResponse = walletService.modifyWalletTurnOut(wallet);
 
@@ -222,7 +221,7 @@ public class WalletController {
     }
 
 
-    @ApiOperation(value="用户充币信息", notes="用户充币")
+    /*@ApiOperation(value="用户充币信息", notes="用户充币")
     @RequestMapping(value = "/modifyChargeMoneyInfos",method = RequestMethod.POST)
     public ApiResponseResult modifyChargeMoneyInfos( HttpServletRequest request){
 
@@ -240,7 +239,210 @@ public class WalletController {
         }
 
         return ApiResponseResult.build(200,"success","成功",num);
+    }*/
+
+
+
+    @ApiOperation(value="用户创建钱包", notes="创建钱包")
+    @ApiImplicitParam(name="user", value="用户对象user", dataType="User")
+    @RequestMapping(value="/createWalletInfo", method=RequestMethod.POST)
+    public ApiResponseResult createWalletInfo(@RequestBody UserWalletVo user,
+                                              HttpServletRequest request) {
+
+        ApiResponseResult apiResponse = new ApiResponseResult();
+        try {
+
+            apiResponse = walletService.createWalletInfo(user);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+
+            return ApiResponseResult.build(2017, "error", "出现异常", "");
+        }
+        return apiResponse;
     }
+
+    @ApiOperation(value="查询用户钱包币种列表", notes="根据用户编号查询用户钱包信息,调用第三方接口")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name="userId", value="用户编号", dataType="Integer", paramType="query", required=true),
+            @ApiImplicitParam(name="coinName", value="币种名称", dataType="String", paramType="query", required=false)
+    })
+    @RequestMapping(value="/queryUserWalletList", method=RequestMethod.GET)
+    public ApiResponseResult queryUserWalletList(@RequestParam("userId") Integer userId,
+                                                 @RequestParam(value="coinName", required=false) String coinName) {
+
+        ApiResponseResult apiResponseResult = new ApiResponseResult();
+        try {
+
+            apiResponseResult = walletService.findUserWalletList(userId,coinName);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+
+            return ApiResponseResult.build(2011, "error", "出现异常", "");
+        }
+        return apiResponseResult;
+    }
+
+    @ApiOperation(value="用户提币", notes="调用第三方转账")
+    @ApiImplicitParam(name="wallet", value="钱包对象wallet", dataType="Wallet")
+    @RequestMapping(value="/modifyWithdrawMoney", method=RequestMethod.POST)
+    public ApiResponseResult modifyWithdrawMoney(@RequestBody WalletUtilsVo wallet,
+                                                 HttpServletRequest request){
+
+        ApiResponseResult apiResponseResult = new ApiResponseResult();
+        try {
+
+            apiResponseResult = walletService.modifyWithdrawMoney(wallet);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+
+            return ApiResponseResult.build(2017, "error", "出现异常", "");
+        }
+        return apiResponseResult;
+    }
+
+    @ApiOperation(value="查询合约币信息", notes="合约币")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name="userId", value="用户编号", dataType="Integer", paramType="query", required=true),
+            @ApiImplicitParam(name="contractAddr", value="合约币地址", dataType="String", paramType="query", required=true)
+    })
+    @RequestMapping(value="/queryContractAddr", method=RequestMethod.GET)
+    public ApiResponseResult queryContractAddr(@RequestParam("userId") Integer userId,
+                                               @RequestParam("contractAddr") String contractAddr) {
+
+        ApiResponseResult apiResponseResult = new ApiResponseResult();
+        try {
+
+            apiResponseResult = walletService.queryContractAddr(userId, contractAddr);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+
+            return ApiResponseResult.build(2016, "error", "出现异常", "");
+        }
+        return apiResponseResult;
+    }
+
+
+    @ApiOperation(value="新增合约币信息", notes="增加合约币")
+    @ApiImplicitParam(name="walletContractVo", value="合约币对象walletContractVo", dataType="walletContractVo")
+    @RequestMapping(value="/createContractWalletInfo", method=RequestMethod.POST)
+    public ApiResponseResult createContractWalletInfo(@RequestBody WalletContractVo walletContractVo) {
+
+        ApiResponseResult apiResponseResult = new ApiResponseResult();
+
+        try {
+
+            apiResponseResult = walletService.createContractWalletInfo(walletContractVo);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+
+            return ApiResponseResult.build(2017, "error", "出现异常", "");
+        }
+        return apiResponseResult;
+    }
+
+
+    @ApiOperation(value="查询用户已有的币种信息", notes="币种信息")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name="userId", value="用户编号", dataType="Integer", paramType="query", required=true),
+            @ApiImplicitParam(name="list", value="币种信息", dataType="String", paramType="query", required=true)
+    })
+    @RequestMapping(value="/queryUserWalletListStatus", method= RequestMethod.GET)
+    public ApiResponseResult queryUserWalletListStatus(@RequestParam("userId")Integer userId,
+                                                       @RequestParam("list")String  list) {
+
+        ApiResponseResult apiResponseResult = new ApiResponseResult();
+        try {
+
+            apiResponseResult = walletService.findUserWalletListStatus(userId,list);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+
+            return ApiResponseResult.build(2016, "error", "出现异常", "");
+        }
+        return apiResponseResult;
+    }
+
+
+    @ApiOperation(value="查询所有账户", notes="所有账户")
+    @RequestMapping(value="/queryAccountInfo", method= RequestMethod.GET)
+    public ApiResponseResult queryAccountInfo() {
+
+        ApiResponseResult apiResponseResult = new ApiResponseResult();
+        try {
+
+            apiResponseResult = walletService.queryAccountList();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+
+            return ApiResponseResult.build(2016, "error", "出现异常", "");
+        }
+        return apiResponseResult;
+    }
+
+    @ApiOperation(value="查询阻塞数信息", notes="阻塞数")
+    @RequestMapping(value="/blockNumber", method=RequestMethod.GET)
+    public ApiResponseResult blockNumber() {
+
+        return this.walletService.blockNumber();
+    }
+
+
+
+
+
+
+    /*@ApiOperation(value="查询两个用户之间的币种比较", notes="币种比较")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name="phone", value="手机号", dataType="String", paramType="query", required=true),
+            @ApiImplicitParam(name="earnerPhone", value="对方手机号", dataType="String", paramType="query", required=true)
+    })
+    @RequestMapping(value="/queryUserWalletInfo", method=RequestMethod.GET)
+    public ApiResponseResult queryUserWalletInfo(@RequestParam("phone") String phone,
+                                                 @RequestParam("earnerPhone") String earnerPhone) {
+
+        ApiResponseResult apiResponseResult = new ApiResponseResult();
+        try {
+
+            apiResponseResult = walletService.queryUserWalletInfo(phone, earnerPhone);
+
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+
+            return ApiResponseResult.build(2016, "error", "出现异常", "");
+        }
+
+        return apiResponseResult;
+    }*/
+
+
+
+   /* @ApiOperation(value="查询用户下拥有的币种", notes="币种名称")
+    @ApiImplicitParam(name="phone", value="手机号", dataType="String", paramType="query", required=true)
+    @RequestMapping(value="/queryWalletListInfo", method=RequestMethod.GET)
+    public ApiResponseResult queryWalletListInfo(@RequestParam("phone")String phone){
+
+        ApiResponseResult apiResponseResult = new ApiResponseResult();
+        try {
+
+            apiResponseResult = walletService.findWalletListInfo(phone);
+
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+
+            return ApiResponseResult.build(2016, "error", "出现异常", "");
+        }
+
+        return apiResponseResult;
+    }*/
 
 
 

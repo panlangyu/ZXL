@@ -14,7 +14,7 @@
 
     <!-- 查询用户钱包下币种详情订单记录 -->
     <select id="selectUserCoinTransactionList" resultMap="BaseResultMap">
-        SELECT  id,txType,`to`,`hash`,amount,createTime FROM VAH_T_TRANSCATION
+        SELECT  id,txType,`to`,`hash`,amount,createTime FROM vah_t_transcation
 
         <trim prefix="WHERE" prefixOverrides="AND | OR">
             <if test="userId != null and userId != 0">
@@ -38,7 +38,7 @@
     <insert id="insertWalletTurnOut" parameterType="pro.bechat.wallet.domain.model.model.Transcation" useGeneratedKeys="true"
             keyProperty="id">
 
-        INSERT INTO VAH_T_TRANSCATION(userId,coinId,coinType,amount,txType,`from`,`to`,`hash`,txStatus,capital,createTime,updateTime,remark)
+        INSERT INTO vah_t_transcation(userId,coinId,coinType,amount,txType,`from`,`to`,`hash`,txStatus,capital,createTime,updateTime,remark)
         VALUES(
             #{userId},#{coinId},#{coinType},-#{amount},#{txType},#{from},#{to},#{hash},#{txStatus},#{capital},now(),now(),#{remark}
         )
@@ -49,7 +49,7 @@
     <insert id="insertWalletToChangeInto" parameterType="pro.bechat.wallet.domain.model.model.Transcation" useGeneratedKeys="true"
             keyProperty="id">
 
-        INSERT INTO VAH_T_TRANSCATION(userId,coinId,coinType,amount,txType,`from`,`to`,`hash`,txStatus,capital,createTime,updateTime,remark)
+        INSERT INTO vah_t_transcation(userId,coinId,coinType,amount,txType,`from`,`to`,`hash`,txStatus,capital,createTime,updateTime,remark)
         VALUES(
             #{userId},#{coinId},#{coinType},#{amount},#{txType},#{from},#{to},#{hash},#{txStatus},#{capital},now(),now(),#{remark}
         )
@@ -59,7 +59,7 @@
     <!-- 查看币种交易记录总额,条件查询 转入 -->
     <select id="selectUserCoinTurnToTotal" resultType="Double">
 
-        SELECT SUM(amount) FROM VAH_T_TRANSCATION
+        SELECT SUM(amount) FROM vah_t_transcation
 
         <trim prefix="WHERE" prefixOverrides="AND | OR">
             <if test="userId != null and userId != 0">
@@ -80,7 +80,7 @@
     <!-- 查看币种交易记录总额,条件查询 转入 -->
     <select id="selectUserCoinToChargeInfoTotal" resultType="Double">
 
-        SELECT SUM(amount) FROM VAH_T_TRANSCATION
+        SELECT SUM(amount) FROM vah_t_transcation
 
         <trim prefix="WHERE" prefixOverrides="AND | OR">
             <if test="userId != null and userId != 0">
@@ -103,7 +103,7 @@
 
         SELECT DISTINCT (
             SELECT  SUM(amount)
-            FROM VAH_T_TRANSCATION
+            FROM vah_t_transcation
 
             <trim prefix="WHERE" prefixOverrides="AND | OR">
                 <if test="userId != null and userId != 0">
@@ -120,7 +120,7 @@
             ) AS toChangeInto
         ,(
             SELECT SUM(amount)
-            FROM VAH_T_TRANSCATION
+            FROM vah_t_transcation
 
             <trim prefix="WHERE" prefixOverrides="AND | OR">
                 <if test="userId != null and userId != 0">
@@ -135,7 +135,7 @@
 
             </trim>
             ) AS turnTo
-        FROM VAH_T_TRANSCATION
+        FROM vah_t_transcation
     </select>
 
 
@@ -143,7 +143,7 @@
     <select id="selectUserWalletCoinStraightOrInterest" resultType="Map">
         SELECT DISTINCT (
         SELECT  SUM(amount)
-        FROM VAH_T_TRANSCATION
+        FROM vah_t_transcation
 
         <trim prefix="WHERE" prefixOverrides="AND | OR">
             <if test="userId != null and userId != 0">
@@ -161,7 +161,7 @@
         ) AS straightPush
         ,(
         SELECT SUM(amount)
-        FROM VAH_T_TRANSCATION
+        FROM vah_t_transcation
 
         <trim prefix="WHERE" prefixOverrides="AND | OR">
             <if test="userId != null and userId != 0">
@@ -176,14 +176,14 @@
 
         </trim>
         ) AS  interest
-        FROM VAH_T_TRANSCATION
+        FROM vah_t_transcation
 
     </select>
 
 
     <!-- 钱包管理用户币种的交易记录 -->
     <select id="selectWalletUserCoinTransactionList" resultMap="BaseResultMap">
-        SELECT  id,txType,`to`,`hash`,amount,createTime FROM VAH_T_TRANSCATION
+        SELECT  id,txType,`to`,`hash`,amount,createTime FROM vah_t_transcation
 
         <trim prefix="WHERE" prefixOverrides="AND | OR">
             <if test="userId != null and userId != 0">
@@ -204,7 +204,7 @@
 
     <!-- 查看充值记录 和 提取记录 总额 是否超过 10000 -->
     <select id="selectTranscationRechargeRecord" resultType="BigDecimal">
-        SELECT SUM(amount) FROM VAH_T_TRANSCATION
+        SELECT SUM(amount) FROM vah_t_transcation
 
         <trim prefix="WHERE" prefixOverrides="AND | OR">
 
@@ -240,7 +240,7 @@
             u.phoneNum,
             u.nickName
         FROM
-        	VAH_T_TRANSCATION t
+        	vah_t_transcation t
             LEFT JOIN VAH_T_USER u
             ON t.userId = u.id
         <if test="params.tel!=null">

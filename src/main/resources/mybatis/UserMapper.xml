@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="pro.bechat.wallet.domain.dao.UserMapper">
     <resultMap id="BaseResultMap" type="pro.bechat.wallet.domain.model.model.User">
-        <id column="userId" jdbcType="INTEGER" property="id"/>
+        <id column="id" jdbcType="INTEGER" property="id"/>
         <result column="phoneNum" jdbcType="VARCHAR" property="phoneNum"/>
         <result column="seeds" jdbcType="VARCHAR" property="seeds"/>
         <result column="headImg" jdbcType="VARCHAR" property="headImg"/>
@@ -14,6 +14,24 @@
         <result column="relationship" jdbcType="VARCHAR" property="relationship"/>
         <result column="invitationCode" jdbcType="VARCHAR" property="invitationCode"/>
     </resultMap>
+
+    <!-- 封装带ETH地址的UserVo -->
+    <resultMap id="BaseResultMapAddress" type="pro.bechat.wallet.domain.model.vo.UserVo">
+        <id column="u.id" jdbcType="INTEGER" property="id"/>
+        <result column="phoneNum" jdbcType="VARCHAR" property="phoneNum"/>
+        <result column="passwd" jdbcType="VARCHAR" property="passwd"/>
+        <result column="seeds" jdbcType="VARCHAR" property="seeds"/>
+        <result column="headImg" jdbcType="VARCHAR" property="headImg"/>
+        <result column="status" jdbcType="INTEGER" property="status"/>
+        <result column="nickName" jdbcType="VARCHAR" property="nickName"/>
+        <result column="sex" jdbcType="INTEGER" property="sex"/>
+        <result column="createTime" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="updateTime" jdbcType="TIMESTAMP" property="updateTime"/>
+        <result column="relationship" jdbcType="VARCHAR" property="relationship"/>
+        <result column="invitationCode" jdbcType="VARCHAR" property="invitationCode"/>
+        <result column="address" jdbcType="VARCHAR" property="address"/>
+    </resultMap>
+
     <sql id="Base_Column_List">
                 id,
                 phoneNum,
@@ -33,7 +51,7 @@
             parameterType="pro.bechat.wallet.domain.model.model.User"
             keyProperty="id" keyColumn="id" useGeneratedKeys="true"
     >
-       INSERT INTO VAH_T_USER (
+       INSERT INTO vah_t_user (
 	        phoneNum,
 	        passWd,
 	        seeds,
@@ -67,7 +85,7 @@
     <select id="findUserByInvitationCodeAndStatus" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"/>
-        from VAH_T_USER
+        from vah_t_user
         where invitationCode = #{invitationCode} AND status = #{status}
     </select>
 
@@ -75,37 +93,37 @@
     <select id="findUserByTelAndStatus" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"/>
-        from VAH_T_USER
+        from vah_t_user
         where phoneNum = #{tel} AND status = #{status}
     </select>
 
     <update id="updateInvitaionCode">
-        update VAH_T_USER set invitationCode = #{invitationCode} where  id = #{id}
+        update vah_t_user set invitationCode = #{invitationCode} where  id = #{id}
     </update>
     <select id="findUserById" resultMap="BaseResultMap" parameterType="java.lang.Integer">
         select
         <include refid="Base_Column_List"/>
-        from VAH_T_USER
+        from vah_t_user
         where id = #{id} AND status = 1
     </select>
 
     <update id="updateUserHeadPic">
-        update VAH_T_USER set headImg = #{picUrl} where  id = #{id}
+        update vah_t_user set headImg = #{picUrl} where  id = #{id}
     </update>
 
 
     <update id="updateUserNameAndSexAndPic">
-        update VAH_T_USER set sex = #{sex} , nickName = #{name} ,  headImg = #{pic} where  id = #{id}
+        update vah_t_user set sex = #{sex} , nickName = #{name} ,  headImg = #{pic} where  id = #{id}
     </update>
 
     <select id="isExit" parameterType="java.lang.Integer">
-        SELECT COUNT(1) FROM VAH_T_USER WHERE id = #{id} AND `status` = 1;
+        SELECT COUNT(1) FROM vah_t_user WHERE id = #{id} AND `status` = 1;
     </select>
     
     <select id="findUserByShip" parameterType="java.lang.String" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"/>
-        from VAH_T_USER
+        from vah_t_user
         where relationship = #{relationship} AND status = 1
     </select>
 
@@ -114,7 +132,7 @@
     <select id="findAllUsers" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"/>
-        from VAH_T_USER
+        from vah_t_user
         <if test="search!=null and search != ''">
             where phoneNum = #{search} or nickName = #{search}
         </if>
@@ -122,14 +140,14 @@
     <select id="findUserByNameOrPhenoe" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"/>
-        from VAH_T_USER
+        from vah_t_user
         where phoneNum = #{search} or nickName = #{search}
         and status = 1
     </select>
 
     <select id="findUsersByIds" resultMap="BaseResultMap" parameterType="java.util.List">
         select <include refid="Base_Column_List"/>
-        from VAH_T_USER
+        from vah_t_user
         where id in <foreach collection="ids" index="index" item="item" open="(" separator="," close=")">
             #{item}
          </foreach>
@@ -141,12 +159,59 @@
     <select id="findLineUsersByShip" parameterType="java.lang.String" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"/>
-        from VAH_T_USER
+        from vah_t_user
         where relationship = #{relationship}
         or relationship like  #{relationship2}
     </select>
     
     <update id="updateUserStatusById">
-         update VAH_T_USER set STATUS = #{status} where  id = #{id}
+         update vah_t_user set STATUS = #{status} where  id = #{id}
     </update>
+
+    <!-- 按phoneNum手机号查询用户信息 -->
+    <select id="findUserExist" parameterType="java.lang.String" resultMap="BaseResultMap">
+
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM vah_t_user
+
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+
+            <if test="phone != null and phone.length() > 0">
+
+                AND  phoneNum = #{phone}
+            </if>
+
+        </trim>
+
+    </select>
+
+
+    <!-- 查询用户信息及绑定ETH地址 -->
+    <select id="findUserInfoAddress" resultMap="BaseResultMapAddress">
+
+        SELECT  u.id,phoneNum,u.passwd,seeds,headImg,`status`,nickName,sex,u.createTime,u.updateTime,relationShip,mnemonit,invitationCode,address
+        FROM vah_t_user u
+        INNER JOIN vah_y_wallet w ON u.id = w.userId
+
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+
+            <if test="userId != null and userId != 0">
+
+                AND  userId = #{userId}
+            </if>
+
+            <if test="coinName != null and coinName.length() > 0">
+
+                AND  coinName = #{coinName}
+            </if>
+
+        </trim>
+
+    </select>
+
+
+
+
+
 </mapper>

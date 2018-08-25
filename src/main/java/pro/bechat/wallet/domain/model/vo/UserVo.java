@@ -1,18 +1,11 @@
-package pro.bechat.wallet.domain.model.model;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
+package pro.bechat.wallet.domain.model.vo;
 
 import java.util.Date;
 
 /**
- * create User by huc
- * 2018/4/20  下午2:16
+ * 用户封装少量参数VO
  */
-public class User {
-
-    public static int STATUS_NOMARL = 1;
-    public static int STATUS_OUT = 2;
-    public static int STATUS_FREE = 3;
+public class UserVo {
 
     private int id;
 
@@ -40,13 +33,7 @@ public class User {
 
     private String mnemonit;
 
-    public String getInvitationCode() {
-        return invitationCode;
-    }
-
-    public void setInvitationCode(String invitationCode) {
-        this.invitationCode = invitationCode;
-    }
+    private String address;         //ETH地址
 
     public int getId() {
         return id;
@@ -56,20 +43,20 @@ public class User {
         this.id = id;
     }
 
-    public String getPasswd() {
-        return passwd;
-    }
-
-    public void setPasswd(String passwd) {
-        this.passwd = passwd;
-    }
-
     public String getPhoneNum() {
         return phoneNum;
     }
 
     public void setPhoneNum(String phoneNum) {
         this.phoneNum = phoneNum;
+    }
+
+    public String getPasswd() {
+        return passwd;
+    }
+
+    public void setPasswd(String passwd) {
+        this.passwd = passwd;
     }
 
     public String getSeeds() {
@@ -136,11 +123,27 @@ public class User {
         this.relationship = relationship;
     }
 
+    public String getInvitationCode() {
+        return invitationCode;
+    }
+
+    public void setInvitationCode(String invitationCode) {
+        this.invitationCode = invitationCode;
+    }
+
     public String getMnemonit() {
         return mnemonit;
     }
 
     public void setMnemonit(String mnemonit) {
         this.mnemonit = mnemonit;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
     }
 }

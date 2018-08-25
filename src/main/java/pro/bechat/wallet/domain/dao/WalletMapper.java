@@ -3,6 +3,7 @@ package pro.bechat.wallet.domain.dao;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 import pro.bechat.wallet.domain.model.model.Wallet;
+import pro.bechat.wallet.domain.model.vo.WalletStatusVo;
 import pro.bechat.wallet.domain.model.vo.WalletVo;
 import java.math.BigDecimal;
 import java.util.List;
@@ -34,9 +35,7 @@ public interface WalletMapper {
      * @return
      * @throws Exception
      */
-    public List<WalletVo> selectUserWalletCoinList(@Param("currentPage")Integer currentPage,
-                                                   @Param("currentSize")Integer currentSize,
-                                                   @Param("userId")Integer userId,
+    public List<WalletVo> selectUserWalletCoinList(@Param("userId")Integer userId,
                                                    @Param("coinName")String coinName)throws Exception;
 
     /**
@@ -80,12 +79,12 @@ public interface WalletMapper {
     /**
      * 查询用户钱包下是否有该币种
      * @param userId
-     * @param coinId
+     * @param coinName
      * @return
      * @throws Exception
      */
     public Wallet selectUserWalletByCoinId(@Param("userId")Integer userId,
-                                            @Param("coinId")Integer coinId)throws Exception;
+                                           @Param("coinName")String coinName)throws Exception;
 
     /**
      * 管理钱包用户币种昨日收益 +(冻结数量)
@@ -137,6 +136,29 @@ public interface WalletMapper {
      * @throws Exception
      */
     public Integer modifyUserWalletInterest(Wallet wallet)throws Exception;
+
+
+    public Integer insertWalletInfo(Wallet wallet) throws Exception;
+
+
+    public String findWalletAddressByUserId(@Param("userId") Integer userId,
+                                            @Param("coinName") String coinName)throws Exception;
+
+
+    public Wallet findWalletByUserIdAndAddress(@Param("userId") Integer userId,
+                                               @Param("contractAddr") String contractAddr)throws Exception;
+
+
+    public List<Wallet> findUserWalletInfo(@Param("userId") Integer userId)throws Exception;
+
+    /**
+     * 查询用户下的币种,只读取币种名称
+     * @param userId
+     * @return
+     * @throws Exception
+     */
+    public List<Wallet> findWalletListInfo(@Param("userId") Integer userId)throws Exception;
+
 
 
 }

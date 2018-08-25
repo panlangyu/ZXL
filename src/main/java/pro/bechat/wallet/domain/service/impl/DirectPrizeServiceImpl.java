@@ -131,7 +131,7 @@ public class DirectPrizeServiceImpl implements DirectPrizeService {
 
                 wallet = new Wallet();
                 wallet.setUserId(walletInfo.getUserId());                           //用户编号
-                wallet.setCoinId(walletInfo.getCoinId());                           //币种
+                //wallet.setCoinId(walletInfo.getCoinId());                           //币种
 
                 if(compare == 1 || compare == 0){
 
@@ -142,35 +142,35 @@ public class DirectPrizeServiceImpl implements DirectPrizeService {
                 }
 
                 // 5、查询用户钱包币种信息
-                Wallet userWallet = walletMapper.selectUserWalletByCoinId(wallet.getUserId(),wallet.getCoinId());
-                if(null == userWallet){
+                //Wallet userWallet = walletMapper.selectUserWalletByCoinId(wallet.getUserId(),wallet.getCoinId());
+                //if(null == userWallet){
 
-                    continue;
-                }
+                //    continue;
+               // }
 
                 // 6、查询用户钱包币种相对应的 投资信息
-                Investment investment = investmentMapper.selectInvestmentByWalletId(userWallet.getId());
-                if(null == investment){
+                //Investment investment = investmentMapper.selectInvestmentByWalletId(userWallet.getId());
+               // if(null == investment){
 
-                    continue;
-                }
+               //     continue;
+               // }
 
                 // 6、修改用户生息信息
-                wallet.setId(userWallet.getId());                              //钱包编号
+               // wallet.setId(userWallet.getId());                              //钱包编号
                 num = walletMapper.modifyUserWalletInterest(wallet);           //用户钱包币种利息生息
 
                 // 7、转入利息信息
-                investment.setInterests(wallet.getAmount());                   //生息数量
-                investment.setRecommend(null);                                 //将直推奖金额设置为空
-                investment.setDynamicAward(null);                              //将动态奖金额设置为空
-                num = investmentMapper.modifyInvestmentInfo(investment);
+               // investment.setInterests(wallet.getAmount());                   //生息数量
+               // investment.setRecommend(null);                                 //将直推奖金额设置为空
+               // investment.setDynamicAward(null);                              //将动态奖金额设置为空
+                //num = investmentMapper.modifyInvestmentInfo(investment);
                 //if(num == 0){
 
                 //   return ApiResponseResult.build(2010,"error","新增失败","");
                 //}
 
                 // 8、转入生息记录
-                num = insertWalletInterestToChargeTo(userWallet,wallet.getAmount());
+                //num = insertWalletInterestToChargeTo(userWallet,wallet.getAmount());
                 //if(num == 0){
 
                 // return ApiResponseResult.build(2010,"error","新增失败","");
@@ -179,8 +179,8 @@ public class DirectPrizeServiceImpl implements DirectPrizeService {
             }catch (Exception e){
 
                 e.printStackTrace();
-                logger.warning("用户编号:"+wallet.getUserId()+",币种编号:"+wallet.getCoinId()+
-                        ",利息生息多少:"+wallet.getAmount()+",当前时间:"+sdf.format(new Date()));
+                //logger.warning("用户编号:"+wallet.getUserId()+",币种编号:"+wallet.getCoinId()+
+                //        ",利息生息多少:"+wallet.getAmount()+",当前时间:"+sdf.format(new Date()));
             }
 
         }
@@ -233,7 +233,7 @@ public class DirectPrizeServiceImpl implements DirectPrizeService {
             wallet = new Wallet();
             wallet.setUserId(directPrizeVo.getRefereeId());                       //推荐人编号
             wallet.setAmount(directPrizeVo.getAmount().multiply(deductionPrice)); //返还的数量
-            wallet.setCoinId(directPrizeVo.getCoinId());                          //币种
+            //wallet.setCoinId(directPrizeVo.getCoinId());                          //币种
 
             directPrize = new DirectPrize();
             directPrize.setAmount(directPrizeVo.getAmount().multiply(deductionPrice));
@@ -242,17 +242,17 @@ public class DirectPrizeServiceImpl implements DirectPrizeService {
             try{
 
                 // 5、查询推荐人钱包信息
-                Wallet userWallet = walletMapper.selectUserWalletByCoinId(wallet.getUserId(),wallet.getCoinId());
-                if(null == userWallet){
+                //Wallet userWallet = walletMapper.selectUserWalletByCoinId(wallet.getUserId(),wallet.getCoinId());
+              //  if(null == userWallet){
 
-                    return ApiResponseResult.build(2010,"error","未查询到推荐人信息","");
-                }
+             //       return ApiResponseResult.build(2010,"error","未查询到推荐人信息","");
+             //   }
                 // 6、查询被推荐人钱包信息
-                Wallet directWallet = walletMapper.selectUserWalletByCoinId(directPrizeVo.getCoverRefereeId(),directPrizeVo.getCoinId());
-                if(null == directWallet){
+               // Wallet directWallet = walletMapper.selectUserWalletByCoinId(directPrizeVo.getCoverRefereeId(),directPrizeVo.getCoinId());
+              //  if(null == directWallet){
 
-                    return ApiResponseResult.build(2010,"error","未查询到被推荐人信息","");
-                }
+            //        return ApiResponseResult.build(2010,"error","未查询到被推荐人信息","");
+            //    }
 
                 // 7、转出记录 钱包编号(id)、价格(amount)
                 num = directPrizeMapper.modifyDirectPrizeInfo(directPrize);
@@ -262,7 +262,7 @@ public class DirectPrizeServiceImpl implements DirectPrizeService {
                 }
 
                 // 8、转入记录 钱包编号(id)、价格(amount)
-                wallet.setId(userWallet.getId());                                       //钱包编号
+               // wallet.setId(userWallet.getId());                                       //钱包编号
                 num = walletMapper.modifyWalletToChangeInto(wallet);                    //修改返还直推奖 给 推荐人
                 if(num == 0){
 
@@ -270,15 +270,15 @@ public class DirectPrizeServiceImpl implements DirectPrizeService {
                 }
 
                 // 9、新增转出记录 userId(转出userId)、coinId(币种编号)、coinType(币种名称)、txType(直推 3)、from(转出地址)、to(转入地址)、hash(UUID)、txStatus(状态 1)、capital(转账完后的本金),createTime(新增时间)
-                directWallet.setAmount(directPrizeVo.getAmountAvailable());
-                num = insertWalletTurnTo(userWallet,directWallet,wallet.getAmount());
+               // directWallet.setAmount(directPrizeVo.getAmountAvailable());
+               /// num = insertWalletTurnTo(userWallet,directWallet,wallet.getAmount());
                 if(num == 0){
 
                     return ApiResponseResult.build(2010,"error","新增失败","");
                 }
 
                 // 10、新增转入记录 userId(转入userId)、coinId(币种编号)、coinType(币种名称)、txType(直推 3)、from(转出地址)、to(转入地址)、hash(UUID)、txStatus(状态 1)、capital(转账完后的本金),createTime(新增时间)
-                num = insertWalletToChargeTo(userWallet,directWallet,directPrize.getAmount());
+                //num = insertWalletToChargeTo(userWallet,directWallet,directPrize.getAmount());
                 if(num == 0){
 
                     return ApiResponseResult.build(2010,"error","新增失败","");
@@ -322,7 +322,7 @@ public class DirectPrizeServiceImpl implements DirectPrizeService {
         for(User user : userList){
 
             // 2、查询所有用户下的所有钱包币种(一个钱包 = 一个币种 )
-            voList = walletMapper.selectUserWalletCoinList(1,1,user.getId(),null);
+            voList = walletMapper.selectUserWalletCoinList(user.getId(),null);
             if(null == voList){
 
                 //return ApiResponseResult.build(2010,"error","未查询到钱包信息","");
@@ -349,7 +349,7 @@ public class DirectPrizeServiceImpl implements DirectPrizeService {
 
         Transcation transcation = new Transcation();
         transcation.setUserId(directWallet.getUserId());        //用户编号
-        transcation.setCoinId(directWallet.getCoinId());        //币种编号
+        //transcation.setCoinId(directWallet.getCoinId());        //币种编号
         transcation.setCoinType(directWallet.getCoinName());    //币种名称
         transcation.setAmount(deductionPrice);                  //交易金额
         transcation.setTxType(3);                               //交易类型（1：转入，2：转出，3：直推，4：利息，5:团队奖）
@@ -374,8 +374,8 @@ public class DirectPrizeServiceImpl implements DirectPrizeService {
 
         Transcation transcation = new Transcation();
         transcation.setUserId(userWallet.getUserId());          //用户编号
-        transcation.setCoinId(userWallet.getCoinId());          //币种编号
-        transcation.setCoinType(userWallet.getCoinName());      //币种名称
+       // transcation.setCoinId(userWallet.getCoinId());          //币种编号
+        //transcation.setCoinType(userWallet.getCoinName());      //币种名称
         transcation.setAmount(deductionPrice);                  //交易金额
         transcation.setTxType(3);                               //交易类型（1：转入，2：转出，3：直推，4：利息，5:团队奖）
         transcation.setFrom(directWallet.getAddress());         //转出地址
@@ -401,7 +401,7 @@ public class DirectPrizeServiceImpl implements DirectPrizeService {
 
         Transcation transcation = new Transcation();
         transcation.setUserId(userWallet.getUserId());          //用户编号
-        transcation.setCoinId(userWallet.getCoinId());          //币种编号
+       // transcation.setCoinId(userWallet.getCoinId());          //币种编号
         transcation.setCoinType(userWallet.getCoinName());      //币种名称
         transcation.setAmount(deductionPrice);                  //交易金额
         transcation.setTxType(4);                               //交易类型（1：转入，2：转出，3：直推，4：利息，5:团队奖）

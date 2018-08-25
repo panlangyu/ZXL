@@ -1,7 +1,12 @@
 package pro.bechat.wallet.domain.service;
 
+import io.swagger.annotations.Api;
+import pro.bechat.wallet.domain.model.model.User;
 import pro.bechat.wallet.domain.model.model.Wallet;
 import pro.bechat.wallet.domain.model.response.ApiResponseResult;
+import pro.bechat.wallet.domain.model.vo.UserWalletVo;
+import pro.bechat.wallet.domain.model.vo.WalletContractVo;
+import pro.bechat.wallet.domain.model.vo.WalletUtilsVo;
 
 /**
  * 钱包业务Service
@@ -94,6 +99,68 @@ public interface WalletService {
      * @throws Exception
      */
     public ApiResponseResult modifyChargeMoneyInfo(Wallet wallet)throws Exception;
+
+
+    /**
+     * 创建钱包 ETH
+     * @param user
+     * @return
+     * @throws Exception
+     */
+    public ApiResponseResult createWalletInfo(UserWalletVo user) throws Exception;
+
+    /**
+     * 查询钱包列表
+     * @param userId
+     * @param coinName
+     * @return
+     * @throws Exception
+     */
+    public ApiResponseResult findUserWalletList(Integer userId, String coinName) throws Exception;
+
+    /**
+     * 钱包转账
+     * @param walletUtilsVo
+     * @return
+     * @throws Exception
+     */
+    public ApiResponseResult modifyWithdrawMoney(WalletUtilsVo walletUtilsVo) throws Exception;
+
+    public ApiResponseResult queryContractAddr(Integer userId, String contractAddr) throws Exception;
+
+    public ApiResponseResult queryAccountList() throws Exception;
+
+    public ApiResponseResult blockNumber();
+
+    /**
+     * 新增合约币信息
+     * @param walletContractVo
+     * @return
+     * @throws Exception
+     */
+    public ApiResponseResult createContractWalletInfo(WalletContractVo walletContractVo)throws Exception;
+
+    /**
+     * 用户已拥有币种
+     * @param userId
+     * @param list
+     * @return
+     * @throws Exception
+     */
+    public ApiResponseResult findUserWalletListStatus(Integer userId,String list)throws Exception;
+
+
+    //public ApiResponseResult queryUserWalletInfo(String paramString1, String paramString2)
+            //throws Exception;
+
+    /**
+     * 查询用户下的币种,只读取币种名称
+     * @param phone
+     * @return
+     * @throws Exception
+     */
+    //public ApiResponseResult findWalletListInfo(String phone)throws Exception;
+
 
 
 }
