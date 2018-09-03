@@ -277,7 +277,7 @@ public class WalletServiceImpl implements WalletService {
 
         Map<String,Object> map = new HashMap<>();
 
-        Wallet wallet = walletMapper.selectUserWalletByCoinId(userId,"");
+        Wallet wallet = walletMapper.selectUserWalletByCoinId(userId,0);
 
         if(null == wallet){
 
@@ -715,7 +715,7 @@ public class WalletServiceImpl implements WalletService {
             return ApiResponseResult.build(2011, "error", "用户不存在", "");
         }
 
-        Wallet userWalletCoin = walletMapper.selectUserWalletByCoinId(userInfo.getId(), wallet.getCoinName());
+        Wallet userWalletCoin = walletMapper.selectUserWalletByCoinId(userInfo.getId(), wallet.getId());
         if (userWalletCoin == null) {
 
             return ApiResponseResult.build(2011, "error", "未查询到用户下的币种信息", "");
@@ -777,6 +777,7 @@ public class WalletServiceImpl implements WalletService {
         //拿出币种数量和转账数量比较
         int compare = price.compareTo(new BigDecimal(wallet.getValue()));
         if (compare == 0 || compare == -1) {
+
             return ApiResponseResult.build(2011, "error", "币种数量不足", "");
         }
 

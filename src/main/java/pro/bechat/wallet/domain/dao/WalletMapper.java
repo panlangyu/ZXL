@@ -78,13 +78,13 @@ public interface WalletMapper {
 
     /**
      * 查询用户钱包下是否有该币种
-     * @param userId
-     * @param coinName
+     * @param userId 用户编号
+     * @param id  钱包编号
      * @return
      * @throws Exception
      */
     public Wallet selectUserWalletByCoinId(@Param("userId")Integer userId,
-                                           @Param("coinName")String coinName)throws Exception;
+                                           @Param("id")Integer id)throws Exception;
 
     /**
      * 管理钱包用户币种昨日收益 +(冻结数量)

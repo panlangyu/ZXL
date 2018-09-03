@@ -8,13 +8,18 @@ spring:
       exclude: WEB-INF/**
   resources:
     static-locations: classpath:/static,classpath:/public,classpath:/resources,classpath:/META-INF/resources
+  http:
+    encoding:
+      force: true
+      charset: UTF-8
+      enabled: true
   datasource:
         name: VAHWallet
 #        url: jdbc:mysql://172.17.0.1:3306/wallet
 #        url: jdbc:mysql://103.65.180.165:3306/VAHWallet
+        url: jdbc:mysql://localhost:3306/vahwallet?autoReconnect=true&initialTimeout=3&useUnicode=true&characterEncoding=utf-8
 #        username: VAHWallet
 #        password: WxfTaZTFe7h6ZhCy
-        url: jdbc:mysql://localhost:3306/reawallet
         username: root
         password: 123456
         # 使用druid数据源
@@ -59,5 +64,13 @@ logging:
 server:
       context-path: /bechatwallet
       port: 8090
-      address: 192.168.10.125
+      address: 192.168.10.118
+      tomcat:
+        uri-encoding: UTF-8
+
+#配置第三方访问路径
+yellowduck:
+  url: "http://39.105.26.249:9090"
+#  url: "http://127.0.0.1:9090"
+#  url: "http://192.168.10.103:9090"
 
