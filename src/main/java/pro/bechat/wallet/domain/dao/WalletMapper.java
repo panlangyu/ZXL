@@ -32,11 +32,12 @@ public interface WalletMapper {
     /**
      * 查询用户钱包币种列表数据
      * @param userId
+     * @param id
      * @return
      * @throws Exception
      */
     public List<WalletVo> selectUserWalletCoinList(@Param("userId")Integer userId,
-                                                   @Param("coinName")String coinName)throws Exception;
+                                                   @Param("id")Integer id)throws Exception;
 
     /**
      * 锁住钱包表

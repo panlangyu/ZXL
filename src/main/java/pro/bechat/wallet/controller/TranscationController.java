@@ -19,7 +19,7 @@ import pro.bechat.wallet.domain.service.TranscationService;
  */
 @RestController
 @RequestMapping("/transaction")
-@Api(value="钱包业务接口",tags={"transaction service"})
+@Api(value="交易信息",tags={"交易信息"})
 public class TranscationController {
 
 

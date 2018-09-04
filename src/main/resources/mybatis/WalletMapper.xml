@@ -80,8 +80,8 @@
             <if test="userId != null and userId != 0">
                 AND userid = #{userId}
             </if>
-            <if test="coinName != null and coinName.length() > 0">
-                AND coinName = #{coinName}
+            <if test="id != null and id != 0">
+                AND id = #{id}
             </if>
 
         </trim>

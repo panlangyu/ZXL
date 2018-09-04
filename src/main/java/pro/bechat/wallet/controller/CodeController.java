@@ -18,7 +18,7 @@ import pro.bechat.wallet.publics.PhoneUtils;
  */
 @RestController
 @RequestMapping("/code")
-@Api(value = "验证码接口", tags = {"code service"})
+@Api(value = "验证码接口", tags = {"验证码接口"})
 public class CodeController {
 
     @Autowired

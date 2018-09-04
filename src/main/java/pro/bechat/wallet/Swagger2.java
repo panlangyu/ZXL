@@ -26,13 +26,12 @@ public class Swagger2 {
     }
 
     private ApiInfo apiInfo() {
-        return new ApiInfoBuilder()
-                .title("Spring Boot中使用Swagger2构建RESTful APIs")
-                .description("更多Spring Boot相关文章请关注：http://blog.didispace.com/")
-                .termsOfServiceUrl("http://blog.didispace.com/")
-                .contact("挨踢男PLY")
-                .version("1.0")
-                .build();
+
+        return new ApiInfoBuilder().title("HUC钱包测试文档")
+                .description("")
+                .termsOfServiceUrl("")
+                .contact("SpringBoot swagger2")
+                .version("1.0").build();
     }
 
 }

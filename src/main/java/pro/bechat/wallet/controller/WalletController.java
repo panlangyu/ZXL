@@ -24,7 +24,7 @@ import java.util.logging.Logger;
  */
 @RestController
 @RequestMapping("/wallet")
-@Api(value="钱包业务接口",tags={"wallet service"})
+@Api(value="钱包业务接口",tags={"钱包功能"})
 public class WalletController {
 
     Logger logger = Logger.getLogger(WalletController.class.getSimpleName());
@@ -32,7 +32,7 @@ public class WalletController {
     @Autowired
     private WalletService walletService;                //钱包业务Service
 
-
+    /*
     @ApiOperation(value="查询用户个人钱包总额", notes="根据userId查询个人钱包币种数量总额")
     @ApiImplicitParam(name = "userId", value = "用户编号userId",dataType="Integer", paramType = "query",required = true)
     @RequestMapping(value = "/queryUserWalletTotal",method = RequestMethod.GET)
@@ -219,7 +219,7 @@ public class WalletController {
 
         return apiResponse;
     }
-
+*/
 
     /*@ApiOperation(value="用户充币信息", notes="用户充币")
     @RequestMapping(value = "/modifyChargeMoneyInfos",method = RequestMethod.POST)
@@ -265,16 +265,16 @@ public class WalletController {
     @ApiOperation(value="查询用户钱包币种列表", notes="根据用户编号查询用户钱包信息,调用第三方接口")
     @ApiImplicitParams({
             @ApiImplicitParam(name="userId", value="用户编号", dataType="Integer", paramType="query", required=true),
-            @ApiImplicitParam(name="coinName", value="币种名称", dataType="String", paramType="query", required=false)
+            @ApiImplicitParam(name="id", value="币种编号", dataType="Integer", paramType="query", required=false)
     })
     @RequestMapping(value="/queryUserWalletList", method=RequestMethod.GET)
     public ApiResponseResult queryUserWalletList(@RequestParam("userId") Integer userId,
-                                                 @RequestParam(value="coinName", required=false) String coinName) {
+                                                 @RequestParam(value="id", required=false) Integer id) {
 
         ApiResponseResult apiResponseResult = new ApiResponseResult();
         try {
 
-            apiResponseResult = walletService.findUserWalletList(userId,coinName);
+            apiResponseResult = walletService.findUserWalletList(userId,id);
 
         } catch (Exception e) {
             e.printStackTrace();

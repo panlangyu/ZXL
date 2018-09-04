@@ -678,7 +678,7 @@ public class WalletServiceImpl implements WalletService {
     }
 
     @Override
-    public ApiResponseResult findUserWalletList(Integer userId, String coinName) throws Exception {
+    public ApiResponseResult findUserWalletList(Integer userId, Integer id) throws Exception {
 
         User userInfo = userMapper.findUserById(userId);
         if (null == userInfo) {
@@ -688,7 +688,7 @@ public class WalletServiceImpl implements WalletService {
 
         //PageHelper.startPage(currentPage, currentSize);
 
-        List<WalletVo> voList = walletMapper.selectUserWalletCoinList(userInfo.getId(), coinName);
+        List<WalletVo> voList = walletMapper.selectUserWalletCoinList(userInfo.getId(), id);
         if (null == voList) {
 
             return ApiResponseResult.build(2011, "error", "未查询到用户钱包币种信息", "");

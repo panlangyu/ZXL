@@ -112,11 +112,11 @@ public interface WalletService {
     /**
      * 查询钱包列表
      * @param userId
-     * @param coinName
+     * @param id
      * @return
      * @throws Exception
      */
-    public ApiResponseResult findUserWalletList(Integer userId, String coinName) throws Exception;
+    public ApiResponseResult findUserWalletList(Integer userId, Integer id) throws Exception;
 
     /**
      * 钱包转账

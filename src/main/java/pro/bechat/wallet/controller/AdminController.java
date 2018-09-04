@@ -1,5 +1,6 @@
 package pro.bechat.wallet.controller;
 
+import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,6 +20,7 @@ import pro.bechat.wallet.publics.RewardConfigureUtils;
  */
 @RestController
 @RequestMapping("/admin")
+@Api(value = "管理员", tags = {"用户直推"})
 public class AdminController {
 
     @Autowired
