@@ -43,7 +43,7 @@ public interface WalletMapper {
      * 锁住钱包表
      * @throws Exception
      */
-    public List<Wallet> lockWalletTable()throws Exception;
+    public List<Wallet> lockWalletTable(@Param("id")Integer id)throws Exception;
 
     /**
      * 查询钱包用户单个币种信息(按id查询)

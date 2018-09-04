@@ -92,11 +92,20 @@
 
 
     <!-- 钱包转账，锁住钱包表,共享锁 -->
-    <select id="lockWalletTable" resultType="pro.bechat.wallet.domain.model.model.Wallet">
+    <select id="lockWalletTable" resultType="pro.bechat.wallet.domain.model.model.Wallet" parameterType="java.lang.Integer">
 
         /*SELECT * FROM vah_y_wallet FOR UPDATE*/
 
-        SELECT * FROM vah_y_wallet LOCK IN SHARE MODE;
+        SELECT * FROM vah_y_wallet
+
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+            <if test="id != null and id != 0">
+                AND id = #{id}
+            </if>
+
+        </trim>
+
+        LOCK IN SHARE MODE;
 
     </select>
 

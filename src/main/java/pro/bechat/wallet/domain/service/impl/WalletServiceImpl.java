@@ -104,7 +104,7 @@ public class WalletServiceImpl implements WalletService {
 
         // 1、锁钱包表
         //锁表出错，建议使用事务，不建议锁表。
-        walletMapper.lockWalletTable();
+        walletMapper.lockWalletTable(wallet.getId());
 
         // 2、查询该币种信息,拿出金额做判断
         Wallet userWalletCoin = walletMapper.selectUserWalletCoinById(wallet);      //按id查询查询转出币种信息
@@ -297,7 +297,7 @@ public class WalletServiceImpl implements WalletService {
     public ApiResponseResult modifyWalletDepositToChangeInto(Wallet wallet) throws Exception {
 
         // 1、锁钱包表
-        walletMapper.lockWalletTable();
+        walletMapper.lockWalletTable(wallet.getId());
 
         // 2、拿到钱包币种信息  按编号去查询
         Wallet userWalletCoin = walletMapper.selectUserWalletCoinById(wallet);      //按id查询查询转出币种信息
@@ -377,7 +377,7 @@ public class WalletServiceImpl implements WalletService {
     public ApiResponseResult modifyWalletDepositTurnOut(Wallet wallet) throws Exception {
 
         // 1、锁钱包表
-        walletMapper.lockWalletTable();
+        walletMapper.lockWalletTable(wallet.getId());
 
         // 2、拿到钱包币种信息  按编号去查询
         Wallet userWalletCoin = walletMapper.selectUserWalletCoinById(wallet);      //按id查询查询转出币种信息
@@ -502,7 +502,7 @@ public class WalletServiceImpl implements WalletService {
     public ApiResponseResult modifyChargeMoneyInfo(Wallet wallet) throws Exception {
 
         // 1、锁住钱包表
-        walletMapper.lockWalletTable();
+        walletMapper.lockWalletTable(wallet.getId());
 
         // 1、按照id去查询钱包信息
         Wallet userWalletCoin = walletMapper.selectUserWalletCoinById(wallet);      //按id查询查询转出币种信息
@@ -731,7 +731,7 @@ public class WalletServiceImpl implements WalletService {
         }
 
         //当前用户转账锁钱包表
-        walletMapper.lockWalletTable();
+        walletMapper.lockWalletTable(wallet.getId());
 
         int trun = new BigDecimal(wallet.getValue()).compareTo(BigDecimal.ZERO);
         if (trun == 0 || trun == -1) {

@@ -77,7 +77,7 @@ public class DirectPrizeServiceImpl implements DirectPrizeService {
 
 
         // 1、锁钱包 表  行级锁
-        walletMapper.lockWalletTable();
+        walletMapper.lockWalletTable(0);
 
         // 2、查询钱包信息,冻结金额不为 0 的  冻结金额就是用来生息的,  如果3天未提取利息的不再生息
         List<Wallet> walletList = walletMapper.selectUserWalletInterest();
@@ -201,7 +201,7 @@ public class DirectPrizeServiceImpl implements DirectPrizeService {
         Integer recommendNumber = RewardConfigureUtils.getInstance().getRecommendNumber();                  //3 推荐人数限制,
 
         // 1、锁钱包 表  行级锁
-        walletMapper.lockWalletTable();
+        walletMapper.lockWalletTable(0);
 
         // 2、查询直推记录表,未返还完的继续返还 当 本金不等于 已用金额
         List<DirectPrizeVo> voList =  directPrizeMapper.selectDirectPrizeList();
