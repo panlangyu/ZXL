@@ -17,32 +17,32 @@ public interface DirectPrizeMapper {
      * 查询是否用户直推的信息是否记录超过3条
      * @param refereeId 推荐人
      * @return
-     * @throws Exception
+     * @
      */
-    public Integer selectDirectPrizeCount(@Param("refereeId")Integer refereeId)throws Exception;
+    Integer selectDirectPrizeCount(@Param("refereeId")Integer refereeId);
 
     /**
      * 查询未返完的信息
      * @return
-     * @throws Exception
+     * @
      */
-    public List<DirectPrizeVo> selectDirectPrizeList();
+    List<DirectPrizeVo> selectDirectPrizeList();
 
     /**
      * 新增直推奖记录
      * @param directPrize
      * @return
-     * @throws Exception
+     * @
      */
-    public Integer insertDirectPrizeInfo(DirectPrize directPrize)throws Exception;
+    Integer insertDirectPrizeInfo(DirectPrize directPrize);
 
     /**
      * 修改 未返还的 直推奖
      * @param directPrize
      * @return
-     * @throws Exception
+     * @
      */
-    public Integer modifyDirectPrizeInfo(DirectPrize directPrize)throws Exception;
+    Integer modifyDirectPrizeInfo(DirectPrize directPrize);
 
 
 }

@@ -17,6 +17,6 @@ public interface CoinMapper {
      * @return
      * @throws Exception
      */
-    public List<CoinVo> selectCoinList()throws Exception;
+    List<CoinVo> selectCoinList();
 
 }

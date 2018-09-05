@@ -2,29 +2,6 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="pro.bechat.wallet.domain.dao.WalletMapper">
 
-    <!-- 封装用户钱包币种列表数据 -->
-    <!--<resultMap id="BaseResultMap" type="pro.bechat.wallet.domain.model.vo.WalletVo">
-        <id column="id" jdbcType="INTEGER" property="id"/>
-        <result column="coinId" jdbcType="INTEGER" property="coinId"/>
-        <result column="coinName" jdbcType="VARCHAR" property="coinName"/>
-        <result column="coinImg" jdbcType="VARCHAR" property="coinImg"/>
-        <result column="address" jdbcType="VARCHAR" property="address"/>
-        <result column="freeAmount" jdbcType="DECIMAL" property="freeAmount"/>
-        <result column="availableAmount" jdbcType="DECIMAL" property="amount"/>
-    </resultMap>-->
-
-    <!-- 封装用户钱包单个币种数据 -->
-   <!-- <resultMap id="BaseResultMapWallet" type="pro.bechat.wallet.domain.model.model.Wallet">
-        <id column="id" jdbcType="INTEGER" property="id"/>
-        <result column="coinId" jdbcType="INTEGER" property="coinId"/>
-        <result column="address" jdbcType="VARCHAR" property="address"/>
-        <result column="createTime" jdbcType="TIMESTAMP" property="createTime"/>
-        <result column="userId" jdbcType="INTEGER" property="userId"/>
-        <result column="freeAmount" jdbcType="DECIMAL" property="freeAmount"/>
-        <result column="amount" jdbcType="DECIMAL" property="amount"/>
-        <result column="availableAmount" jdbcType="DECIMAL" property="availableAmount"/>
-    </resultMap>-->
-
     <!-- 封装给客户端的Vo数据 -->
     <resultMap id="BaseResultMap" type="pro.bechat.wallet.domain.model.vo.WalletVo">
         <id column="id" jdbcType="INTEGER" property="id"/>
@@ -55,19 +32,6 @@
         <result column="contractAddr" jdbcType="VARCHAR" property="contractAddr"/>
     </resultMap>
 
-
-
-    <!-- 查询个人钱包总资产 -->
-    <select id="selectUserWalletTotal" resultType="BigDecimal" >
-      SELECT SUM(availableAmount) FROM vah_y_wallet
-
-        <trim prefix="WHERE" prefixOverrides="AND | OR">
-          <if test="userId != null and userId != 0">
-              AND userid = #{userId}
-          </if>
-        </trim>
-
-    </select>
 
 
     <!-- 查询用户钱包数据列表 -->
@@ -109,63 +73,6 @@
 
     </select>
 
-    <!-- 查询用户单个钱包信息,按编号查询 -->
-    <select id="selectUserWalletCoinById" resultMap="BaseResultMapWallet" parameterType="pro.bechat.wallet.domain.model.model.Wallet">
-
-        SELECT id,coinId,address,createTime,userId,freeAmount,amount,availableAmount FROM vah_y_wallet
-
-        <trim prefix="WHERE" prefixOverrides="AND | OR">
-            <if test="id != null and id != 0">
-                AND id = #{id}
-            </if>
-            <!--<<if test="userId != null and userId != 0">
-                AND userId = #{userId}
-            </if>
-            if test="coinId != null and coinId != 0">
-                AND coinId = #{coinId}
-            </if>-->
-
-        </trim>
-
-    </select>
-
-    <!-- 查询用户单个钱包信息,按地址查询 -->
-    <select id="selectUserWalletCoinByAddress" resultMap="BaseResultMapWallet" parameterType="pro.bechat.wallet.domain.model.model.Wallet">
-
-        SELECT id,coinId,address,createTime,userId,freeAmount,amount,availableAmount FROM vah_y_wallet
-
-        <trim prefix="WHERE" prefixOverrides="AND | OR">
-            <if test="address != null and address.length() > 0">
-                AND address = #{address}
-            </if>
-            <!--<if test="userId != null and userId != 0">
-                AND userId = #{userId}
-            </if>
-            <if test="coinId != null and coinId != 0">
-                AND coinId = #{coinId}
-            </if>-->
-
-        </trim>
-
-    </select>
-
-
-
-    <!-- 修改钱包资产 转出 -->
-    <update id="modifyWalletTurnOut" parameterType="pro.bechat.wallet.domain.model.model.Wallet">
-
-        UPDATE vah_y_wallet
-
-        <trim prefix="SET" suffixOverrides="," suffix="WHERE id=#{id}">
-
-            <if test="amount != null and amount != 0">
-                amount = amount - #{amount},
-                availableAmount = availableAmount - #{amount},
-            </if>
-            updateTime=NOW(),
-        </trim>
-
-    </update>
 
     <!-- 修改钱包资产 转入 -->
     <update id="modifyWalletToChangeInto" parameterType="pro.bechat.wallet.domain.model.model.Wallet">
@@ -210,75 +117,6 @@
         </trim>
 
     </select>
-
-
-    <!-- 钱包管理币种 的 交易记录 (昨日收益)+(冻结数量) -->
-    <select id="selectYesterdayProfit" resultType="Map">
-        SELECT
-        SUM(amount) AS yesterdayProfit,
-        (
-            SELECT freeAmount FROM vah_y_wallet
-
-            <trim prefix="WHERE" prefixOverrides="AND | OR">
-
-                <if test="userId != null and userId != 0">
-                    AND userId = #{userId}
-                </if>
-
-                <if test="coinId != null and coinId != 0">
-                    AND coinId = #{coinId}
-                </if>
-
-            </trim>
-
-        ) AS freeAmount
-        FROM VAH_T_TRANSCATION
-        WHERE TO_DAYS( NOW( ) ) - TO_DAYS(createTime) = 1
-
-        <if test="userId != null and userId != 0">
-            AND userId = #{userId}
-        </if>
-
-        <if test="coinId != null and coinId != 0">
-            AND coinId = #{coinId}
-        </if>
-        <!--<if test="coinType != null and coinType.length() > 0">
-            AND coinType = #{coinType}
-        </if>-->
-
-    </select>
-
-    <!-- 转入钱包管理(从 钱包 转出到 钱包管理 同一币种做处理) -->
-    <update id="modifyWalletDepositToChangeInto" parameterType="pro.bechat.wallet.domain.model.model.Wallet">
-
-        UPDATE vah_y_wallet
-
-        <trim prefix="SET" suffixOverrides="," suffix="WHERE id=#{id}">
-
-            <if test="amount != null and amount != 0">
-                freeAmount = freeAmount + #{amount},
-                availableAmount = availableAmount - #{amount},
-            </if>
-            updateTime=NOW(),
-        </trim>
-
-    </update>
-
-    <!-- 钱包管理转出(从 钱包管理 转出到 钱包 同一币种做处理) -->
-    <update id="modifyWalletDepositTurnOut" parameterType="pro.bechat.wallet.domain.model.model.Wallet">
-
-        UPDATE vah_y_wallet
-
-        <trim prefix="SET" suffixOverrides="," suffix="WHERE id=#{id}">
-
-            <if test="amount != null and amount != 0">
-                freeAmount = freeAmount - #{amount},
-                availableAmount = availableAmount + #{amount},
-            </if>
-            updateTime=NOW(),
-        </trim>
-
-    </update>
 
 
     <!-- 新增钱包币种信息 -->

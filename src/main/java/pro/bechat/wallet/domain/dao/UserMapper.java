@@ -100,7 +100,6 @@ public interface UserMapper extends BasicMapper<User>{
      */
     List<User> findUsersByIds(@Param("ids")List<String> ids);
 
-
     /**
      * 根据用户关系查询子类关系图
      * @param
@@ -114,7 +113,7 @@ public interface UserMapper extends BasicMapper<User>{
      * @return
      * @throws Exception
      */
-    public User findUserExist(@Param("phone") String phone)throws Exception;
+    User findUserExist(@Param("phone") String phone);
 
     /**
      * 查询用户信息及绑定ETH地址
@@ -123,8 +122,7 @@ public interface UserMapper extends BasicMapper<User>{
      * @return
      * @throws Exception
      */
-    public UserVo findUserInfoAddress(@Param("userId") Integer userId,
-                                      @Param("coinName") String coinName)throws Exception;
+     UserVo findUserInfoAddress(@Param("userId") Integer userId,@Param("coinName") String coinName);
 
 
 }

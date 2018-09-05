@@ -25,29 +25,26 @@ public interface TranscationMapper {
      * @Param("startTime")String startTime,
      * @Param("endTime")String endTime
      * @return
-     * @throws Exception
+     * @
      */
-    public List<TranscationVo> selectUserCoinTransactionList(@Param("currentPage")Integer currentPage,
-                                                             @Param("currentSize")Integer currentSize,
-                                                             @Param("userId")Integer userId,
-                                                             @Param("coinType")String coinType
-                                                             )throws Exception;
+    List<TranscationVo> selectUserCoinTransactionList(@Param("currentPage")Integer currentPage, @Param("currentSize")Integer currentSize,
+                                                      @Param("userId")Integer userId, @Param("coinType")String coinType);
 
     /**
      * 修改钱包资产 转出订单记录
      * @param transcation
      * @return
-     * @throws Exception
+     * @
      */
-    public Integer insertWalletTurnOut(Transcation transcation)throws Exception;
+    Integer insertWalletTurnOut(Transcation transcation);
 
     /**
      * 修改钱包资产 转入订单记录
      * @param transcation
      * @return
-     * @throws Exception
+     * @
      */
-    public Integer insertWalletToChangeInto(Transcation transcation)throws Exception;
+    Integer insertWalletToChangeInto(Transcation transcation);
 
     /**
      * 查看币种交易记录总额,条件查询
@@ -55,11 +52,10 @@ public interface TranscationMapper {
      * @param startTime
      * @param endTime
      * @return
-     * @throws Exception
+     * @
      */
-    public Double selectUserCoinTurnToTotal(@Param("userId")Integer userId,
-                                            @Param("startTime")String startTime,
-                                            @Param("endTime")String endTime)throws Exception;
+    Double selectUserCoinTurnToTotal(@Param("userId")Integer userId, @Param("startTime")String startTime,
+                                     @Param("endTime")String endTime);
 
     /**
      * 查看币种交易记录总额,条件查询
@@ -67,11 +63,10 @@ public interface TranscationMapper {
      * @param startTime
      * @param endTime
      * @return
-     * @throws Exception
+     * @
      */
-    public Double selectUserCoinToChargeInfoTotal(@Param("userId")Integer userId,
-                                                  @Param("startTime")String startTime,
-                                                  @Param("endTime")String endTime)throws Exception;
+    Double selectUserCoinToChargeInfoTotal(@Param("userId")Integer userId, @Param("startTime")String startTime,
+                                           @Param("endTime")String endTime);
 
     /**
      *  查看币种交易记录总额,条件查询
@@ -79,21 +74,19 @@ public interface TranscationMapper {
      * @param startTime
      * @param endTime
      * @return
-     * @throws Exception
+     * @
      */
-    public Map<String,Object> selectUserCoinTrunToChargeTotal(@Param("userId")Integer userId,
-                                                              @Param("startTime")String startTime,
-                                                              @Param("endTime")String endTime)throws Exception;
+    Map<String,Object> selectUserCoinTrunToChargeTotal(@Param("userId")Integer userId, @Param("startTime")String startTime,
+                                                       @Param("endTime")String endTime);
 
     /**
      * 查询钱包管理币种的 直推 和 生息的总额
      * @param userId
      * @param coinType
      * @return
-     * @throws Exception
+     * @
      */
-    public Map<String,Object> selectUserWalletCoinStraightOrInterest(@Param("userId")Integer userId,
-                                                                     @Param("coinType")String coinType)throws Exception;
+    Map<String,Object> selectUserWalletCoinStraightOrInterest(@Param("userId")Integer userId, @Param("coinType")String coinType);
 
 
     /**
@@ -105,24 +98,20 @@ public interface TranscationMapper {
      * @param startTime
      * @param endTime
      * @return
-     * @throws Exception
+     * @
      */
-    public List<TranscationVo> selectWalletUserCoinTransactionList(@Param("currentPage")Integer currentPage,
-                                                                   @Param("currentSize")Integer currentSize,
-                                                                   @Param("userId")Integer userId,
-                                                                   @Param("coinType")String coinType,
-                                                                   @Param("startTime")String startTime,
-                                                                   @Param("endTime")String endTime)throws Exception;
+    List<TranscationVo> selectWalletUserCoinTransactionList(@Param("currentPage")Integer currentPage, @Param("currentSize")Integer currentSize,
+                                                            @Param("userId")Integer userId, @Param("coinType")String coinType,
+                                                            @Param("startTime")String startTime, @Param("endTime")String endTime);
 
     /**
      * 查看充值记录 和 提取记录 总额 是否超过 10000
      * @param userId
      * @param coinId
      * @return
-     * @throws Exception
+     * @
      */
-    public BigDecimal selectTranscationRechargeRecord(@Param("userId")Integer userId,
-                                                      @Param("coinId")Integer coinId)throws Exception;
+    BigDecimal selectTranscationRechargeRecord(@Param("userId")Integer userId, @Param("coinId")Integer coinId);
 
 
 
@@ -131,7 +120,7 @@ public interface TranscationMapper {
      * @param params
      * @return
      */
-    List<AdminTranscationBean> selectTranscationByParams(@Param("currentPage")Integer currentPage,
-                                                         @Param("currentSize")Integer currentSize, @Param("params")Map<String,String> params);
+    List<AdminTranscationBean> selectTranscationByParams(@Param("currentPage")Integer currentPage, @Param("currentSize")Integer currentSize,
+                                                         @Param("params")Map<String,String> params);
 
 }

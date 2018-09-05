@@ -17,156 +17,74 @@ import java.util.Map;
 @Repository
 public interface WalletMapper {
 
-    //extends BasicMapper<Wallet>
-
-    /**
-     * 查询个人钱包总资产
-     * @param userId
-     * @return
-     * @throws Exception
-     */
-    public BigDecimal selectUserWalletTotal(@Param("userId")Integer userId)throws Exception;
-
-
 
     /**
      * 查询用户钱包币种列表数据
      * @param userId
      * @param id
      * @return
-     * @throws Exception
+     * @
      */
-    public List<WalletVo> selectUserWalletCoinList(@Param("userId")Integer userId,
-                                                   @Param("id")Integer id)throws Exception;
+    List<WalletVo> selectUserWalletCoinList(@Param("userId")Integer userId,@Param("id")Integer id);
 
     /**
      * 锁住钱包表
-     * @throws Exception
+     * @
      */
-    public List<Wallet> lockWalletTable(@Param("id")Integer id)throws Exception;
-
-    /**
-     * 查询钱包用户单个币种信息(按id查询)
-     * @param wallet
-     * @return
-     * @throws Exception
-     */
-    public Wallet selectUserWalletCoinById(Wallet wallet)throws Exception;
-
-    /**
-     * 查询钱包用户单个币种信息(按地址查询)
-     * @param wallet
-     * @return
-     * @throws Exception
-     */
-    public Wallet selectUserWalletCoinByAddress(Wallet wallet)throws Exception;
-
-    /**
-     * 修改钱包资产 转出
-     * @param wallet
-     * @return
-     * @throws Exception
-     */
-    public Integer modifyWalletTurnOut(Wallet wallet)throws Exception;
+    List<Wallet> lockWalletTable(@Param("id")Integer id);
 
     /**
      * 修改钱包资产 转入
      * @param wallet
      * @return
-     * @throws Exception
+     * @
      */
-    public Integer modifyWalletToChangeInto(Wallet wallet)throws Exception;
+    Integer modifyWalletToChangeInto(Wallet wallet);
 
     /**
      * 查询用户钱包下是否有该币种
      * @param userId 用户编号
      * @param id  钱包编号
      * @return
-     * @throws Exception
+     * @
      */
-    public Wallet selectUserWalletByCoinId(@Param("userId")Integer userId,
-                                           @Param("id")Integer id)throws Exception;
-
-    /**
-     * 管理钱包用户币种昨日收益 +(冻结数量)
-     * @param userId
-     * @param coinId
-     * @return
-     * @throws Exception
-     */
-    public Map<String,Object> selectYesterdayProfit(@Param("userId")Integer userId,
-                                                    @Param("coinId")Integer coinId)throws Exception;
-
-
-    /**
-     * 转入钱包管理(从 钱包 转出到 钱包管理 同一币种做处理)
-     * @param wallet
-     * @return
-     * @throws Exception
-     */
-    public Integer modifyWalletDepositToChangeInto(Wallet wallet)throws Exception;
-
-
-    /**
-     * 钱包管理转出(从 钱包管理 转出到 钱包 同一币种做处理)
-     * @param wallet
-     * @return
-     * @throws Exception
-     */
-    public Integer modifyWalletDepositTurnOut(Wallet wallet)throws Exception;
+    Wallet selectUserWalletByCoinId(@Param("userId")Integer userId,@Param("id")Integer id);
 
     /**
      * 新增用户钱包币种信息
      * @param list
      * @return
-     * @throws Exception
+     * @
      */
-    public Integer insertUserWalletInfo(List<Wallet> list)throws Exception;
+    Integer insertUserWalletInfo(List<Wallet> list);
 
     /**
      * 查询钱包信息,冻结金额不为 0 的  冻结金额就是用来生息的,  如果3天未提取利息的不再生息
      * @return
-     * @throws Exception
+     * @
      */
-    public List<Wallet> selectUserWalletInterest()throws Exception;
+    List<Wallet> selectUserWalletInterest();
 
-    /**
-     * 修改用户钱包币种 利息生息
-     * @param wallet
-     * @return
-     * @throws Exception
-     */
-    public Integer modifyUserWalletInterest(Wallet wallet)throws Exception;
+    /** 修改用户钱包币种 利息生息 **/
+    Integer modifyUserWalletInterest(Wallet wallet);
 
 
-    public Integer insertWalletInfo(Wallet wallet) throws Exception;
+    Integer insertWalletInfo(Wallet wallet) ;
 
 
-    public String findWalletAddressByUserId(@Param("userId") Integer userId,
-                                            @Param("coinName") String coinName)throws Exception;
+    String findWalletAddressByUserId(@Param("userId") Integer userId, @Param("coinName") String coinName);
 
 
-    public Wallet findWalletByUserIdAndAddress(@Param("userId") Integer userId,
-                                               @Param("contractAddr") String contractAddr)throws Exception;
+    Wallet findWalletByUserIdAndAddress(@Param("userId") Integer userId, @Param("contractAddr") String contractAddr);
 
 
-    public List<Wallet> findUserWalletInfo(@Param("userId") Integer userId)throws Exception;
+    List<Wallet> findUserWalletInfo(@Param("userId") Integer userId);
 
-    /**
-     * 查询用户下的币种,只读取币种名称
-     * @param userId
-     * @return
-     * @throws Exception
-     */
-    public List<Wallet> findWalletListInfo(@Param("userId") Integer userId)throws Exception;
+    /** 查询用户下的币种,只读取币种名称 **/
+    List<Wallet> findWalletListInfo(@Param("userId") Integer userId);
 
-    /**
-     * 删除合约币信息
-     * @param wallet
-     * @return
-     * @throws Exception
-     */
-    public Integer deleteContractAddrInfo(Wallet wallet)throws Exception;
+    /** 删除合约币信息 **/
+    Integer deleteContractAddrInfo(Wallet wallet);
 
 
 
