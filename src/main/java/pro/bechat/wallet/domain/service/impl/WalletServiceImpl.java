@@ -188,6 +188,13 @@ public class WalletServiceImpl implements WalletService {
             throw new WalletException(WalletEnum.WALLET_NOT_USER_REPEAT);
         }
 
+        wallet.setPasswd(ObjectUtils.rsaDecrypt(wallet.getPasswd()));           //解密密码
+
+        if(wallet.getPasswd() == null || wallet.getPasswd().equals("")){
+
+            throw new WalletException(WalletEnum.WALLET_PASSWD_DAMAGE);
+        }
+
         //验证密码输入是否正确
         if(userWalletCoin.getPasswd() != null && !userWalletCoin.getPasswd().equals("")){
 

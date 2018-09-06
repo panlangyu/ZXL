@@ -22,6 +22,15 @@ public class RestExceptionHandler {
 
     private final static Logger logger = LoggerFactory.getLogger(RestExceptionHandler.class);
 
+    //RSA加密异常
+    @ExceptionHandler(value=ArrayIndexOutOfBoundsException.class)
+    public ApiResponseResult arrayIndexOutOfBoundsException(ArrayIndexOutOfBoundsException ex) {
+
+        this.logger.error("【服务器加密算法异常】 {} : "+ ex.getMessage());
+        //ex.printStackTrace();
+        return ApiResponseResult.build(1012,"error","[服务器加密算法异常]：too much data for RSA block","");
+    }
+
     //空值异常
     @ExceptionHandler(value = NullPointerException.class)
     public ApiResponseResult nullPointerException(NullPointerException ex) {

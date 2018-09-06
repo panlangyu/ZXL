@@ -25,7 +25,8 @@ public enum WalletEnum {
     WALLET_NOT_ETH_INFO(1026,"用户未拥有ETH钱包"),
     WALLET_PASSWD_FAIL(1027,"密码输入不正确"),
     WALLET_NOT_MARKET(1028,"未查询到市场资产"),
-    WALLET_DELETE_FAIL(1029,"删除失败");
+    WALLET_DELETE_FAIL(1029,"删除失败"),
+    WALLET_PASSWD_DAMAGE(1027,"密码数据已损坏");
 
 
 
