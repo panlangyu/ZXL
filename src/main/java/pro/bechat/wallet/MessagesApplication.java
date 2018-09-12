@@ -6,7 +6,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
 
 
-@SpringBootApplication
+@SpringBootApplication()
 @MapperScan("pro.bechat.wallet.domain.dao")
 @ComponentScan("pro.bechat.wallet.*")
 public class MessagesApplication {

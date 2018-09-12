@@ -5,7 +5,7 @@ package pro.bechat.wallet.domain.enums;
  */
 public enum UserEnum {
 
-    USER_NOT_INFO(1001,"用户不存在"),
+    USER_NULL_USER_INFO(1001,"未查询到用户信息"),
     USER_INSERT_FAIL(1002,"添加失败"),
     USER_MODIFY_FAIL(1005,"修改失败");
 

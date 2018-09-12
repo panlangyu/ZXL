@@ -60,8 +60,8 @@ public class CommonController {
     public Result register(String phone,
                           String pass,
                          String invitationCode,
-                         String keyWords
-    ) {
+                         String keyWords) {
+
         try {
             userService.register(phone, pass, keyWords, invitationCode);
             return Result.getSuccess("注册成功");

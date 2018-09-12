@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import jetbrick.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -54,7 +55,7 @@ public class WalletServiceImpl implements WalletService {
     public Integer insertUserWalletInfo(Integer userId)  {
 
         List<CoinVo>  voList = coinMapper.selectCoinList();
-        if(null == voList){
+        if(voList.isEmpty()){
 
             return 0;
         }
@@ -163,7 +164,7 @@ public class WalletServiceImpl implements WalletService {
         }
 
         List<WalletVo> voList = walletMapper.selectUserWalletCoinList(userInfo.getId(), id);
-        if (null == voList) {
+        if (voList.isEmpty()) {
 
             throw new WalletException(WalletEnum.WALLET_NOT_LIST_INFO);
         }
@@ -328,7 +329,7 @@ public class WalletServiceImpl implements WalletService {
         }
 
         List<Wallet> walletList = walletMapper.findUserWalletInfo(userInfo.getId());
-        if (null == walletList || walletList.size() == 0) {
+        if (walletList.isEmpty()) {
 
             throw new WalletException(WalletEnum.WALLET_NOT_LIST_INFO);
         }
@@ -433,7 +434,7 @@ public class WalletServiceImpl implements WalletService {
 
         // 3、拿到第一个钱包，ETH(以太坊)
         List<Wallet> walletList = walletMapper.findUserWalletInfo(userInfo.getId());
-        if (null == walletList || walletList.size() == 0) {
+        if (walletList.isEmpty()) {
 
             throw new WalletException(WalletEnum.WALLET_NOT_LIST_INFO);
         }
@@ -603,6 +604,18 @@ public class WalletServiceImpl implements WalletService {
     }*/
 
 
+    public static void main(String[] args) {
+
+        String str = "123";
+
+        if(StringUtils.isEmpty(str)){
+
+            System.out.println("123");
+        }
+        System.out.println("2222");
+
+
+    }
 
 
 

@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pro.bechat.wallet.domain.dao.BasicMapper;
 import pro.bechat.wallet.domain.dao.UserMapper;
+import pro.bechat.wallet.domain.enums.UserEnum;
+import pro.bechat.wallet.domain.exception.UserException;
 import pro.bechat.wallet.domain.model.model.User;
 import pro.bechat.wallet.domain.model.response.ApiResponseResult;
 import pro.bechat.wallet.domain.model.vo.TranscationVo;
@@ -107,10 +109,10 @@ public class UserService extends BasicService<User> {
         }
 
         //生成钱包
-        int numbers = walletService.insertUserWalletInfo(user.getId());
+        /*int numbers = walletService.createWalletInfo(user.getId());
         if(numbers == 0){
             logger.warning("创建用户钱包错误");
-        }
+        }*/
     }
 
 
@@ -307,13 +309,13 @@ public class UserService extends BasicService<User> {
      * @param userId
      * @return
      */
-    public ApiResponseResult findUserAddressInfo(Integer userId)throws Exception{
+    public ApiResponseResult findUserAddressInfo(Integer userId){
 
         UserVo userVo = userMapper.findUserInfoAddress(userId,"ETH");
 
         if(null == userVo){
 
-            return ApiResponseResult.build(2001, "error", "未查询到用户信息", "");
+            throw new UserException(UserEnum.USER_NULL_USER_INFO);
         }
 
         return ApiResponseResult.build(200, "success", "用户信息及ETH地址", userVo);

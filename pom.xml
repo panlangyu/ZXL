@@ -449,14 +449,14 @@
                     <verbose>true</verbose>
                 </configuration>
             </plugin>
-            <plugin>
+           <!-- <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
                     <mainClass>package pro.bechat.wallet.SpringBootStartApplication</mainClass>
                     <fork>true</fork>
                 </configuration>
-            </plugin>
+            </plugin>-->
 
             <!-- 打jar包打开 -->
             <!--<plugin>
@@ -467,14 +467,5 @@
         </plugins>
     </build>
 
-    <reporting>
-        <!--<plugins>-->
-            <!--<plugin>-->
-                <!--<groupId>org.codehaus.mojo</groupId>-->
-                <!--<artifactId>cobertura-maven-plugin</artifactId>-->
-                <!--<version>2.5.1</version>-->
-            <!--</plugin>-->
-        <!--</plugins>-->
-    </reporting>
 
 </project>

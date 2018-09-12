@@ -32,7 +32,7 @@ public class UserController {
     HttpServletRequest request;
 
     @GetMapping("/user")
-    public Result getUserById() {
+    public ApiResponseResult getUserById() {
         try {
             String token = request.getHeader("token");
             int id = 0;
@@ -40,11 +40,11 @@ public class UserController {
                 Claims claims = TokenUtil.verifyToken(token);
                 id = Integer.parseInt(claims.getId());
             } catch (Exception e) {
-                return Result.getErro("token校验失败");
+                return ApiResponseResult.build(2002,"error","token校验失败",null);
             }
-            return Result.getSuccess(userService.findUserById(id));
+            return userService.findUserAddressInfo(id);
         } catch (Exception e) {
-            return Result.getErro(e.getMessage());
+            return ApiResponseResult.build(2001,"error","出现异常",null);
         }
     }
 
@@ -74,18 +74,7 @@ public class UserController {
     @RequestMapping(value="/queryUserAddressInfo", method= RequestMethod.GET)
     public ApiResponseResult queryUserAddressInfo(@RequestParam("userId")Integer userId){
 
-        ApiResponseResult apiResponseResult = new ApiResponseResult();
-
-        try{
-
-            apiResponseResult = userService.findUserAddressInfo(userId);
-
-        }catch (Exception e){
-
-            return ApiResponseResult.build(2012,"error","出现异常","");
-        }
-
-        return apiResponseResult;
+        return  userService.findUserAddressInfo(userId);
     }
 
 }
