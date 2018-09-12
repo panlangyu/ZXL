@@ -1,7 +1,6 @@
 package pro.bechat.wallet.domain.exception;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.log4j.Logger;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestController;
@@ -14,7 +13,7 @@ import pro.bechat.wallet.domain.model.response.ApiResponseResult;
 @ControllerAdvice
 public class ExceptionHandlerUtils {
 
-    private final static Logger logger = LoggerFactory.getLogger(ExceptionHandlerUtils.class);
+    private final static Logger logger = Logger.getLogger(RestExceptionHandler.class);
 
     //自定义接收用户抛出异常
     @ExceptionHandler(value = UserException.class)

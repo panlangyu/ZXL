@@ -23,7 +23,7 @@ import java.util.logging.Logger;
 @RequestMapping("/user")
 @Api(value = "用户相关", tags = {"校验cookie "})
 public class UserController {
-    Logger logger = Logger.getLogger(CommonController.class.getSimpleName());
+    //Logger logger = Logger.getLogger(CommonController.class.getSimpleName());
 
     @Autowired
     UserService userService;
