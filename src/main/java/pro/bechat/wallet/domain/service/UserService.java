@@ -311,6 +311,8 @@ public class UserService extends BasicService<User> {
      */
     public ApiResponseResult findUserAddressInfo(Integer userId){
 
+        //throw new NullPointerException("空指针异常");
+
         UserVo userVo = userMapper.findUserInfoAddress(userId,"ETH");
 
         if(null == userVo){
@@ -322,6 +324,40 @@ public class UserService extends BasicService<User> {
     }
 
 
+
+    public static String makelinefeed(String s) {
+        //用空格作为分隔符，将单词存到字符数组里面
+        String[] str = s.split(" ");
+        //利用StringBuffer对字符串进行修改
+        StringBuffer buffer = new StringBuffer();
+        //判断单词长度，计算
+        int len = 0;
+        for (int i = 0; i < str.length; i++) {
+            //叠加
+            len += str[i].length();
+            //System.out.println(len);
+            if (len > 89) {
+                buffer.append("\n" + str[i] + " ");//利用StringBuffer对字符串进行修改
+                len = str[i].length()+1;//+1为换行后读出空格一位
+            } else {
+                buffer.append(str[i] + " ");
+                len++;
+            }
+        }
+        return buffer.toString();
+    }
+
+
+    public static void main(String[] args) {
+
+        //String str ="Q/NONEND RFDHKD1200REB/NOSH HKD600Q/NONEND RFDHKD1200REB/NOSH HKD600 For more details, please refer to the fare rule details from the confirmation email.";
+
+        String str ="Q/NONEND RFDHKD1200REB/NOSH HKD600Q/NONEND RFDHKD1200REB/NOSH HKD600 sssssssssssssssssFor more, please refer to the fare rule details from the confirmation email.";
+        System.out.println(makelinefeed(str));
+        System.out.println(str.indexOf("r"));
+
+
+    }
 
 
 }
